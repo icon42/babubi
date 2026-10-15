@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch
 
-from babybuddy.models import get_user_model
+from babubi.models import get_user_model
 from api import serializers
 from core import models
 from django.conf import settings
@@ -14,7 +14,7 @@ from rest_framework.test import APIRequestFactory, APITestCase
 
 
 class TestBase:
-    class BabyBuddyAPITestCaseBase(APITestCase):
+    class BabubiAPITestCaseBase(APITestCase):
         fixtures = ["tests.json"]
         model = None
         endpoint = None
@@ -82,7 +82,7 @@ class TestBase:
             self.assertIsNotNone(obj.end)
 
 
-class BMIAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class BMIAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:bmi-list")
     model = models.BMI
 
@@ -130,7 +130,7 @@ class BMIAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class ChildAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class ChildAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:child-list")
     model = models.Child
     delete_id = "fake-child"
@@ -182,7 +182,7 @@ class ChildAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class PumpingAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class PumpingAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:pumping-list")
     model = models.Pumping
     timer_test_data = {"amount": 2}
@@ -233,7 +233,7 @@ class PumpingAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class DiaperChangeAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class DiaperChangeAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:diaperchange-list")
     model = models.DiaperChange
     delete_id = 3
@@ -310,7 +310,7 @@ class DiaperChangeAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class FeedingAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class FeedingAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:feeding-list")
     model = models.Feeding
     timer_test_data = {"type": "breast milk", "method": "left breast"}
@@ -381,7 +381,7 @@ class FeedingAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class HeadCircumferenceAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class HeadCircumferenceAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:headcircumference-list")
     model = models.HeadCircumference
 
@@ -431,7 +431,7 @@ class HeadCircumferenceAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class HeightAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class HeightAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:height-list")
     model = models.Height
 
@@ -479,7 +479,7 @@ class HeightAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class MedicationAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class MedicationAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:medication-list")
     model = models.Medication
 
@@ -560,7 +560,7 @@ class MedicationAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data["notes"], patch_data["notes"])
 
 
-class NoteAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class NoteAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:note-list")
     model = models.Note
 
@@ -617,7 +617,7 @@ class NoteAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data["note"], entry["note"])
 
 
-class SleepAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class SleepAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:sleep-list")
     model = models.Sleep
     timer_test_data = {"child": 1}
@@ -669,7 +669,7 @@ class SleepAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data["end"], entry["end"])
 
 
-class TagsAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class TagsAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:tag-list")
     model = models.Tag
 
@@ -730,7 +730,7 @@ class TagsAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertCountEqual(list(note.tags.names()), data["tags"])
 
 
-class TemperatureAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class TemperatureAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:temperature-list")
     model = models.Temperature
 
@@ -789,7 +789,7 @@ class TemperatureAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class TimerAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class TimerAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:timer-list")
     model = models.Timer
 
@@ -839,7 +839,7 @@ class TimerAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class TummyTimeAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class TummyTimeAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:tummytime-list")
     model = models.TummyTime
     timer_test_data = {"milestone": "Timer test"}
@@ -901,7 +901,7 @@ class TummyTimeAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
         self.assertEqual(response.data, entry)
 
 
-class WeightAPITestCase(TestBase.BabyBuddyAPITestCaseBase):
+class WeightAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:weight-list")
     model = models.Weight
 
@@ -1009,7 +1009,7 @@ class CaregiverAPITestCase(APITestCase):
             username="caregiver", password="caregiver", is_active=True
         )
         self.caregiver.groups.add(
-            Group.objects.get(name=settings.BABY_BUDDY["CAREGIVER_GROUP_NAME"])
+            Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
         )
         # Re-fetch so group permissions are visible to the permission checks.
         self.caregiver = get_user_model().objects.get(username="caregiver")
@@ -1369,7 +1369,7 @@ class CaregiverWebTestCase(APITestCase):
             username="caregiver", password="caregiver", is_active=True
         )
         self.caregiver.groups.add(
-            Group.objects.get(name=settings.BABY_BUDDY["CAREGIVER_GROUP_NAME"])
+            Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
         )
         self.client.login(username="caregiver", password="caregiver")
 

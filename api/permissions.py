@@ -2,7 +2,7 @@
 from rest_framework.permissions import DjangoModelPermissions
 
 
-class BabyBuddyDjangoModelPermissions(DjangoModelPermissions):
+class BabubiDjangoModelPermissions(DjangoModelPermissions):
     perms_map = {
         "GET": ["%(app_label)s.view_%(model_name)s"],
         "OPTIONS": ["%(app_label)s.add_%(model_name)s"],

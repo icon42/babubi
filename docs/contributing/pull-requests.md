@@ -1,16 +1,16 @@
 # Pull requests
 
-Baby Buddy's maintainers accept and encourage contributions via GitHub [Issues](https://github.com/babybuddy/babybuddy/issues)
+Babubi's maintainers accept and encourage contributions via GitHub [Issues](https://github.com/babybuddy/babybuddy/issues)
 and [Pull Requests](https://github.com/babybuddy/babybuddy/pulls). Maintainers
-and users may also be found at [babybuddy/Lobby](https://gitter.im/babybuddy/Lobby)
+and users may also be found at [babubi/Lobby](https://gitter.im/babybuddy/Lobby)
 on Gitter.
 
 ## Caveats
 
 ### Icon font
 
-Baby Buddy uses [Fontello](https://fontello.com/) to build a custom icon font
-for icons used throughout the application. See [`babybuddy/static_src/fontello`](https://github.com/babybuddy/babybuddy/tree/master/babybuddy/static_src/fontello)
+Babubi uses [Fontello](https://fontello.com/) to build a custom icon font
+for icons used throughout the application. See [`babubi/static_src/fontello`](https://github.com/babybuddy/babybuddy/tree/master/babybuddy/static_src/fontello)
 for further documentation about using the config file with Fontello and license
 information for fonts used by this application.
 

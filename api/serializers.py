@@ -11,7 +11,7 @@ from django.utils import timezone
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 from core import models
-from babybuddy import models as babybuddy_models
+from babubi import models as babubi_models
 
 
 class CoreModelSerializer(serializers.HyperlinkedModelSerializer):
@@ -378,7 +378,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return self.instance.api_key().key
 
     class Meta:
-        model = babybuddy_models.Settings
+        model = babubi_models.Settings
         fields = (
             "user",
             "language",

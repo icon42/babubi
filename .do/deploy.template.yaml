@@ -1,5 +1,5 @@
 spec:
-  name: babybuddy
+  name: babubi
   services:
     - name: app
       environment_slug: python
@@ -24,7 +24,7 @@ spec:
         - key: DJANGO_SETTINGS_MODULE
           scope: RUN_AND_BUILD_TIME
           type: GENERAL
-          value: "babybuddy.settings.base"
+          value: "babubi.settings.base"
         - key: SECRET_KEY
           scope: RUN_TIME
           type: GENERAL

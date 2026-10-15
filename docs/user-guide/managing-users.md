@@ -71,13 +71,13 @@ requires `core.change_tag`; creating new tag names additionally requires
 !!! warning "The role is not limited to one child"
 
     A caregiver has access to every child on the instance, and may edit entries
-    that other users created. There is no per-child grant, and Baby Buddy does
+    that other users created. There is no per-child grant, and Babubi does
     not record which user created an entry, so a caregiver's entries cannot be
     told apart from anyone else's afterwards.
 
 To withdraw access, clear the **Active** checkbox on the user, or delete the
 user. Subsequent web and API requests are denied, including requests using an
-existing API key. Do not simply clear the **Caregiver** checkbox in Baby Buddy's
+existing API key. Do not simply clear the **Caregiver** checkbox in Babubi's
 user form: saving with neither restricted role selected makes the account a
 standard (superuser) user. Removing group membership directly in Django's admin
 does not itself change the superuser flag, but any other permissions remain.

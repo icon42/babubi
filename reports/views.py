@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.views.generic.detail import DetailView
 
-from babybuddy.mixins import PermissionRequiredMixin
+from babubi.mixins import PermissionRequiredMixin
 from core import models
 
 from . import graphs

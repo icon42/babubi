@@ -25,7 +25,7 @@ class EntryPermissionsTestCase(TestCase):
         self.child = models.Child.objects.first()
         self.user = get_user_model().objects.create_user(username="entry-caregiver")
         self.user.groups.add(
-            Group.objects.get(name=settings.BABY_BUDDY["CAREGIVER_GROUP_NAME"])
+            Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
         )
         self.other = get_user_model().objects.create_user(username="timer-owner")
         # Pumping is deliberately excluded from the caregiver defaults.

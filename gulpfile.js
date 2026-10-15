@@ -87,7 +87,7 @@ function coverage(cb) {
       "run",
       "manage.py",
       "test",
-      "--settings=babybuddy.settings.test",
+      "--settings=babubi.settings.test",
       "--parallel",
       "--exclude-tag",
       "isolate",
@@ -101,7 +101,7 @@ function coverage(cb) {
       try {
         config.testsConfig.isolated.forEach(function (test_name) {
           es(
-            "pipenv run coverage run manage.py test --settings=babybuddy.settings.test " +
+            "pipenv run coverage run manage.py test --settings=babubi.settings.test " +
               test_name,
             { stdio: "inherit" },
           );
@@ -246,7 +246,7 @@ function test(cb) {
     "-Wa",
     "manage.py",
     "test",
-    "--settings=babybuddy.settings.test",
+    "--settings=babubi.settings.test",
     "--parallel",
     "--exclude-tag",
     "isolate",
@@ -258,7 +258,7 @@ function test(cb) {
       config.testsConfig.isolated.forEach(function (test_name) {
         try {
           es(
-            "pipenv run python manage.py test --settings=babybuddy.settings.test " +
+            "pipenv run python manage.py test --settings=babubi.settings.test " +
               test_name,
             { stdio: "inherit" },
           );
@@ -309,7 +309,7 @@ gulp.task("collectstatic", function (cb) {
     }
   }
   if (noSettings) {
-    parameters.push("--settings=babybuddy.settings.base");
+    parameters.push("--settings=babubi.settings.base");
   }
 
   command = command.concat(parameters);
@@ -374,7 +374,7 @@ gulp.task("generateschema", () => {
     "manage.py",
     "generateschema",
     "--title",
-    "Baby Buddy API",
+    "Babubi API",
     "--file",
     "openapi-schema.yml",
   ]);

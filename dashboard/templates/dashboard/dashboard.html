@@ -1,4 +1,4 @@
-{% extends "babybuddy/page.html" %}
+{% extends "babubi/page.html" %}
 {% load cards i18n imagekit static %}
 {% block title %}
     {% trans "Dashboard" %}
@@ -21,7 +21,7 @@
                                     {% thumbnail '300x300' object.picture as thumb %}
                                         <img src="{{ thumb.url }}" class="child-photo img-fluid" />
                                     {% else %}
-                                        <img src="{% static 'babybuddy/img/core/child-placeholder.png' %}"
+                                        <img src="{% static 'babubi/img/core/child-placeholder.png' %}"
                                              class="child-photo img-fluid" />
                                     {% endif %}
                                     </a>

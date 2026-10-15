@@ -72,7 +72,7 @@ def add_read_only_group_permissions(sender, **kwargs):
     from django.apps import apps
 
     _add_group_permissions(
-        settings.BABY_BUDDY["READ_ONLY_GROUP_NAME"],
+        settings.BABUBI["READ_ONLY_GROUP_NAME"],
         _permissions(f"view_{model}" for model in apps.all_models["core"]),
     )
 
@@ -83,7 +83,7 @@ def add_caregiver_group_permissions(sender, **kwargs):
         codenames += [f"add_{model}", f"change_{model}"]
 
     _add_group_permissions(
-        settings.BABY_BUDDY["CAREGIVER_GROUP_NAME"], _permissions(codenames)
+        settings.BABUBI["CAREGIVER_GROUP_NAME"], _permissions(codenames)
     )
 
 
@@ -100,7 +100,7 @@ class CoreConfig(AppConfig):
         #   receiver is connected after this one (`django.contrib.auth` is
         #   listed after `core` in `INSTALLED_APPS`), so on `core`'s own signal
         #   they do not exist yet.
-        # - the read-only group itself is created on `babybuddy`'s signal.
+        # - the read-only group itself is created on `babubi`'s signal.
         #
         # Restricted to `sender=self` the receiver therefore ran exactly once,
         # too early, and a freshly migrated database ended up with an empty

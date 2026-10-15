@@ -1,25 +1,25 @@
 # Deployment
 
-The default username and password for Baby Buddy is `admin`/`admin`. For any
+The default username and password for Babubi is `admin`/`admin`. For any
 deployment, **log in and change the default password immediately**.
 
-Many of Baby Buddy's configuration settings can be controlled using environment
+Many of Babubi's configuration settings can be controlled using environment
 variables - see [Configuration](../configuration/intro.md) for detailed information.
 
 ## Docker
 
-Baby Buddy relies on the [LinuxServer.io](https://www.linuxserver.io/) community
+Babubi relies on the [LinuxServer.io](https://www.linuxserver.io/) community
 for a multi-architecture container with strong support. See
-[linuxserver/docker-babybuddy](https://github.com/linuxserver/docker-babybuddy)
+[linuxserver/docker-babubi](https://github.com/linuxserver/docker-babybuddy)
 for detailed information about the container or use the following Docker Compose
 configuration as a template to get started quickly:
 
 ```yaml
 version: "2.1"
 services:
-  babybuddy:
-    image: lscr.io/linuxserver/babybuddy
-    container_name: babybuddy
+  babubi:
+    image: lscr.io/linuxserver/babubi
+    container_name: babubi
     volumes:
       - /path/to/appdata:/config
     ports:
@@ -29,7 +29,7 @@ services:
 
 See [Django's databases documentation](https://docs.djangoproject.com/en/5.0/ref/databases/) for database requirements.
 
-See [HTTPS/SSL configuration](ssl.md) for information on how to secure Baby Buddy.
+See [HTTPS/SSL configuration](ssl.md) for information on how to secure Babubi.
 
 ### Running commands
 
@@ -38,39 +38,39 @@ the environment variables `DJANGO_SETTINGS_MODULE` and `SECRET_KEY` before
 running commands. For example:
 
 ```shell
-docker exec -it babybuddy /bin/bash
-export DJANGO_SETTINGS_MODULE="babybuddy.settings.base"
+docker exec -it babubi /bin/bash
+export DJANGO_SETTINGS_MODULE="babubi.settings.base"
 export SECRET_KEY="$(cat /config/.secretkey)"
 cd /app/www/public
 python manage.py --help
 ```
 
-Note: the container name (`babybuddy`) and secret key location
+Note: the container name (`babubi`) and secret key location
 (`/config/.secretkey`) may differ depending on the container configuration.
 Refer to the running containers configuration for these values.
 
 ## Home Assistant
 
 [Home Assistant](https://www.home-assistant.io/) is an open source home automation tool
-that can be used to host and control Baby Buddy. An existing Home Assistant installation
+that can be used to host and control Babubi. An existing Home Assistant installation
 is required to use this method.
 
-See the community-maintained [Baby Buddy Home Assistant Addon](https://github.com/OttPeterR/addon-babybuddy)
+See the community-maintained [Babubi Home Assistant Addon](https://github.com/OttPeterR/addon-babybuddy)
 for installation instructions and then review the
-community-maintained [Baby Buddy Home Assistant integration](https://github.com/jcgoette/baby_buddy_homeassistant)
+community-maintained [Babubi Home Assistant integration](https://github.com/jcgoette/baby_buddy_homeassistant)
 for added integrations with the base Home Assistant system.
 
 See
-also [How to Setup Baby Buddy in Home Assistant](https://smarthomescene.com/guides/how-to-setup-baby-buddy-in-home-assistant/)
+also [How to Setup Babubi in Home Assistant](https://smarthomescene.com/guides/how-to-setup-baby-buddy-in-home-assistant/)
 from Smart Home Scene for more detailed installation and configuration instructions.
 
 ## Digital Ocean
 
 !!! info
 
-    The Digital Ocean deployment and link URLs include referal codes. All referral funds receieved are treated as donations to Baby Buddy.
+    The Digital Ocean deployment and link URLs include referal codes. All referral funds receieved are treated as donations to Babubi.
 
-There are two ways to deploy Baby Buddy to Digital Ocean -- as a droplet from a marketplace image or as an app.
+There are two ways to deploy Babubi to Digital Ocean -- as a droplet from a marketplace image or as an app.
 
 The **marketplace image** is the cheaper option ($6/month), but may require more manual configuration depending on desired features and is limited to the latest release the marketplace image has been approved for.
 
@@ -80,7 +80,7 @@ The **app** can be de deployed from any tag or the main branch and can be manage
 
 **Cost**: $6+/month
 
-Use the button below to create a new droplet using the Baby Buddy marketplace image.
+Use the button below to create a new droplet using the Babubi marketplace image.
 
 Access and configuration instructions will be provided after the droplet has been started and configured by the image.
 
@@ -93,7 +93,7 @@ Access and configuration instructions will be provided after the droplet has bee
 Use the button below to start a new deploy to [Digital Ocean](https://www.digitalocean.com/?refcode=dd79e4cfd7b6&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge).
 
 Modify the app environment variables during the build configuration and set the `SECRET_KEY` value to something random
-and unique. Digital Ocean's automatic secret generator does not work with Baby Buddy.
+and unique. Digital Ocean's automatic secret generator does not work with Babubi.
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/babybuddy/babybuddy/tree/master&refcode=dd79e4cfd7b6)
 
@@ -104,26 +104,26 @@ To deploy on [Clever Cloud](https://www.clever-cloud.com), log in to your
 application, link it to a PostgreSQL addon and optionally a Cellar S3 Storage
 addon (only if you want file storage for child picture in particular).
 Then make sure to set the following environment variables in your Python
-application before pushing the babybuddy source code:
+application before pushing the babubi source code:
 
 ```shell
 CC_PYTHON_BACKEND=uwsgi
 CC_PYTHON_MANAGE_TASKS=migrate
-CC_PYTHON_MODULE=babybuddy.wsgi:application
-DJANGO_SETTINGS_MODULE=babybuddy.settings.clever-cloud
+CC_PYTHON_MODULE=babubi.wsgi:application
+DJANGO_SETTINGS_MODULE=babubi.settings.clever-cloud
 SECRET_KEY=<CHANGE TO SOMETHING RANDOM>
 AWS_STORAGE_BUCKET_NAME=<DESIRED BUCKET NAME> # only if file storage is needed
 ```
 
 See [Configuration](../configuration/intro.md) for other environment variables available
-for your instance of babybuddy.
+for your instance of babubi.
 
-After that, you just have to push babybuddy code repository to the Git
+After that, you just have to push babubi code repository to the Git
 deployment URL of your Clever Cloud Python application.
 
 ## GCP Cloud Run
 
-Baby Buddy can be hosted serverless in GCP Cloud Run using configuration provided at
+Babubi can be hosted serverless in GCP Cloud Run using configuration provided at
 `terraform/gcp-cloud-run`. The configuration scales down to zero for cost-effectiveness.
 With this approach initial requests to the service after a long period will be slow but
 subsequent requests will be much faster.
@@ -138,14 +138,14 @@ Run `terraform init` from the configuration directory to get started:
 
 ```shell
 git clone https://github.com/babybuddy/babybuddy.git
-cd babybuddy/terraform/gcp-cloud-run
+cd babubi/terraform/gcp-cloud-run
 terraform init
 terraform apply -var project_id=<project-id> -var project_name=<project-name> -var billing_account=<billing-account-id>
 ```
 
 ## Manual
 
-There are many ways to deploy Baby Buddy manually to any server/VPS. The basic
+There are many ways to deploy Babubi manually to any server/VPS. The basic
 requirements are Python, a web server, an application server, and a database.
 
 ### Requirements
@@ -183,16 +183,16 @@ and any number of children).
 4. Set up directories and files
 
    ```shell
-   sudo mkdir /var/www/babybuddy
-   sudo chown $USER:$(id -gn $USER) /var/www/babybuddy
-   mkdir -p /var/www/babybuddy/data/media
-   git clone https://github.com/babybuddy/babybuddy.git /var/www/babybuddy/public
+   sudo mkdir /var/www/babubi
+   sudo chown $USER:$(id -gn $USER) /var/www/babubi
+   mkdir -p /var/www/babubi/data/media
+   git clone https://github.com/babybuddy/babybuddy.git /var/www/babubi/public
    ```
 
 5. Move in to the application folder
 
    ```shell
-   cd /var/www/babybuddy/public
+   cd /var/www/babubi/public
    ```
 
 6. Initiate and enter a Python environment with Pipenv locally.
@@ -206,29 +206,29 @@ and any number of children).
 7. Create a production settings file and set the `SECRET_KEY` and `ALLOWED_HOSTS` values
 
    ```shell
-   cp babybuddy/settings/production.example.py babybuddy/settings/production.py
-   editor babybuddy/settings/production.py
+   cp babubi/settings/production.example.py babubi/settings/production.py
+   editor babubi/settings/production.py
    ```
 
 8. Initiate the application
 
    ```shell
-   export DJANGO_SETTINGS_MODULE=babybuddy.settings.production
+   export DJANGO_SETTINGS_MODULE=babubi.settings.production
    python manage.py migrate
    ```
 
 9. Set appropriate permissions on the database and data folder
 
    ```shell
-   sudo chown -R www-data:www-data /var/www/babybuddy/data
-   sudo chmod 640 /var/www/babybuddy/data/db.sqlite3
-   sudo chmod 750 /var/www/babybuddy/data
+   sudo chown -R www-data:www-data /var/www/babubi/data
+   sudo chmod 640 /var/www/babubi/data/db.sqlite3
+   sudo chmod 750 /var/www/babubi/data
    ```
 
 10. Create and configure the uwsgi app
 
     ```shell
-    sudo editor /etc/uwsgi/apps-available/babybuddy.ini
+    sudo editor /etc/uwsgi/apps-available/babubi.ini
     ```
 
     Example config:
@@ -236,8 +236,8 @@ and any number of children).
     ```ini
     [uwsgi]
     plugins = python3
-    project = babybuddy
-    base_dir = /var/www/babybuddy
+    project = babubi
+    base_dir = /var/www/babubi
 
     chdir = %(base_dir)/public
     virtualenv = %(chdir)/.venv
@@ -251,39 +251,39 @@ and any number of children).
     for more advanced configuration details.
 
     See [Subdirectory configuration](subdirectory.md) for additional configuration
-    required if Baby Buddy will be hosted in a subdirectory of another server.
+    required if Babubi will be hosted in a subdirectory of another server.
 
 11. Symlink config and restart uWSGI:
 
     ```shell
-    sudo ln -s /etc/uwsgi/apps-available/babybuddy.ini /etc/uwsgi/apps-enabled/babybuddy.ini
+    sudo ln -s /etc/uwsgi/apps-available/babubi.ini /etc/uwsgi/apps-enabled/babubi.ini
     sudo service uwsgi restart
     ```
 
 12. Create and configure the nginx server
 
     ```shell
-    sudo editor /etc/nginx/sites-available/babybuddy
+    sudo editor /etc/nginx/sites-available/babubi
     ```
 
     Example config:
 
     ```nginx
-    upstream babybuddy {
-     server unix:///var/run/uwsgi/app/babybuddy/socket;
+    upstream babubi {
+     server unix:///var/run/uwsgi/app/babubi/socket;
     }
 
     server {
      listen 80;
-     server_name babybuddy.example.com;
+     server_name babubi.example.com;
 
      location / {
-        uwsgi_pass babybuddy;
+        uwsgi_pass babubi;
         include uwsgi_params;
      }
 
      location /media {
-        alias /var/www/babybuddy/data/media;
+        alias /var/www/babubi/data/media;
      }
     }
     ```
@@ -292,15 +292,15 @@ and any number of children).
     configuration details.
 
     See [Subdirectory configuration](subdirectory.md) for additional configuration
-    required if Baby Buddy will be hosted in a subdirectory of another server.
+    required if Babubi will be hosted in a subdirectory of another server.
 
 13. Symlink config and restart NGINX:
 
     ```shell
-    sudo ln -s /etc/nginx/sites-available/babybuddy /etc/nginx/sites-enabled/babybuddy
+    sudo ln -s /etc/nginx/sites-available/babubi /etc/nginx/sites-enabled/babubi
     sudo service nginx restart
     ```
 
 14. That's it (hopefully)!
 
-See [HTTPS/SSL configuration](ssl.md) for information on how to secure Baby Buddy.
+See [HTTPS/SSL configuration](ssl.md) for information on how to secure Babubi.

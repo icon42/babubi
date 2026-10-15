@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  title: Baby Buddy API
+  title: Babubi API
   version: ""
 paths:
   /api/bmi/:

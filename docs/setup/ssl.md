@@ -5,20 +5,20 @@ Additional tools and configuration are required to add HTTPS support.
 
 ## Configuration requirements
 
-For either approach (host- or container-based) Baby Buddy's configuration will need to
+For either approach (host- or container-based) Babubi's configuration will need to
 be updated to account for the proxy. For details on these settings see [Proxy configuration](proxy.md).
 
 After configuring the proxy set the following two environment variables and then restart
 necessary services:
 
 ```ini
-CSRF_TRUSTED_ORIGINS=https://babybuddy.example.com
+CSRF_TRUSTED_ORIGINS=https://babubi.example.com
 SECURE_PROXY_SSL_HEADER=True
 ```
 
 ## Host-based proxy
 
-This guide assumes Baby Buddy has been deployed to a Debian-like system with
+This guide assumes Babubi has been deployed to a Debian-like system with
 [snapd installed](https://snapcraft.io/docs/installing-snapd) using the [example deployment](deployment.md#example-deployment)
 however this approach can also be used with a Docker deployment if having the proxy
 in the host is desired (otherwise see [Container-based proxy](#container-based-proxy)).
@@ -34,29 +34,29 @@ If NGINX is not already installed on the host system install it with a package m
 apt-get -y install nginx
 ```
 
-NGINX will be used to proxy HTTPS traffic to Baby Buddy. There are many other proxies
+NGINX will be used to proxy HTTPS traffic to Babubi. There are many other proxies
 available for this (often with Let's Encrypt support, as well) so a different one can
 be used if desired.
 
 #### Configure NGINX
 
-If Baby Buddy is running from Docker a new NGINX site will need to be created to send
-traffic to Docker. The configuration below uses the example domain `babybuddy.example.com`
-and assumes Docker has exposed Baby Buddy on port `8000` (the default configuration).
+If Babubi is running from Docker a new NGINX site will need to be created to send
+traffic to Docker. The configuration below uses the example domain `babubi.example.com`
+and assumes Docker has exposed Babubi on port `8000` (the default configuration).
 
 ```shell
-editor /etc/nginx/sites-available/babybuddy
+editor /etc/nginx/sites-available/babubi
 ```
 
 Initial configuration:
 
 ```nginx
 server_tokens               off;
-access_log                  /var/log/nginx/babybuddy.access.log;
-error_log                   /var/log/nginx/babybuddy.error.log;
+access_log                  /var/log/nginx/babubi.access.log;
+error_log                   /var/log/nginx/babubi.error.log;
 
 server {
-  server_name               babybuddy.example.com;
+  server_name               babubi.example.com;
   location / {
     proxy_pass              http://localhost:8000;
     proxy_set_header        Host $host;
@@ -67,11 +67,11 @@ server {
 Enable the new site:
 
 ```shell
-ln -s /etc/nginx/sites-available/babybuddy /etc/nginx/sites-enabled/babybuddy
+ln -s /etc/nginx/sites-available/babubi /etc/nginx/sites-enabled/babubi
 service nginx restart
 ```
 
-Confirm the site is not accessible at `http://babybuddy.example.com`. Note: Attempting
+Confirm the site is not accessible at `http://babubi.example.com`. Note: Attempting
 to log in will result in a CSRF error! This will be addressed after HTTPS has been
 established.
 
@@ -102,34 +102,34 @@ certbot --nginx
 service nginx restart
 ```
 
-Certbot should have updated the NGINX site configuration (`/etc/nginx/sites-available/babybuddy`)
+Certbot should have updated the NGINX site configuration (`/etc/nginx/sites-available/babubi`)
 to look something like this:
 
 ```nginx
 server_tokens               off;
-access_log                  /var/log/nginx/babybuddy.access.log;
-error_log                   /var/log/nginx/babybuddy.error.log;
+access_log                  /var/log/nginx/babubi.access.log;
+error_log                   /var/log/nginx/babubi.error.log;
 
 server {
-  server_name               babybuddy.example.com;
+  server_name               babubi.example.com;
   location / {
     proxy_pass              http://localhost:8000;
     proxy_set_header        Host $host;
   }
 
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/babybuddy.example.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/babybuddy.example.com/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/babubi.example.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/babubi.example.com/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 server {
-    if ($host = babybuddy.example.com) {
+    if ($host = babubi.example.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-  server_name               babybuddy.example.com;
+  server_name               babubi.example.com;
   listen                    80;
     return 404; # managed by Certbot
 }
@@ -140,7 +140,7 @@ instructive for how to add it to the NGINX site configuration.
 
 ## Container-based proxy
 
-If Baby Buddy is already hosted in a Docker container the proxy (NGINX) can be hosted
+If Babubi is already hosted in a Docker container the proxy (NGINX) can be hosted
 there as well. The configuration provided here assumes the `docker-compose.yml` example
 from the [Docker deployment method](deployment.md#docker) is used.
 
@@ -149,9 +149,9 @@ from the [Docker deployment method](deployment.md#docker) is used.
 Add the following `services` entry to `docker-compose.yml`:
 
 ```yaml
-babybuddy-nginx:
+babubi-nginx:
   image: nginx
-  container_name: babybuddy-nginx
+  container_name: babubi-nginx
   volumes:
     - /path/to/appdata/nginx.conf:/etc/nginx/conf.d/default.conf
     - /path/to/appdata/logs:/var/log/nginx
@@ -160,29 +160,29 @@ babybuddy-nginx:
     - 80:80
     - 443:443
   depends_on:
-    - babybuddy
+    - babubi
 ```
 
 Set the contents of `/path/to/appdata/nginx.conf` to:
 
 ```nginx
 server {
-    server_name         babybuddy.example.com;
+    server_name         babubi.example.com;
     listen              443 ssl;
-    ssl_certificate     /certs/babybuddy.example.com.crt;
-    ssl_certificate_key /certs/babybuddy.example.com.key;
+    ssl_certificate     /certs/babubi.example.com.crt;
+    ssl_certificate_key /certs/babubi.example.com.key;
     location / {
-        proxy_pass              http://babybuddy:8000;
+        proxy_pass              http://babubi:8000;
         proxy_set_header        Host $host;
     }
 }
 
 server {
-    if ($host = babybuddy.example.com) {
+    if ($host = babubi.example.com) {
         return 301 https://$host$request_uri;
     }
 
-    server_name         babybuddy.example.com;
+    server_name         babubi.example.com;
     listen              80;
     return 404;
 }

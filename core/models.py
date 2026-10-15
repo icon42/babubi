@@ -15,7 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager as TaggitTaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 
-from babybuddy.site_settings import NapSettings, FeedingSettings
+from babubi.site_settings import NapSettings, FeedingSettings
 from core.utils import random_color, timezone_aware_duration
 
 

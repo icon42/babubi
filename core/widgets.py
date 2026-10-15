@@ -18,7 +18,7 @@ class TagsEditor(widgets.Widget):
     """
 
     class Media:
-        js = ("babybuddy/js/tags_editor.js",)
+        js = ("babubi/js/tags_editor.js",)
 
     input_type = "hidden"
     template_name = "core/widget_tag_editor.html"
@@ -45,13 +45,13 @@ class TagsEditor(widgets.Widget):
         """
         Bootstrap integration adds form-control to the classes of the widget.
         This works only for "plain" input-based widgets however. In addition,
-        we need to add a custom class "babybuddy-tags-editor" for the javascript
+        we need to add a custom class "babubi-tags-editor" for the javascript
         file to detect the widget and take control of its contents.
         """
         attrs = super().build_attrs(base_attrs, extra_attrs)
         class_string = attrs.get("class", "")
         class_string = class_string.replace("form-control", "")
-        attrs["class"] = class_string + " babybuddy-tags-editor"
+        attrs["class"] = class_string + " babubi-tags-editor"
         return attrs
 
     def get_context(self, name: str, value: Any, attrs) -> Dict[str, Any]:

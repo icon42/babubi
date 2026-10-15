@@ -1,4 +1,4 @@
-{% extends "babybuddy/page.html" %}
+{% extends "babubi/page.html" %}
 {% load datetime i18n %}
 {% block title %}
     {% if request.resolver_match.url_name == "tag-update" %}
@@ -28,5 +28,5 @@
     {% else %}
         <h1>{% trans "Add a Tag" %}</h1>
     {% endif %}
-    {% include "babybuddy/form.html" %}
+    {% include "babubi/form.html" %}
 {% endblock %}

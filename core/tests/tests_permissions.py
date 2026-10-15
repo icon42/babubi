@@ -127,7 +127,7 @@ class PermissionCodenameTestCase(TestCase):
         existing = {f"{app}.{codename}" for app, codename in existing}
         pattern = re.compile(r"perms\.(core\.[a-z][a-z0-9_]*)")
         missing = set()
-        for app in ("babybuddy", "core", "dashboard", "reports"):
+        for app in ("babubi", "core", "dashboard", "reports"):
             templates = Path(settings.BASE_DIR) / app / "templates"
             if not templates.exists():
                 continue

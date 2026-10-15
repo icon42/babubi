@@ -2,9 +2,9 @@
 
 ## Definitions
 
-Baby Buddy's Gulp commands are defined in [`gulpfile.js`](https://github.com/babybuddy/babybuddy/tree/master/gulpfile.js).
+Babubi's Gulp commands are defined in [`gulpfile.js`](https://github.com/babybuddy/babybuddy/tree/master/gulpfile.js).
 
-Baby Buddy's management commands are defined in [`babybuddy/management/commands`](https://github.com/babybuddy/babybuddy/tree/master/babybuddy/management/commands).
+Babubi's management commands are defined in [`babubi/management/commands`](https://github.com/babybuddy/babybuddy/tree/master/babybuddy/management/commands).
 
 ## Commands
 
@@ -17,7 +17,7 @@ server IP address. See [`gulp runserver`](#runserver) for details.
 ### `build`
 
 Creates all script, style and "extra" assets and places them in the
-`babybuddy/static` folder.
+`babubi/static` folder.
 
 ### `docs:build`
 
@@ -41,7 +41,7 @@ static assets.
 ### `collectstatic`
 
 Executes Django's `collectstatic` management task. This task relies on files in
-the `babybuddy/static` folder, so generally `gulp build` should be run before
+the `babubi/static` folder, so generally `gulp build` should be run before
 this command for production deployments. Gulp also passes along
 non-overlapping arguments for this command, e.g. `--no-input`.
 
@@ -71,7 +71,7 @@ children and seven days of data for each.
 
 ### `format`
 
-Formats Baby Buddy's code base using [black](https://github.com/psf/black). Run this
+Formats Babubi's code base using [black](https://github.com/psf/black). Run this
 before commits to ensure linting will pass!
 
 ### `generateschema`
@@ -128,7 +128,7 @@ not need to be executed independently - see the `build` command.
 
 ### `test`
 
-Executes Baby Buddy's suite of tests.
+Executes Babubi's suite of tests.
 
 Gulp also passes along non-overlapping arguments for this command, however
 individual tests cannot be run with this command. `python manage.py test` can be
@@ -142,7 +142,7 @@ only needs to be run after making changes to the config file.
 
 ### `updatestatic`
 
-Rebuilds Baby Buddy's `/static` folder by running the following commands in
+Rebuilds Babubi's `/static` folder by running the following commands in
 order:
 
 - [`lint`](#lint)
@@ -150,5 +150,5 @@ order:
 - [`build`](#build)
 - [`collectstatic`](#collectstatic)
 
-Execute and commit changes made by this command whenever changing Baby Buddy's
+Execute and commit changes made by this command whenever changing Babubi's
 frontend code (SASS, JS, etc.).

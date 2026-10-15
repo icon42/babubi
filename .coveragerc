@@ -1,12 +1,12 @@
 [run]
 omit =
     */migrations/*
-    babybuddy/management/*
-    babybuddy/settings/*
-    babybuddy/wsgi.py
+    babubi/management/*
+    babubi/settings/*
+    babubi/wsgi.py
 source =
     api
-    babybuddy
+    babubi
     core
     dashboard
     reports

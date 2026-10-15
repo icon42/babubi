@@ -51,7 +51,7 @@ If this is set to `True`, the browser CSRF cookie will be marked as "secure", wh
 
 _Default:_ `None`
 
-If Baby Buddy is behind a proxy, you may need add all possible origins to this setting
+If Babubi is behind a proxy, you may need add all possible origins to this setting
 for form submission to work correctly. Separate multiple origins with commas.
 
 Each entry must contain both the scheme (http, https) and fully-qualified domain name.
@@ -73,7 +73,7 @@ _Default:_ `HTTP_REMOTE_USER`
 Sets the header to read the authenticated username from when
 `REVERSE_PROXY_AUTH` has been enabled.
 
-Baby Buddy modifies headers in the HTTP request; HTTP headers in the request have all characters converted to uppercase, replacing any hyphens with underscores and adding an HTTP\_ prefix to the name. For example `X-Auth-User` would be converted to `HTTP_X_AUTH_USER`.
+Babubi modifies headers in the HTTP request; HTTP headers in the request have all characters converted to uppercase, replacing any hyphens with underscores and adding an HTTP\_ prefix to the name. For example `X-Auth-User` would be converted to `HTTP_X_AUTH_USER`.
 
 **Example value**
 
@@ -102,7 +102,7 @@ ensure the headers are not forwarded from sources other than your proxy.
 
 _Default:_ `None`
 
-A random, unique string must be set as the "secret key" before Baby Buddy can
+A random, unique string must be set as the "secret key" before Babubi can
 be deployed and run.
 
 See also [Django's documentation on the SECRET_KEY setting](https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key).
@@ -111,7 +111,7 @@ See also [Django's documentation on the SECRET_KEY setting](https://docs.djangop
 
 _Default:_ `None`
 
-If Baby Buddy is behind a proxy, you may need to set this to `True` in order to
+If Babubi is behind a proxy, you may need to set this to `True` in order to
 trust the `X-Forwarded-Proto` header that comes from your proxy, and any time
 its value is "https". This guarantees the request is secure (i.e., it originally
 came in via HTTPS).

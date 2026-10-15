@@ -1,5 +1,5 @@
-{% extends "babybuddy/page.html" %}
-{% load babybuddy duration i18n timers %}
+{% extends "babubi/page.html" %}
+{% load babubi duration i18n timers %}
 {% get_child_count as CHILD_COUNT %}
 {% block title %}{{ object }}{% endblock %}
 {% block breadcrumbs %}
@@ -81,5 +81,5 @@
     </div>
 {% endblock %}
 {% block javascript %}
-    <script type="application/javascript">BabyBuddy.Timer.run({{ timer.id }}, 'timer-status');</script>
+    <script type="application/javascript">Babubi.Timer.run({{ timer.id }}, 'timer-status');</script>
 {% endblock %}

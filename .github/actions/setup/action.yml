@@ -1,5 +1,5 @@
 name: Setup
-description: Set up Baby Buddy environment and dependencies.
+description: Set up Babubi environment and dependencies.
 inputs:
   python-version:
     description: "What Python version to use."

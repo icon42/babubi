@@ -20,12 +20,12 @@ class ReadOnlyGroupPermissionsTestCase(TestCase):
     def test_group_exists(self):
         self.assertTrue(
             Group.objects.filter(
-                name=settings.BABY_BUDDY["READ_ONLY_GROUP_NAME"]
+                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
             ).exists()
         )
 
     def test_group_has_all_core_view_permissions(self):
-        group = Group.objects.get(name=settings.BABY_BUDDY["READ_ONLY_GROUP_NAME"])
+        group = Group.objects.get(name=settings.BABUBI["READ_ONLY_GROUP_NAME"])
         granted = set(group.permissions.values_list("codename", flat=True))
 
         expected = {
@@ -42,7 +42,7 @@ class ReadOnlyGroupPermissionsTestCase(TestCase):
             username="readonly", password="readonly", is_active=True
         )
         user.groups.add(
-            Group.objects.get(name=settings.BABY_BUDDY["READ_ONLY_GROUP_NAME"])
+            Group.objects.get(name=settings.BABUBI["READ_ONLY_GROUP_NAME"])
         )
         # Re-fetch so the permission cache picks up the new group.
         user = get_user_model().objects.get(username="readonly")
@@ -85,7 +85,7 @@ class CaregiverGroupPermissionsTestCase(TestCase):
     }
 
     def setUp(self):
-        self.group = Group.objects.get(name=settings.BABY_BUDDY["CAREGIVER_GROUP_NAME"])
+        self.group = Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
 
     def test_fresh_group_has_exact_default_permissions(self):
         self.assertEqual(self.group.permissions.count(), 28)
@@ -111,7 +111,7 @@ class CaregiverGroupPermissionsTestCase(TestCase):
             (add_read_only_group_permissions, "READ_ONLY_GROUP_NAME"),
         ):
             with self.subTest(group=group_name):
-                group = Group.objects.get(name=settings.BABY_BUDDY[group_name])
+                group = Group.objects.get(name=settings.BABUBI[group_name])
                 group.permissions.clear()
                 sync(sender=None)
                 self.assertIn(core_permission, group.permissions.all())

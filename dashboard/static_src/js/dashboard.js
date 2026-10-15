@@ -1,9 +1,9 @@
-/* Baby Buddy Dashboard
+/* Babubi Dashboard
  *
  * Provides a "watch" function to update the dashboard at one minute intervals
  * and/or on visibility state changes.
  */
-BabyBuddy.Dashboard = (function ($) {
+Babubi.Dashboard = (function ($) {
   var runIntervalId = null;
   var dashboardElement = null;
   var hidden = null;
@@ -13,7 +13,7 @@ BabyBuddy.Dashboard = (function ($) {
       dashboardElement = $("#" + element_id);
 
       if (dashboardElement.length == 0) {
-        console.error("Baby Buddy: Dashboard element not found.");
+        console.error("Babubi: Dashboard element not found.");
         return false;
       }
 

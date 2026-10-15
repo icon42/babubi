@@ -1,5 +1,5 @@
 {
-  "name": "babybuddy",
+  "name": "babubi",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
@@ -33,7 +33,7 @@
     }
   },
   "containerEnv": {
-    "DJANGO_SETTINGS_MODULE": "babybuddy.settings.development",
+    "DJANGO_SETTINGS_MODULE": "babubi.settings.development",
     "PIPENV_VENV_IN_PROJECT": "1"
   },
   "postCreateCommand": "pipenv install --dev && npm install --include=dev && gulp migrate",

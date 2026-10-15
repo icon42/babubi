@@ -1,4 +1,4 @@
-/* Baby Buddy Timer
+/* Babubi Timer
  *
  * Uses a supplied ID to run a timer. The element using the ID must have
  * three children with the following classes:
@@ -6,7 +6,7 @@
  *  * timer-minutes
  *  * timer-hours
  */
-BabyBuddy.Timer = (function ($) {
+Babubi.Timer = (function ($) {
   var runIntervalId = null;
   var timerId = null;
   var timerElement = null;

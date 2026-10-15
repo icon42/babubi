@@ -1,4 +1,4 @@
-{% extends "babybuddy/page.html" %}
+{% extends "babubi/page.html" %}
 {% load i18n imagekit static widget_tweaks %}
 {% block title %}
     {% trans "Children" %}
@@ -15,7 +15,7 @@
             </a>
         {% endif %}
     </h1>
-    {% include "babybuddy/filter.html" %}
+    {% include "babubi/filter.html" %}
     <div class="table-responsive">
         <table class="table table-borderless table-striped table-hover align-middle">
             <thead>
@@ -36,7 +36,7 @@
                             {% if child.picture %}
                                 {% include "core/child_thumbnail.html" %}
                             {% else %}
-                                <img src="{% static 'babybuddy/img/core/child-placeholder.png' %}"
+                                <img src="{% static 'babubi/img/core/child-placeholder.png' %}"
                                      width="40"
                                      height="40"
                                      class="img-fluid rounded-circle" />
@@ -74,5 +74,5 @@
             </tbody>
         </table>
     </div>
-    {% include "babybuddy/paginator.html" %}
+    {% include "babubi/paginator.html" %}
 {% endblock %}

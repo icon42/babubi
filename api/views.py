@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
 
 from core import models
-from babybuddy import models as babybuddy_models
+from babubi import models as babubi_models
 
 from . import serializers, filters
 
@@ -170,12 +170,12 @@ class ProfileView(views.APIView):
     action = "get"
     basename = "profile"
 
-    queryset = babybuddy_models.Settings.objects.all()
+    queryset = babubi_models.Settings.objects.all()
     serializer_class = serializers.ProfileSerializer
 
     def get(self, request):
         settings = get_object_or_404(
-            babybuddy_models.Settings.objects, user=request.user
+            babubi_models.Settings.objects, user=request.user
         )
         serializer = self.serializer_class(settings)
         return Response(serializer.data)

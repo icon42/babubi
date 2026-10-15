@@ -12,8 +12,8 @@ from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
-from babybuddy.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from babybuddy.views import BabyBuddyFilterView, BabyBuddyPaginatedView
+from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from babubi.views import BabubiFilterView, BabubiPaginatedView
 from core import filters, forms, models, timeline
 
 
@@ -92,7 +92,7 @@ class CoreDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
         }
 
 
-class BMIList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class BMIList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.BMI
     template_name = "core/bmi_list.html"
     permission_required = ("core.view_bmi",)
@@ -119,7 +119,7 @@ class BMIDelete(CoreDeleteView):
     success_url = reverse_lazy("core:bmi-list")
 
 
-class ChildList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class ChildList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Child
     template_name = "core/child_list.html"
     permission_required = ("core.view_child",)
@@ -169,7 +169,7 @@ class ChildDelete(CoreUpdateView):
 
 
 class DiaperChangeList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.DiaperChange
     template_name = "core/diaperchange_list.html"
@@ -197,7 +197,7 @@ class DiaperChangeDelete(CoreDeleteView):
     success_url = reverse_lazy("core:diaperchange-list")
 
 
-class FeedingList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class FeedingList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Feeding
     template_name = "core/feeding_list.html"
     permission_required = ("core.view_feeding",)
@@ -232,7 +232,7 @@ class FeedingDelete(CoreDeleteView):
 
 
 class HeadCircumferenceList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.HeadCircumference
     template_name = "core/head_circumference_list.html"
@@ -263,7 +263,7 @@ class HeadCircumferenceDelete(CoreDeleteView):
     success_url = reverse_lazy("core:head-circumference-list")
 
 
-class HeightList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class HeightList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Height
     template_name = "core/height_list.html"
     permission_required = ("core.view_height",)
@@ -291,7 +291,7 @@ class HeightDelete(CoreDeleteView):
 
 
 class MedicationList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.Medication
     template_name = "core/medication_list.html"
@@ -319,7 +319,7 @@ class MedicationDelete(CoreDeleteView):
     success_url = reverse_lazy("core:medication-list")
 
 
-class NoteList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class NoteList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Note
     template_name = "core/note_list.html"
     permission_required = ("core.view_note",)
@@ -346,7 +346,7 @@ class NoteDelete(CoreDeleteView):
     success_url = reverse_lazy("core:note-list")
 
 
-class PumpingList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class PumpingList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Pumping
     template_name = "core/pumping_list.html"
     permission_required = ("core.view_pumping",)
@@ -375,7 +375,7 @@ class PumpingDelete(CoreDeleteView):
     success_url = reverse_lazy("core:pumping-list")
 
 
-class SleepList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class SleepList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Sleep
     template_name = "core/sleep_list.html"
     permission_required = ("core.view_sleep",)
@@ -403,7 +403,7 @@ class SleepDelete(CoreDeleteView):
 
 
 class TagAdminList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.Tag
     template_name = "core/tag_list.html"
@@ -465,7 +465,7 @@ class TagAdminDelete(CoreDeleteView):
 
 
 class TemperatureList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.Temperature
     template_name = "core/temperature_list.html"
@@ -514,7 +514,7 @@ class Timeline(LoginRequiredMixin, TemplateView):
         return context
 
 
-class TimerList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class TimerList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Timer
     template_name = "core/timer_list.html"
     permission_required = ("core.view_timer",)
@@ -598,7 +598,7 @@ class TimerDelete(CoreDeleteView):
 
 
 class TummyTimeList(
-    PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView
+    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
 ):
     model = models.TummyTime
     template_name = "core/tummytime_list.html"
@@ -626,7 +626,7 @@ class TummyTimeDelete(CoreDeleteView):
     success_url = reverse_lazy("core:tummytime-list")
 
 
-class WeightList(PermissionRequiredMixin, BabyBuddyPaginatedView, BabyBuddyFilterView):
+class WeightList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Weight
     template_name = "core/weight_list.html"
     permission_required = ("core.view_weight",)

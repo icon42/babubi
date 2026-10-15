@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 
-from babybuddy.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from core.models import Child
 
 
@@ -16,7 +16,7 @@ class Dashboard(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         children = Child.objects.count()
         if children == 0:
-            return HttpResponseRedirect(reverse("babybuddy:welcome"))
+            return HttpResponseRedirect(reverse("babubi:welcome"))
         elif children == 1:
             return HttpResponseRedirect(
                 reverse("dashboard:dashboard-child", args={Child.objects.first().slug})

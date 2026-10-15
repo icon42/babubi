@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from taggit.forms import TagField, TagWidgetMixin
 
-from babybuddy.widgets import DateInput, DateTimeInput, TimeInput
+from babubi.widgets import DateInput, DateTimeInput, TimeInput
 from core import models
 from core.models import Timer
 from core.widgets import TagsEditor, ChildRadioSelect, PillRadioSelect
@@ -308,7 +308,7 @@ class ChildForm(forms.ModelForm):
     class Meta:
         model = models.Child
         fields = ["first_name", "last_name", "birth_date", "birth_time"]
-        if settings.BABY_BUDDY["ALLOW_UPLOADS"]:
+        if settings.BABUBI["ALLOW_UPLOADS"]:
             fields.append("picture")
         widgets = {
             "birth_date": DateInput(),
@@ -497,7 +497,7 @@ class NoteForm(CoreModelForm, TaggableModelForm):
     class Meta:
         model = models.Note
         fields = ["child", "note", "time", "tags"]
-        if settings.BABY_BUDDY["ALLOW_UPLOADS"]:
+        if settings.BABUBI["ALLOW_UPLOADS"]:
             fields.insert(2, "image")
         widgets = {
             "child": ChildRadioSelect,

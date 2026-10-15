@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework import authentication, exceptions
 
-from babybuddy.models import access_expired
+from babubi.models import access_expired
 
 
 class TokenAuthentication(authentication.TokenAuthentication):

@@ -1,11 +1,11 @@
-const basePath = "babybuddy/static/babybuddy/";
+const basePath = "babubi/static/babubi/";
 
 const config = {
   basePath: basePath,
   extrasConfig: {
     fonts: {
       dest: basePath + "font/",
-      files: "babybuddy/static_src/fontello/font/*",
+      files: "babubi/static_src/fontello/font/*",
     },
     images: {
       dest: basePath + "img/",
@@ -13,16 +13,16 @@ const config = {
     },
     logo: {
       dest: basePath + "logo/",
-      files: "babybuddy/static_src/logo/**/*",
+      files: "babubi/static_src/logo/**/*",
     },
     root: {
       dest: basePath + "root/",
-      files: "babybuddy/static_src/root/*",
+      files: "babubi/static_src/root/*",
     },
   },
   glyphFontConfig: {
-    configFile: "babybuddy/static_src/fontello/config.json",
-    dest: "babybuddy/static_src/fontello",
+    configFile: "babubi/static_src/fontello/config.json",
+    dest: "babubi/static_src/fontello",
   },
   scriptsConfig: {
     dest: basePath + "js/",
@@ -63,22 +63,22 @@ const config = {
       "node_modules/plotly.js/dist/plotly-locale-zh-tw.js",
     ],
     app: [
-      "babybuddy/static_src/js/babybuddy.js",
+      "babubi/static_src/js/babubi.js",
       "core/static_src/js/*.js",
       "dashboard/static_src/js/*.js",
     ],
-    tags_editor: ["babybuddy/static_src/js/tags_editor.js"],
+    tags_editor: ["babubi/static_src/js/tags_editor.js"],
   },
   stylesConfig: {
     dest: basePath + "css/",
-    app: "babybuddy/static_src/scss/babybuddy.scss",
-    ignore: ["babybuddy.scss"],
+    app: "babubi/static_src/scss/babubi.scss",
+    ignore: ["babubi.scss"],
   },
   testsConfig: {
-    isolated: ["babybuddy.tests.tests_views.ViewsTestCase.test_password_reset"],
+    isolated: ["babubi.tests.tests_views.ViewsTestCase.test_password_reset"],
   },
   watchConfig: {
-    scriptsGlob: ["*/static_src/js/**/*.js", "!babybuddy/static/js/"],
+    scriptsGlob: ["*/static_src/js/**/*.js", "!babubi/static/js/"],
     stylesGlob: ["*/static_src/scss/**/*.scss"],
   },
 };

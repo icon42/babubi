@@ -1,6 +1,6 @@
 # API
 
-Baby Buddy uses the [Django REST Framework](https://www.django-rest-framework.org/)
+Babubi uses the [Django REST Framework](https://www.django-rest-framework.org/)
 (DRF) to provide a REST API.
 
 The only requirement for (most) requests is to set the `Authorization` header as

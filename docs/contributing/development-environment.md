@@ -3,10 +3,10 @@
 ## [Dev Container](https://containers.dev/)
 
 1. Add Dev Container support to your preferred IDE: https://containers.dev/supporting
-2. Clone the Baby Buddy repo
+2. Clone the Babubi repo
 3. Open the cloned repo in the dev container
 
-Run `gulp` to start the Baby Buddy development server.
+Run `gulp` to start the Babubi development server.
 
 ### Debugging in VSCode
 
@@ -64,7 +64,7 @@ To debug in devenv + vscode/codespaces:
 7. Set, at least, the `DJANGO_SETTINGS_MODULE` environment variable
 
    ```shell
-   export DJANGO_SETTINGS_MODULE=babybuddy.settings.development
+   export DJANGO_SETTINGS_MODULE=babubi.settings.development
    ```
 
    This process will differ based on the host OS. The above example is for

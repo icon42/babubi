@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from babybuddy.models import Settings
+from babubi.models import Settings
 from core import models
 from dashboard.templatetags import cards
 

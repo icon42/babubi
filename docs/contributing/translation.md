@@ -2,14 +2,14 @@
 
 ## POEditor
 
-Baby Buddy uses [POEditor](https://poeditor.com/) for translation contributions.
-Interested contributors can [join translation of Baby Buddy](https://poeditor.com/join/project/QwQqrpTIzn)
+Babubi uses [POEditor](https://poeditor.com/) for translation contributions.
+Interested contributors can [join translation of Babubi](https://poeditor.com/join/project/QwQqrpTIzn)
 for access to a simple, web-based frontend for adding/editing translation files
 to the project.
 
 ## Manual
 
-Baby Buddy has support for translation/localization. A manual translation
+Babubi has support for translation/localization. A manual translation
 process will look something like this:
 
 1. Set up a development environment (see [Development environment](development-environment.md)).
@@ -30,7 +30,7 @@ process will look something like this:
    compile an optimized translation file (`locale/xx/LC_MESSAGES/django.mo`).
 
 6. To expose the new translation as a user setting, add the locale code to the
-   `LANGUAGES` array in the base settings file (`babybuddy/settings/base.py`).
+   `LANGUAGES` array in the base settings file (`babubi/settings/base.py`).
 
 7. Check if Plotly offers a translation (in `node_modules/plotly.js/dist/`) for
    the language. If it does:

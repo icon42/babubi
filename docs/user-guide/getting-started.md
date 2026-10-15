@@ -8,10 +8,10 @@
 
 ## Dashboard
 
-![Baby Buddy child dashboard](../assets/images/dashboard.png)
+![Babubi child dashboard](../assets/images/dashboard.png)
 
-The Baby Buddy dashboard can be reached by selecting Dashboard on the menu or by
-selecting the Baby Buddy icon in the upper left of the menu. The Dashboard lists
+The Babubi dashboard can be reached by selecting Dashboard on the menu or by
+selecting the Babubi icon in the upper left of the menu. The Dashboard lists
 an overview of all elements related to your child, including:
 
 - Last feeding is the time from the start of the last feed and how/where the milk came from (a bottle, or breast).
@@ -30,7 +30,7 @@ Select the title of any of the cards to see more details.
 
 ## Timeline
 
-![Baby Buddy child timeline](../assets/images/timeline.png)
+![Babubi child timeline](../assets/images/timeline.png)
 
 The timeline page lists all your child's activities over time. On the left (or
 top on mobile view) is an image of your baby, their name, date of birth, age and
@@ -41,7 +41,7 @@ ability to edit any entry.
 
 ## Measurements
 
-![Baby Buddy measurements menu](../assets/images/menu_measurements.png)
+![Babubi measurements menu](../assets/images/menu_measurements.png)
 
 The Measurements menu provides the option to view and track your baby's
 measurements of temperature, weight, height, head circumference and BMI.
@@ -53,7 +53,7 @@ Add a specific measurement by selecting the add or + measurement.
 
 ## Activities
 
-![Baby Buddy activites menu](../assets/images/menu_activities.png)
+![Babubi activites menu](../assets/images/menu_activities.png)
 
 The Activities menu provides the option to view and track your baby's activities
 such as diaper changes, feedings, sleep, and tummy time.
@@ -66,7 +66,7 @@ information.
 
 ## Timers
 
-![Baby Buddy timers menu](../assets/images/menu_timers.png)
+![Babubi timers menu](../assets/images/menu_timers.png)
 
 The Timers menu provides the option to start timers or view all current timers.
 

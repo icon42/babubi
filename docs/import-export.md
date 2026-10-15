@@ -1,13 +1,13 @@
 # Import/Export
 
-Baby Buddy uses the [django-import-export application](https://django-import-export.readthedocs.io/)
+Babubi uses the [django-import-export application](https://django-import-export.readthedocs.io/)
 to provide import and export functionality.
 
 ## Export
 
-Export actions are accessible from Baby Buddy's "Database Admin" area (the
+Export actions are accessible from Babubi's "Database Admin" area (the
 Django admin interface). For example, to export all diaper change entries from
-Baby Buddy as an Excel file:
+Babubi as an Excel file:
 
 1. Log in as a user with "staff" access.
 
@@ -27,7 +27,7 @@ or many individual records and select "Export selected Diaper Changes" from the
 
 ## Import
 
-Import actions are accessible from Baby Buddy's "Database Admin" area (the
+Import actions are accessible from Babubi's "Database Admin" area (the
 Django admin interface). From the list of entry types in the Database Admin,
 select the type to import and click the "Import" button on the list page. The
 import screen for a particular type will list the fields generally expected to

@@ -2,7 +2,7 @@ provider "google" {
   region = var.region
 }
 
-resource "google_project" "baby_buddy" {
+resource "google_project" "babubi" {
   name                = var.project_name
   project_id          = var.project_id
   billing_account     = var.billing_account
@@ -19,7 +19,7 @@ locals {
 
 resource "google_project_service" "project_services" {
   for_each                   = local.services
-  project                    = google_project.baby_buddy.project_id
+  project                    = google_project.babubi.project_id
   service                    = each.value
   disable_on_destroy         = true
   disable_dependent_services = true
@@ -53,8 +53,8 @@ resource "random_password" "django_secret_key" {
   }
 }
 
-resource "google_sql_database_instance" "baby_buddy" {
-  name             = "babybuddy"
+resource "google_sql_database_instance" "babubi" {
+  name             = "babubi"
   database_version = "POSTGRES_15"
   root_password    = random_password.root_password.result
   settings {
@@ -75,7 +75,7 @@ resource "google_sql_database_instance" "baby_buddy" {
 
 resource "google_secret_manager_secret" "postgres_password" {
   secret_id = "postgres-password"
-  project   = google_project.baby_buddy.project_id
+  project   = google_project.babubi.project_id
   replication {
     auto {}
   }
@@ -83,19 +83,19 @@ resource "google_secret_manager_secret" "postgres_password" {
 
 resource "google_secret_manager_secret_version" "postgres_password" {
   secret      = google_secret_manager_secret.postgres_password.name
-  secret_data = google_sql_database_instance.baby_buddy.root_password
+  secret_data = google_sql_database_instance.babubi.root_password
 }
 
 resource "google_secret_manager_secret_iam_member" "postgres_password" {
   secret_id  = google_secret_manager_secret.postgres_password.id
   role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${google_project.baby_buddy.number}-compute@developer.gserviceaccount.com"
+  member     = "serviceAccount:${google_project.babubi.number}-compute@developer.gserviceaccount.com"
   depends_on = [google_secret_manager_secret.postgres_password]
 }
 
 resource "google_secret_manager_secret" "django_secret_key" {
   secret_id = "django-secret-key"
-  project   = google_project.baby_buddy.project_id
+  project   = google_project.babubi.project_id
   replication {
     auto {}
   }
@@ -109,15 +109,15 @@ resource "google_secret_manager_secret_version" "django_secret_key" {
 resource "google_secret_manager_secret_iam_member" "django_secret_key" {
   secret_id  = google_secret_manager_secret.django_secret_key.name
   role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${google_project.baby_buddy.number}-compute@developer.gserviceaccount.com"
+  member     = "serviceAccount:${google_project.babubi.number}-compute@developer.gserviceaccount.com"
   depends_on = [google_secret_manager_secret.django_secret_key]
 }
 
-resource "google_cloud_run_v2_service" "baby_buddy" {
-  name     = "babybuddy"
+resource "google_cloud_run_v2_service" "babubi" {
+  name     = "babubi"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_ALL"
-  project  = google_project.baby_buddy.project_id
+  project  = google_project.babubi.project_id
 
   template {
     scaling {
@@ -127,17 +127,17 @@ resource "google_cloud_run_v2_service" "baby_buddy" {
     volumes {
       name = "cloudsql"
       cloud_sql_instance {
-        instances = [google_sql_database_instance.baby_buddy.connection_name]
+        instances = [google_sql_database_instance.babubi.connection_name]
       }
     }
 
     containers {
-      name  = "babybuddy-1"
-      image = "docker.io/linuxserver/babybuddy:latest"
+      name  = "babubi-1"
+      image = "docker.io/linuxserver/babubi:latest"
 
       env {
         name  = "DB_HOST"
-        value = "/cloudsql/${google_project.baby_buddy.project_id}:${var.region}:${google_sql_database_instance.baby_buddy.name}"
+        value = "/cloudsql/${google_project.babubi.project_id}:${var.region}:${google_sql_database_instance.babubi.name}"
       }
       env {
         name  = "DB_USER"

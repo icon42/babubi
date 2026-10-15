@@ -29,7 +29,7 @@ Port to use for the SMTP server defined in `EMAIL_HOST`.
 
 _Default:_ `<EMAIL_HOST_USER>` or `webmaster@localhost`
 
-The sender of the email . Can be an email, or name and email : `Baby buddy <babybuddy@example.com>` .
+The sender of the email . Can be an email, or name and email : `Babubi <babubi@example.com>` .
 
 ## `EMAIL_USE_TLS`
 
