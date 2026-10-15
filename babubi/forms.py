@@ -92,9 +92,7 @@ class BabubiUserForm(forms.ModelForm):
             user.save()
             user.settings.access_expires = self.cleaned_data.get("access_expires")
             user.settings.save(update_fields=["access_expires"])
-        readonly_group = Group.objects.get(
-            name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-        )
+        readonly_group = Group.objects.get(name=settings.BABUBI["READ_ONLY_GROUP_NAME"])
         caregiver_group = Group.objects.get(
             name=settings.BABUBI["CAREGIVER_GROUP_NAME"]
         )

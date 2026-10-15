@@ -123,9 +123,7 @@ class FormsTestCase(TestCase):
         self.assertTrue(user.is_superuser)
         self.assertFalse(user.is_staff)
         self.assertFalse(
-            user.groups.filter(
-                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
         )
 
     def test_add_staff_user(self):
@@ -143,9 +141,7 @@ class FormsTestCase(TestCase):
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
         self.assertFalse(
-            user.groups.filter(
-                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
         )
 
     def test_add_read_only_user(self):
@@ -163,9 +159,7 @@ class FormsTestCase(TestCase):
         self.assertFalse(user.is_superuser)
         self.assertFalse(user.is_staff)
         self.assertTrue(
-            user.groups.filter(
-                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
         )
 
     def test_add_caregiver_user(self):
@@ -186,9 +180,7 @@ class FormsTestCase(TestCase):
         self.assertFalse(user.is_superuser)
         self.assertFalse(user.is_staff)
         self.assertTrue(
-            user.groups.filter(
-                name=settings.BABUBI["CAREGIVER_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["CAREGIVER_GROUP_NAME"]).exists()
         )
         self.assertTrue(user.has_perm("core.add_feeding"))
         self.assertTrue(user.has_perm("core.add_diaperchange"))
@@ -272,14 +264,10 @@ class FormsTestCase(TestCase):
         self.assertTrue(user.is_staff)
         self.assertFalse(user.is_superuser)
         self.assertTrue(
-            user.groups.filter(
-                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
         )
         self.assertFalse(
-            user.groups.filter(
-                name=settings.BABUBI["CAREGIVER_GROUP_NAME"]
-            ).exists()
+            user.groups.filter(name=settings.BABUBI["CAREGIVER_GROUP_NAME"]).exists()
         )
 
     def test_edit_user_to_caregiver(self):

@@ -19,9 +19,7 @@ class ReadOnlyGroupPermissionsTestCase(TestCase):
 
     def test_group_exists(self):
         self.assertTrue(
-            Group.objects.filter(
-                name=settings.BABUBI["READ_ONLY_GROUP_NAME"]
-            ).exists()
+            Group.objects.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
         )
 
     def test_group_has_all_core_view_permissions(self):
@@ -41,9 +39,7 @@ class ReadOnlyGroupPermissionsTestCase(TestCase):
         user = get_user_model().objects.create_user(
             username="readonly", password="readonly", is_active=True
         )
-        user.groups.add(
-            Group.objects.get(name=settings.BABUBI["READ_ONLY_GROUP_NAME"])
-        )
+        user.groups.add(Group.objects.get(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]))
         # Re-fetch so the permission cache picks up the new group.
         user = get_user_model().objects.get(username="readonly")
 

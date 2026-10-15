@@ -168,9 +168,7 @@ class ChildDelete(CoreUpdateView):
         return success_message % cleaned_data
 
 
-class DiaperChangeList(
-    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
-):
+class DiaperChangeList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.DiaperChange
     template_name = "core/diaperchange_list.html"
     permission_required = ("core.view_diaperchange",)
@@ -290,9 +288,7 @@ class HeightDelete(CoreDeleteView):
     success_url = reverse_lazy("core:height-list")
 
 
-class MedicationList(
-    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
-):
+class MedicationList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Medication
     template_name = "core/medication_list.html"
     permission_required = ("core.view_medication",)
@@ -402,9 +398,7 @@ class SleepDelete(CoreDeleteView):
     success_url = reverse_lazy("core:sleep-list")
 
 
-class TagAdminList(
-    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
-):
+class TagAdminList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Tag
     template_name = "core/tag_list.html"
     permission_required = ("core.view_tag",)
@@ -464,9 +458,7 @@ class TagAdminDelete(CoreDeleteView):
         return qs.annotate(Count("core_tagged_items"))
 
 
-class TemperatureList(
-    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
-):
+class TemperatureList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.Temperature
     template_name = "core/temperature_list.html"
     permission_required = ("core.view_temperature",)
@@ -597,9 +589,7 @@ class TimerDelete(CoreDeleteView):
     success_url = reverse_lazy("core:timer-list")
 
 
-class TummyTimeList(
-    PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView
-):
+class TummyTimeList(PermissionRequiredMixin, BabubiPaginatedView, BabubiFilterView):
     model = models.TummyTime
     template_name = "core/tummytime_list.html"
     permission_required = ("core.view_tummytime",)
