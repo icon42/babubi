@@ -43,5 +43,20 @@
 }
 
 .navbar {
-    background-color: var(--bs-dark);
+    background-color: $navbar-bg;
+    border-bottom: 1px solid var(--bs-border-color);
+    box-shadow: 0 1px 4px rgba($black, .05);
+}
+
+// Logos drawn for a light or a dark background follow the active theme.
+// Important, so it also wins over display utilities such as d-lg-inline-block.
+[data-bs-theme="dark"] .brand-logo_on-light,
+[data-bs-theme="light"] .brand-logo_on-dark {
+    display: none !important;
+}
+
+// Error pages show the symbol without its colours.
+.brand-icon_sad {
+    filter: grayscale(1);
+    opacity: .6;
 }

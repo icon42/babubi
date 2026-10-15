@@ -3,12 +3,12 @@
   "short_name": "Babubi",
   "icons": [
     {
-      "src": "android-chrome-192x192.png?v=20211218",
+      "src": "android-chrome-192x192.png?v=20261015",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "android-chrome-512x512.png?v=20211218",
+      "src": "android-chrome-512x512.png?v=20261015",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -16,8 +16,8 @@
   "lang": "en-US",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#37abe9",
-  "background_color": "#212529",
+  "theme_color": "#ffffff",
+  "background_color": "#f3f4f6",
   "shortcuts": [
     {
       "name": "Start a timer",

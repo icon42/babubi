@@ -1,4 +1,4 @@
-<img src="babubi/static_src/logo/icon.png" height="150" align="left">
+<img src="babubi/static_src/logo/logo.svg" height="80" alt="Babubi">
 
 # Babubi
 
