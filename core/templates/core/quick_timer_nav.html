@@ -1,7 +1,7 @@
 {% load i18n %}
 {% if children.count > 1 %}
     <div class="dropdown show">
-        <a class="m-0 p-0 text-success"
+        <a class="m-0 p-0 text-secondary"
            title="{% trans "Quick Start Timer" %}"
            href="#"
            role="button"
@@ -35,7 +35,7 @@
           method="post"
           class="mr-2">
         {% csrf_token %}
-        <button class="btn m-0 p-0 text-success"
+        <button class="btn m-0 p-0 text-secondary"
                 type="submit"
                 aria-label="{% trans "Quick Start Timer" %}">
             <i class="icon-2x icon-timer" aria-hidden="true"></i>

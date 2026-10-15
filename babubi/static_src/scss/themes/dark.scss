@@ -1,0 +1,16 @@
+@include color-mode("dark") {
+    // Activity cards (dashboard/static_src/scss/cards.scss): titles mixed
+    // with white stay readable on the dark surface.
+    --card-surface: var(--bs-secondary-bg);
+    --card-shadow: none;
+    --card-accent-mix: 70%;
+
+    table {
+        --bs-table-striped-bg: var(--bs-secondary-bg);
+    }
+
+    .navbar {
+        background-color: $navbar-bg-dark;
+        box-shadow: none;
+    }
+}

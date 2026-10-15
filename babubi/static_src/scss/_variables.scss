@@ -16,16 +16,55 @@ $gray-800: #343a40;
 $gray-900: #212529;
 $black: #000;
 
-$primary: #37abe9;
-$danger: #a72431;
+// Brand palette (_mat/brand guide): violet, dark lilac and coral.
+$brand-violet: #6366f1;
+$brand-lilac: #351c57;
+$brand-coral: #f47785;
+
+$primary: $brand-violet;
+$danger: #d9434f;
 $error: $danger;
-$secondary: #ff8f00;
-$warning: #ffbe42;
-$success: #239556;
-$debug: #5abccc;
-$info: #44c4dd;
-$light: $gray-100;
-$dark: $gray-800;
+$secondary: $brand-coral;
+$warning: #f2b443;
+// Add buttons and confirmations use the brand violet instead of green.
+$success: $brand-violet;
+$debug: #8b8ef5;
+$info: #8b8ef5;
+$light: #f4f3fb;
+$dark: $brand-lilac;
+
+// Diaper changes: a blue next to the brand violet (white text 4.86:1).
+$diaper-color: #4566e8;
+
+// Tummy time: a purple between the brand violet and lilac (white text 4.87:1),
+// so its cards do not look like the violet feeding ones.
+$tummytime-color: #8352e6;
+
+// Accent of the cards that belong to no activity (notes, timers, statistics).
+$card-neutral-color: #7a7590;
+
+// White text on the brand violet is 4.47:1; keep it white on buttons.
+$min-contrast-ratio: 4.4;
+
+// Light mode: a neutral grey page with white cards and navigation bar, and
+// text and secondary surfaces tinted towards the brand lilac.
+$body-bg: #f3f4f6;
+$body-color: #2b1b45;
+$body-secondary-bg: #eceaf7;
+$body-tertiary-bg: #f1effa;
+$headings-color: $brand-lilac;
+$navbar-bg: $white;
+
+// Dark mode: slate blue surfaces, which keep the activity colours readable.
+$body-bg-dark: #0f172a;
+$body-color-dark: #e2e8f0;
+$body-secondary-bg-dark: #1e293b;
+$body-tertiary-bg-dark: #172033;
+$border-color-dark: #334155;
+$headings-color-dark: #f1f5f9;
+$link-color-dark: #a5a8fa;
+$link-hover-color-dark: #c7c9fc;
+$navbar-bg-dark: #0b1120;
 
 // Breadcrumbs
 
@@ -44,7 +83,7 @@ $component-active-bg: $primary;
 
 // Links
 
-$link-color: $info;
+$link-color: $primary;
 $link-decoration: none;
 $link-hover-color: color.adjust($link-color, $lightness: -15%);
 

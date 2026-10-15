@@ -3,12 +3,28 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 {% get_current_locale as LOCALE %}
 {% get_current_timezone as TIMEZONE %}
+{% firstof user.settings.theme "auto" as theme %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
-      data-bs-theme="{{ user.settings.theme|default:'dark' }}"
+      data-bs-theme="{% if theme == "auto" %}light{% else %}{{ theme }}{% endif %}"
+      data-theme-preference="{{ theme }}"
       dir="{{ LANGUAGE_BIDI|yesno:"rtl,ltr" }}">
     <head>
         <meta charset="utf-8" />
+        <script>
+            // Resolve the "auto" theme before the page paints, and follow
+            // later changes of the system preference.
+            (function () {
+                var root = document.documentElement;
+                if (root.dataset.themePreference !== "auto") return;
+                var query = window.matchMedia("(prefers-color-scheme: dark)");
+                var apply = function () {
+                    root.dataset.bsTheme = query.matches ? "dark" : "light";
+                };
+                apply();
+                query.addEventListener("change", apply);
+            })();
+        </script>
         <title>
             {% block title %}{% endblock %}
         | Babubi</title>

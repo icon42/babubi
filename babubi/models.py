@@ -123,9 +123,11 @@ class Settings(models.Model):
         # Built-in themes, plus any extra theme file in scss/themes. Sorted
         # and deduplicated so the choices are stable across systems (and
         # migrations do not drift); glob() also tolerates a missing folder.
+        # "auto" follows the light or dark preference of the browser.
         choices=[
-            ("dark", _("Dark")),
+            ("auto", _("Automatic")),
             ("light", _("Light")),
+            ("dark", _("Dark")),
         ]
         + [
             (path.stem, path.stem.capitalize())
@@ -134,9 +136,9 @@ class Settings(models.Model):
                     "*.scss"
                 )
             )
-            if path.stem not in ("dark", "light")
+            if path.stem not in ("auto", "dark", "light")
         ],
-        default="dark",
+        default="auto",
         max_length=100,
         verbose_name=_("Theme"),
     )

@@ -1,7 +1,8 @@
 {% extends "babubi/base.html" %}
 {% load babubi i18n static timers %}
 {% block nav %}
-    <nav class="navbar navbar-expand-md navbar sticky-top">
+    <nav class="navbar navbar-expand-md navbar sticky-top"
+         data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand me-2" href={% url "babubi:root-router" %}>
                 <img src="{% static "babubi/logo/icon-brand.png" %}"
@@ -34,7 +35,7 @@
             <div class="d-lg-none d-md-none d-flex ms-auto p-0 me-2">
                 {% quick_timer_nav %}
                 <div class="dropdown show">
-                    <a class="text-success"
+                    <a class="text-secondary"
                        href="#"
                        role="button"
                        id="nav-quick-add-link"

@@ -19,6 +19,7 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 - **Own container image**, published at `ghcr.io/icon42/babubi` for amd64 and arm64 and rebuilt every week so its base gets security fixes. It runs as an unprivileged user.
 - **Private uploads.** Child pictures and other uploads are served only to signed-in users and to API clients with a valid token, never to anyone who just has the URL.
 - **Locale defaults from the environment.** `LANGUAGE_CODE` and `TIME_ZONE` set the defaults for new users; without them Babubi uses Baby Buddy's (`en-US`, `UTC`).
+- **Light, dark and automatic themes** in Babubi's colours, chosen by each user, with the browser's preference as the default.
 - **Drop-in migration from Baby Buddy.** Its `/config` volume matches the linuxserver Baby Buddy image, and the first start moves the database over to Babubi on its own.
 
 ## Getting started

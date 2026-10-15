@@ -27,5 +27,5 @@ class SettingsTestCase(TestCase):
     def test_theme_choices(self):
         themes = [choice[0] for choice in Settings._meta.get_field("theme").choices]
         self.assertEqual(len(themes), len(set(themes)))
-        self.assertIn("dark", themes)
-        self.assertIn("light", themes)
+        self.assertEqual(themes[:3], ["auto", "light", "dark"])
+        self.assertEqual(Settings._meta.get_field("theme").default, "auto")

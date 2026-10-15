@@ -1,21 +1,9 @@
-@use 'sass:map';
-
 @include color-mode("light") {
-    .navbar {
-      background-color: var(--bs-body-bg);
-    }
-    .card-statistics, .card-timer {
-        .card-body {
-            color: map.get($theme-colors, 'dark');
-        }
-    }
-    .card-dashboard {
-        .list-group {
-            .list-group-item {
-                color: map.get($theme-colors, 'dark');
-            }
-        }
-    }
+    // Activity cards (dashboard/static_src/scss/cards.scss).
+    --card-surface: #{$white};
+    --card-shadow: 0 1px 3px #{rgba($black, .07)};
+    --card-accent-mix: 100%;
+
     table {
         --bs-table-striped-bg: var(--bs-gray-100);
     }
