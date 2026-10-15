@@ -1,19 +1,15 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Only the latest Babubi release gets security fixes.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.x     | :white_check_mark: |
-| 1.x     | :x:                |
+| 1.x     | :white_check_mark: |
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-Babubi's maintainers recommend GitHub for reporting vulnerabilities.
-Maintainers will do their best to verify, respond to and fix issues reported
-on the platform.
+Report vulnerabilities privately through GitHub: open the [Security tab of the repository](https://github.com/icon42/babubi/security) and choose "Report a vulnerability". Please do not open a public issue.
 
-[Disclose a Vulnerability on GitHub](https://github.com/babybuddy/babybuddy/security)
+If the problem also affects Baby Buddy, which Babubi is forked from, report it to the [Baby Buddy project](https://github.com/babybuddy/babybuddy/security) as well.

@@ -7,7 +7,7 @@ night's sleep, or summarize the day, and it reads and writes through Babubi's
 [API](api.md).
 
 The server lives in its own repository:
-[**babubi/babubi-mcp**](https://github.com/babybuddy/babybuddy-mcp).
+[**icon42/babubi-mcp**](https://github.com/icon42/babubi-mcp).
 
 ## What it can do
 
@@ -35,6 +35,6 @@ should act as (see [Authentication](api.md#authentication)).
     Installation and configuration — including Docker (`http` transport) and Claude
     Desktop (`stdio` transport) setups and the `BABUBI_URL` / `BABUBI_TOKEN`
     environment variables — are documented in the
-    [babubi/babubi-mcp](https://github.com/babybuddy/babybuddy-mcp) repository.
+    [icon42/babubi-mcp](https://github.com/icon42/babubi-mcp) repository.
     Because the server is maintained there, that repository is the source of truth
     for setup steps.

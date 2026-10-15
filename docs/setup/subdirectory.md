@@ -41,8 +41,9 @@ environment variable to the `[uwsgi]` configuration block.
 ### NGINX
 
 Alter the NGINX `server` configuration to include the desired subdirectory path in the
-app (Babubi root) and media `location` declarations _and_ add a new declaration for
-the static `location`.
+app (Babubi root) `location` declaration _and_ add a new declaration for the static
+`location`. Uploads under `/babubi/media` go through the app, which serves them to
+signed-in users only, so they need no `location` of their own.
 
 ```diff
 -    location / {
@@ -53,9 +54,4 @@ the static `location`.
 +    location /babubi/static {
 +        alias /var/www/babubi/public/static;
 +    }
-```
-
-```diff
--    location /media {
-+    location /babubi/media {
 ```

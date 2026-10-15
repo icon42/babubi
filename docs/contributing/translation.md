@@ -1,16 +1,10 @@
 # Translation
 
-## POEditor
+Babubi's translations come from Baby Buddy's translators. Babubi edits the `.po` files under `locale/` directly, with any PO editor such as [Poedit](https://poedit.net/), and takes changes through [pull requests](pull-requests.md). Baby Buddy collects its translations on [POEditor](https://poeditor.com/); a fix that also applies to Baby Buddy is best made there, so both projects get it.
 
-Babubi uses [POEditor](https://poeditor.com/) for translation contributions.
-Interested contributors can [join translation of Babubi](https://poeditor.com/join/project/QwQqrpTIzn)
-for access to a simple, web-based frontend for adding/editing translation files
-to the project.
+## Adding or updating a language
 
-## Manual
-
-Babubi has support for translation/localization. A manual translation
-process will look something like this:
+A translation process will look something like this:
 
 1. Set up a development environment (see [Development environment](development-environment.md)).
 
@@ -34,7 +28,7 @@ process will look something like this:
 
 7. Check if Plotly offers a translation (in `node_modules/plotly.js/dist/`) for
    the language. If it does:
-   1. Add the Plotly translation file path to [`gulpfile.config.js`](https://github.com/babybuddy/babybuddy/tree/master/gulpfile.config.js)
+   1. Add the Plotly translation file path to [`gulpfile.config.js`](../../gulpfile.config.js)
       in `scriptsConfig.graph`.
 
    2. Build, collect, and commit the `/static` folder (see [`gulp updatestatic`](gulp-command-reference.md#updatestatic)).

@@ -1,13 +1,5 @@
 # Home
 
-A buddy for babies! Helps caregivers track sleep, feedings, diaper changes,
-tummy time and more to learn about and predict baby's needs without (_as much_)
-guess work.
+Babubi helps caregivers track sleep, feedings, diaper changes, tummy time and more, to learn about and predict a baby's needs with less guesswork.
 
-## Demo
-
-A [demo of Babubi](http://demo.baby-buddy.net) is available. The demo instance
-resets every hour. Login credentials are:
-
-- Username: `admin`
-- Password: `admin`
+Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy) that starts from its tagged releases. See the [README](../README.md) for how the two differ and how Babubi is versioned, and [Deployment](setup/deployment.md) to get started.
