@@ -4,15 +4,15 @@
     <nav class="navbar navbar-expand-md navbar sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand me-2" href={% url "babubi:root-router" %}>
-                <img src="{% static "babubi/logo/icon.svg" %}"
+                <img src="{{ branding.icon_url }}"
                      height="30"
                      class="d-inline-block d-lg-none align-top"
                      alt="Babubi">
-                <img src="{% static "babubi/logo/logo.svg" %}"
+                <img src="{{ branding.logo_url }}"
                      height="30"
                      class="brand-logo_on-light d-none d-lg-inline-block align-top"
                      alt="Babubi">
-                <img src="{% static "babubi/logo/logo-dark.svg" %}"
+                <img src="{{ branding.logo_dark_url }}"
                      height="30"
                      class="brand-logo_on-dark d-none d-lg-inline-block align-top"
                      alt="Babubi">

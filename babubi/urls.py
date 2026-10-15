@@ -4,10 +4,11 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, reverse_lazy
 
-from . import views
+from . import branding, views
 
 app_patterns = [
     path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("branding/<str:name>", branding.serve, name="branding"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path(
         "reset/",

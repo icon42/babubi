@@ -101,6 +101,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "babubi.branding.context",
             ],
         },
     },
@@ -254,6 +255,13 @@ STATIC_URL = os.path.join(os.environ.get("SUB_PATH") or "", "static/")
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 WHITENOISE_ROOT = os.path.join(BASE_DIR, "static", "babubi", "root")
+
+
+# Branding
+# Directory with a deployment's own logo.svg, logo-dark.svg, icon.svg and
+# custom.css, used in place of Babubi's. Unset disables it.
+
+BRANDING_DIR = os.environ.get("BRANDING_DIR") or None
 
 
 # Media files (User uploaded content)

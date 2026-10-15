@@ -1,5 +1,18 @@
 # Application
 
+## `BRANDING_DIR`
+
+_Default:_ `None` (`/config/branding` in the Docker image)
+
+Directory with a deployment's own branding. Babubi uses each of these files when it is there, and its own otherwise:
+
+- `logo.svg`: the logo on light backgrounds, such as the login page in the light theme.
+- `logo-dark.svg`: the logo on dark backgrounds, such as the navigation bar. Without it, `logo.svg` is used there too.
+- `icon.svg`: the square symbol, used in the navigation bar on small screens, on error pages and as the favicon.
+- `custom.css`: extra styles, loaded after Babubi's own on every page. Target the themes with `[data-bs-theme="light"]` and `[data-bs-theme="dark"]`.
+
+No other file in the directory is ever served. The files are public, since the login page needs them, and are picked up without a restart. App icons for phones (`apple-touch-icon.png` and the like) are not replaced.
+
 ## `DEBUG`
 
 _Default:_ `False`

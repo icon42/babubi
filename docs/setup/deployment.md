@@ -44,6 +44,10 @@ owner, build the image with `--build-arg UID=... --build-arg GID=...`.
 Uploaded files such as child pictures are served by Babubi itself, and only
 to signed-in users or API clients with a valid token.
 
+To use your own logo, icon or extra CSS, put `logo.svg`, `logo-dark.svg`,
+`icon.svg` or `custom.css` in `/config/branding/`. See
+[`BRANDING_DIR`](../configuration/application.md#branding_dir).
+
 Set `DATABASE_URL` (or the `DB_*` variables) to use PostgreSQL instead of
 SQLite. See [Django's databases documentation](https://docs.djangoproject.com/en/5.0/ref/databases/)
 for database requirements.

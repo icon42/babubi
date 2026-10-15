@@ -37,7 +37,8 @@ ENV PATH="/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=babubi.settings.base \
-    DB_NAME=/config/data/db.sqlite3
+    DB_NAME=/config/data/db.sqlite3 \
+    BRANDING_DIR=/config/branding
 
 WORKDIR /app
 USER babubi

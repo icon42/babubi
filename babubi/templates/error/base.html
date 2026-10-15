@@ -7,7 +7,7 @@
             <div class="col-lg-12 mb-4">
                 <div class="d-sm-flex">
                     <img class="d-inline-block align-self-top me-2 mt-2 text-center brand-icon_sad"
-                         src="{% static "babubi/logo/icon.svg" %}"
+                         src="{% if branding %}{{ branding.icon_url }}{% else %}{% static "babubi/logo/icon.svg" %}{% endif %}"
                          height="65"
                          alt="">
                     <div class="p-2 flex-grow-1">

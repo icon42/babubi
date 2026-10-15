@@ -5,11 +5,11 @@
     <div id="view-{{ request.resolver_match.view_name }}" class="container">
         <div class="text-center pt-3">
             <h1 class="m-0">
-                <img src="{% static "babubi/logo/logo.svg" %}"
+                <img src="{{ branding.logo_url }}"
                      height="60"
                      class="brand-logo_on-light"
                      alt="Babubi">
-                <img src="{% static "babubi/logo/logo-dark.svg" %}"
+                <img src="{{ branding.logo_dark_url }}"
                      height="60"
                      class="brand-logo_on-dark"
                      alt="Babubi">
