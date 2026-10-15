@@ -8,46 +8,72 @@ variables - see [Configuration](../configuration/intro.md) for detailed informat
 
 ## Docker
 
-Babubi relies on the [LinuxServer.io](https://www.linuxserver.io/) community
-for a multi-architecture container with strong support. See
-[linuxserver/docker-babubi](https://github.com/linuxserver/docker-babybuddy)
-for detailed information about the container or use the following Docker Compose
-configuration as a template to get started quickly:
+Babubi publishes a multi-architecture image (amd64 and arm64) at
+`ghcr.io/icon42/babubi`, rebuilt every week so its base gets security fixes.
+Use the following Docker Compose configuration as a template:
 
 ```yaml
-version: "2.1"
 services:
   babubi:
-    image: lscr.io/linuxserver/babubi
+    image: ghcr.io/icon42/babubi:latest
     container_name: babubi
+    environment:
+      - ALLOWED_HOSTS=babubi.example.com
+      - CSRF_TRUSTED_ORIGINS=https://babubi.example.com
+      - SECURE_PROXY_SSL_HEADER=True
+      - TIME_ZONE=Europe/Paris
+      - LANGUAGE_CODE=en-US
     volumes:
       - /path/to/appdata:/config
-    ports:
-      - 8000:8000
     restart: unless-stopped
 ```
 
-See [Django's databases documentation](https://docs.djangoproject.com/en/5.0/ref/databases/) for database requirements.
+!!! warning
 
-See [HTTPS/SSL configuration](ssl.md) for information on how to secure Babubi.
+    The container speaks plain HTTP on port 8000 and is meant to sit behind a
+    reverse proxy that terminates TLS (Traefik, Caddy, nginx, ...). Do not
+    publish port 8000 to the internet: the proxy also shields the application
+    server from slow or abusive clients. See [HTTPS/SSL configuration](ssl.md).
+
+The `/config` volume holds the SQLite database (`data/db.sqlite3`), uploaded
+files (`media/`) and a secret key generated on the first start
+(`.secretkey`), unless `SECRET_KEY` is set. The app runs as user and group
+`1000`; a bind-mounted directory must be writable by them. To use another
+owner, build the image with `--build-arg UID=... --build-arg GID=...`.
+
+Uploaded files such as child pictures are served by Babubi itself, and only
+to signed-in users or API clients with a valid token.
+
+Set `DATABASE_URL` (or the `DB_*` variables) to use PostgreSQL instead of
+SQLite. See [Django's databases documentation](https://docs.djangoproject.com/en/5.0/ref/databases/)
+for database requirements.
+
+Every start applies pending database migrations before the app comes up.
+
+### Migrating from Baby Buddy
+
+Babubi can take over a Baby Buddy database. The `/config` layout matches the
+[linuxserver Baby Buddy image](https://github.com/linuxserver/docker-babybuddy),
+so stop Baby Buddy, **back up its `/config` directory**, and start Babubi on the
+same volume. On its first start Babubi runs `migrate_from_babybuddy`, which
+moves the tables, content types and migration records from the `babybuddy`
+app label to `babubi`; later starts find nothing to move. Some Babubi
+migrations cannot be undone, so the backup is the only way back.
 
 ### Running commands
 
-Run administrative commands with the `/app/www/public/manage.py` script. Set
-the environment variables `DJANGO_SETTINGS_MODULE` and `SECRET_KEY` before
-running commands. For example:
+Run administrative commands with `manage.py` inside the container; the
+environment is already set up. For example:
 
 ```shell
-docker exec -it babubi /bin/bash
-export DJANGO_SETTINGS_MODULE="babubi.settings.base"
-export SECRET_KEY="$(cat /config/.secretkey)"
-cd /app/www/public
-python manage.py --help
+docker exec -it babubi python manage.py --help
 ```
 
-Note: the container name (`babubi`) and secret key location
-(`/config/.secretkey`) may differ depending on the container configuration.
-Refer to the running containers configuration for these values.
+When `SECRET_KEY` comes from `/config/.secretkey`, pass it to the command:
+
+```shell
+docker exec -it babubi sh -c 'SECRET_KEY="$(cat /config/.secretkey)" python manage.py --help'
+```
 
 ## Home Assistant
 

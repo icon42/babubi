@@ -1,0 +1,14 @@
+# Only what the app needs at run time goes into the image.
+.git
+.github
+.devcontainer*
+.vscode
+.do
+.buildpacks
+node_modules
+docs
+terraform
+data
+media
+*.md
+screenshot*.png
