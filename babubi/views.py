@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.views import LogoutView as LogoutViewBase
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import BadRequest
+from django.core.exceptions import BadRequest, SuspiciousFileOperation
 from django.forms import Form
-from django.http import HttpResponseForbidden
+from django.http import FileResponse, Http404, HttpResponseForbidden
 from django.middleware.csrf import REASON_BAD_ORIGIN
 from django.shortcuts import redirect, render
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.utils import translation
+from django.utils._os import safe_join
 from django.utils.decorators import method_decorator
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _, gettext_lazy
@@ -36,7 +40,9 @@ from django.views.i18n import set_language
 
 from axes.utils import reset
 from django_filters.views import FilterView
+from rest_framework.exceptions import AuthenticationFailed
 
+from api.authentication import TokenAuthentication
 from babubi import forms
 from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin, StaffOnlyMixin
 
@@ -298,3 +304,25 @@ class Welcome(LoginRequiredMixin, TemplateView):
     """
 
     template_name = "babubi/welcome.html"
+
+
+def media(request, path):
+    """
+    Serves uploaded files (child pictures) to signed-in users and to API
+    clients with a valid token. Upstream leaves media to a web server in front,
+    which hands them to anyone who has the URL.
+    """
+    if not request.user.is_authenticated:
+        try:
+            authenticated = TokenAuthentication().authenticate(request)
+        except AuthenticationFailed:
+            authenticated = None
+        if authenticated is None:
+            return redirect_to_login(request.get_full_path())
+    try:
+        full_path = safe_join(settings.MEDIA_ROOT, path)
+    except SuspiciousFileOperation:
+        raise Http404
+    if not os.path.isfile(full_path):
+        raise Http404
+    return FileResponse(open(full_path, "rb"))

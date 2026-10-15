@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -57,5 +56,7 @@ urlpatterns = [
     path("", include("reports.urls", namespace="reports")),
 ]
 
-if settings.DEBUG:  # pragma: no cover
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Uploads stored on S3 are served from there. The prefix matches MEDIA_URL in
+# settings; Django turns that one into an absolute URL, so it cannot be reused.
+if not settings.AWS_STORAGE_BUCKET_NAME:
+    urlpatterns.append(path("media/<path:path>", views.media, name="media"))
