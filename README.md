@@ -4,6 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](LICENSE)
 [![CI Status](https://github.com/icon42/babubi/actions/workflows/ci.yml/badge.svg)](https://github.com/icon42/babubi/actions/workflows/ci.yml)
+[![Support: none](https://img.shields.io/badge/support-none-lightgrey.svg)](SUPPORT.md)
 
 Babubi helps caregivers track sleep, feedings, diaper changes, tummy time and more, to learn about and predict a baby's needs with less guesswork.
 
@@ -95,6 +96,10 @@ Babubi keeps Baby Buddy's REST API unchanged, so apps and integrations built for
 - [Grafana dashboard](https://github.com/babybuddy/babybuddy/discussions/607)
 - Newborn parenting software series (API, buttons, LCD information screen): [part 1](https://lutzky.net/2021/10/03/software-parenting-1/), [part 2](https://lutzky.net/2021/10/05/software-parenting-2/), [part 3](https://lutzky.net/2021/10/10/software-parenting-3/)
 - [Example custom TypeScript frontend](https://github.com/jkjustjoshing/maddie-buddy), based on [Remix](https://remix.run/)
+
+## Support
+
+Babubi is offered as is, without support; see [SUPPORT.md](SUPPORT.md).
 
 ## Reporting vulnerabilities
 

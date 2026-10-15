@@ -1,6 +1,6 @@
 # Pull requests
 
-Contributions to Babubi are welcome through GitHub [Issues](https://github.com/icon42/babubi/issues) and [Pull Requests](https://github.com/icon42/babubi/pulls).
+Babubi comes without support (see [SUPPORT.md](../../SUPPORT.md)) and has no issue tracker. [Pull requests](https://github.com/icon42/babubi/pulls) can be opened, but may not be reviewed.
 
 Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy) and takes in each of its releases. A bug or feature that is not specific to Babubi is best proposed to Baby Buddy first: once it is released there, Babubi gets it with the next update.
 
