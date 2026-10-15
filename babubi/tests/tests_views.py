@@ -82,6 +82,8 @@ class ViewsTestCase(TestCase):
             page.content.decode(),
             r""".*<div [^>]* data-qr-code-content="[^"]+"[^>]*>.*""",
         )
+        # The Baby Buddy apps only accept codes with this exact prefix.
+        self.assertContains(page, 'data-qr-code-content="BABYBUDDY-LOGIN:')
 
     def test_user_views(self):
         # Staff setting is required to access user management.
