@@ -178,14 +178,14 @@ if REVERSE_PROXY_AUTH:
 
 USE_TZ = True
 
-TIME_ZONE = "UTC"
+TIME_ZONE = os.environ.get("TIME_ZONE") or "UTC"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 USE_I18N = True
 
-LANGUAGE_CODE = "en-US"
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE") or "en-US"
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
