@@ -55,6 +55,11 @@
                         {% include "babubi/form_field.html" %}
                     {% endwith %}
                 </div>
+                <div class="form-group row">
+                    {% with form_settings.theme as field %}
+                        {% include "babubi/form_field.html" %}
+                    {% endwith %}
+                </div>
             </fieldset>
             <fieldset>
                 <legend>{% trans "Dashboard" %}</legend>
