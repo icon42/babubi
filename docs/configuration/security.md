@@ -66,6 +66,74 @@ Each entry must contain both the scheme (http, https) and fully-qualified domain
 - [`ALLOWED_HOSTS`](#allowed_hosts)
 - [`SECURE_PROXY_SSL_HEADER`](#secure_proxy_ssl_header)
 
+## `LOGIN_METHODS`
+
+_Default:_ `password`
+
+How users log in to the web interface: `password`, `oidc` or both, separated by a comma (`password,oidc`).
+
+- `password`: the username and password form.
+- `oidc`: a button that logs in through an OpenID Connect provider, configured with the `OIDC_*` variables below.
+- `password,oidc`: the button and, below it, the form.
+
+With `oidc` alone, Babubi accepts no passwords on the web: the login form, the admin login, the API browser login and password reset are all turned off. API tokens keep working with any value.
+
+OIDC login only links a provider account to an existing user whose username matches the `preferred_username` claim, ignoring case. Babubi never creates users from OIDC: add each user first. Inactive users and users whose access has expired are turned away.
+
+Register Babubi with the provider as a confidential client with these addresses:
+
+- Redirect URI: `https://<babubi host>/oidc/complete/oidc/`
+- Back-channel logout URI (optional): `https://<babubi host>/oidc/logout/backchannel/`
+
+With back-channel logout, the provider tells Babubi when a user's session ends there, and every Babubi session of that user ends too. Babubi follows OpenID Connect Back-Channel Logout 1.0 and needs the `sub` claim in the logout token.
+
+Behind a reverse proxy that terminates HTTPS, set [`SECURE_PROXY_SSL_HEADER`](#secure_proxy_ssl_header) so the redirect URI Babubi sends uses `https`.
+
+If the provider is down and nobody has a session, switch to `password,oidc` and restart to log in with a password.
+
+**Example value**
+
+    oidc
+
+**See also**
+
+- [`OIDC_ENDPOINT`](#oidc_endpoint)
+- [`SESSION_COOKIE_AGE`](#session_cookie_age)
+
+## `OIDC_CLIENT_ID`
+
+_Default:_ `""` (empty)
+
+The client ID Babubi has at the OpenID Connect provider. Required when [`LOGIN_METHODS`](#login_methods) includes `oidc`.
+
+## `OIDC_CLIENT_SECRET`
+
+_Default:_ `""` (empty)
+
+The client secret Babubi has at the OpenID Connect provider. Required when [`LOGIN_METHODS`](#login_methods) includes `oidc`.
+
+## `OIDC_ENDPOINT`
+
+_Default:_ `""` (empty)
+
+The issuer URL of the OpenID Connect provider, without `/.well-known/openid-configuration`. Babubi reads the rest of the provider's configuration from there. Required when [`LOGIN_METHODS`](#login_methods) includes `oidc`.
+
+**Example value**
+
+    https://idp.example.com
+
+## `OIDC_PROVIDER_NAME`
+
+_Default:_ `None`
+
+The provider name shown on the login button, as in "Log in with Example ID". Without it, the button reads "Log in with single sign-on".
+
+## `OIDC_SCOPES`
+
+_Default:_ `openid profile email`
+
+The scopes Babubi requests from the OpenID Connect provider, separated by spaces. The `profile` scope carries the `preferred_username` claim that users are matched on.
+
 ## `PROXY_HEADER`
 
 _Default:_ `HTTP_REMOTE_USER`

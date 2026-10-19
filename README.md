@@ -21,6 +21,7 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 - **Locale defaults from the environment.** `LANGUAGE_CODE` and `TIME_ZONE` set the defaults for new users; without them Babubi uses Baby Buddy's (`en-US`, `UTC`).
 - **Light, dark and automatic themes** in Babubi's colours, chosen by each user, with the browser's preference as the default.
 - **Your own logo and styles** without rebuilding the image: drop `logo.svg`, `icon.svg` or `custom.css` into `/config/branding/` (see [`BRANDING_DIR`](docs/configuration/application.md#branding_dir)).
+- **OpenID Connect login** with any provider, alongside passwords or instead of them, including back-channel logout (see [`LOGIN_METHODS`](docs/configuration/security.md#login_methods)).
 - **Drop-in migration from Baby Buddy.** Its `/config` volume matches the linuxserver Baby Buddy image, and the first start moves the database over to Babubi on its own.
 
 ## Getting started
