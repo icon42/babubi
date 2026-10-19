@@ -28,6 +28,7 @@ django-dbsettings = "~=1.0"
 django-import-export = "~=4.0"
 inflection = "*"
 django-axes = {extras = ["ipware"], version = "~=7.0"}
+social-auth-app-django = "~=7.1"
 
 [dev-packages]
 coveralls = "~=4.0"
