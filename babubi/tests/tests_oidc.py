@@ -166,6 +166,23 @@ class LoginMethodsTestCase(TestCase):
         self.assertContains(page, 'value="/welcome/"', count=2)
         self.assertEqual(self.client.get("/reset/").status_code, 200)
 
+    def test_methods_follow_the_setting_order(self):
+        for methods, first in (
+            (["password", "oidc"], 'name="login"'),
+            (["oidc", "password"], 'name="oidc-login"'),
+        ):
+            with self.subTest(methods=methods), self.settings(
+                LOGIN_METHODS=methods, **OIDC_SETTINGS
+            ):
+                page = self.client.get("/login/").content.decode()
+                buttons = sorted(('name="login"', 'name="oidc-login"'), key=page.index)
+                self.assertEqual(buttons[0], first)
+                # The first method gets the primary button, the other the outline.
+                self.assertEqual(page.count("btn-primary"), 1)
+                self.assertLess(
+                    page.index("btn-primary"), page.index("btn-outline-primary")
+                )
+
     @override_settings(
         LOGIN_METHODS=["password", "oidc"], OIDC_PROVIDER_NAME="Example ID"
     )

@@ -70,11 +70,14 @@ Each entry must contain both the scheme (http, https) and fully-qualified domain
 
 _Default:_ `password`
 
-How users log in to the web interface: `password`, `oidc` or both, separated by a comma (`password,oidc`).
+How users log in to the web interface: `password`, `oidc` or both, separated by a comma.
 
 - `password`: the username and password form.
 - `oidc`: a button that logs in through an OpenID Connect provider, configured with the `OIDC_*` variables below.
-- `password,oidc`: the button and, below it, the form.
+- `password,oidc`: the form and, below it, the button.
+- `oidc,password`: the button and, below it, the form.
+
+With both, the login page follows the order of the value, and the first method gets the primary button.
 
 With `oidc` alone, Babubi accepts no passwords on the web: the login form, the admin login, the API browser login and password reset are all turned off. API tokens keep working with any value.
 

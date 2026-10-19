@@ -177,14 +177,21 @@ if REVERSE_PROXY_AUTH:
     MIDDLEWARE.append("babubi.middleware.CustomRemoteUser")
     AUTHENTICATION_BACKENDS.append("django.contrib.auth.backends.RemoteUserBackend")
 
-# Login methods: "password", "oidc" or both, separated by commas.
+# Login methods: "password", "oidc" or both, separated by commas, in the
+# order the login page shows them.
 LOGIN_METHODS = [
     method.strip()
     for method in (os.environ.get("LOGIN_METHODS") or "password").split(",")
     if method.strip()
 ]
-if not LOGIN_METHODS or not set(LOGIN_METHODS) <= {"password", "oidc"}:
-    raise ImproperlyConfigured("LOGIN_METHODS must be password, oidc or password,oidc.")
+if (
+    not LOGIN_METHODS
+    or not set(LOGIN_METHODS) <= {"password", "oidc"}
+    or len(set(LOGIN_METHODS)) != len(LOGIN_METHODS)
+):
+    raise ImproperlyConfigured(
+        "LOGIN_METHODS must be password, oidc, password,oidc or oidc,password."
+    )
 
 # OpenID Connect login through social-auth-app-django.
 # See https://python-social-auth.readthedocs.io/en/latest/backends/oidc.html

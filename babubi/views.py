@@ -134,8 +134,7 @@ class LoginView(LoginViewBase):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["password_login"] = "password" in settings.LOGIN_METHODS
-        context["oidc_login"] = "oidc" in settings.LOGIN_METHODS
+        context["login_methods"] = settings.LOGIN_METHODS
         context["oidc_provider_name"] = settings.OIDC_PROVIDER_NAME
         return context
 

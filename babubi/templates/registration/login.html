@@ -2,41 +2,52 @@
 {% load i18n static widget_tweaks %}
 {% block title %}Login{% endblock %}
 {% block content %}
-    {% if oidc_login %}
-        <form class="fade-in{% if password_login %} mb-4{% endif %}"
-              method="post"
-              action="{% url 'social:begin' 'oidc' %}">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <button class="btn btn-primary w-100" type="submit" name="oidc-login">
-                {% if oidc_provider_name %}
-                    {% blocktrans with provider=oidc_provider_name %}Log in with {{ provider }}{% endblocktrans %}
-                {% else %}
-                    {% trans "Log in with single sign-on" %}
-                {% endif %}
-            </button>
-        </form>
-    {% endif %}
-    {% if password_login %}
-        <form class="login-form" method="post" action="{% url 'babubi:login' %}">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <label class="visually-hidden" for="username-input-group">{{ form.username.label }}</label>
-            <div class="input-group mb-3 fade-in">
-                <span class="input-group-text text-body-secondary"><i class="icon-user" aria-hidden="true"></i></span>
-                {% render_field form.username name='username' class+='form-control' id='username-input-group' placeholder=form.username.label %}
-            </div>
-            <label class="visually-hidden" for="password-input-group">{{ form.password.label }}</label>
-            <div class="input-group mb-3 fade-in">
-                <span class="input-group-text text-body-secondary"><i class="icon-lock" aria-hidden="true"></i></span>
-                {% render_field form.password name='password' class+='form-control' id='password-input-group' placeholder=form.password.label %}
-            </div>
-            <button class="btn {% if oidc_login %}btn-outline-primary{% else %}btn-primary{% endif %} w-100 fade-in"
-                    type="submit"
-                    name="login">{% trans "Login" %}</button>
-        </form>
-        <div class="bg-faded text-center px-4 py-3 rounded-bottom">
-            <a href="{% url 'babubi:password_reset' %}" name="reset">{% trans "Forgot your password?" %}</a>
+    {% comment %}
+        The methods follow the order of LOGIN_METHODS: the first one is the
+        primary button.
+    {% endcomment %}
+    {% for method in login_methods %}
+        <div class="{% if not forloop.last %}mb-4{% endif %}">
+            {% if method == "oidc" %}
+                <form class="fade-in"
+                      method="post"
+                      action="{% url 'social:begin' 'oidc' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button class="btn {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %} w-100"
+                            type="submit"
+                            name="oidc-login">
+                        {% if oidc_provider_name %}
+                            {% blocktrans with provider=oidc_provider_name %}Log in with {{ provider }}{% endblocktrans %}
+                        {% else %}
+                            {% trans "Log in with single sign-on" %}
+                        {% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <form class="login-form" method="post" action="{% url 'babubi:login' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <label class="visually-hidden" for="username-input-group">{{ form.username.label }}</label>
+                    <div class="input-group mb-3 fade-in">
+                        <span class="input-group-text text-body-secondary"><i class="icon-user"
+   aria-hidden="true"></i></span>
+                        {% render_field form.username name='username' class+='form-control' id='username-input-group' placeholder=form.username.label %}
+                    </div>
+                    <label class="visually-hidden" for="password-input-group">{{ form.password.label }}</label>
+                    <div class="input-group mb-3 fade-in">
+                        <span class="input-group-text text-body-secondary"><i class="icon-lock"
+   aria-hidden="true"></i></span>
+                        {% render_field form.password name='password' class+='form-control' id='password-input-group' placeholder=form.password.label %}
+                    </div>
+                    <button class="btn {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %} w-100 fade-in"
+                            type="submit"
+                            name="login">{% trans "Login" %}</button>
+                </form>
+                <div class="bg-faded text-center px-4 py-3 rounded-bottom">
+                    <a href="{% url 'babubi:password_reset' %}" name="reset">{% trans "Forgot your password?" %}</a>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    {% endfor %}
 {% endblock %}
