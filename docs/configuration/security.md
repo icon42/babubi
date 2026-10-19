@@ -122,6 +122,20 @@ came in via HTTPS).
 - [`ALLOWED_HOSTS`](#allowed_hosts)
 - [`CSRF_TRUSTED_ORIGINS`](#csrf_trusted_origins)
 
+## `SESSION_COOKIE_AGE`
+
+_Default:_ `1209600` (two weeks)
+
+How long a login lasts, in seconds. Babubi renews the session once a day while it is in use, so an active user stays logged in.
+
+**Example value**
+
+    2592000
+
+**See also**
+
+- [Django's documentation on the `SESSION_COOKIE_AGE` setting](https://docs.djangoproject.com/en/5.0/ref/settings/#session-cookie-age)
+
 ## `SESSION_COOKIE_SECURE`
 
 _Default:_ `False`

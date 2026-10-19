@@ -352,6 +352,7 @@ if os.environ.get("SECURE_PROXY_SSL_HEADER"):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # https://docs.djangoproject.com/en/5.0/topics/http/sessions/#settings
+SESSION_COOKIE_AGE = int(os.environ.get("SESSION_COOKIE_AGE") or 1209600)
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = bool(
     strtobool(os.environ.get("SESSION_COOKIE_SECURE") or "False")
