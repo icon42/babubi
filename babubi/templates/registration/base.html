@@ -2,7 +2,8 @@
 {% load static widget_tweaks %}
 {% block breadcrumb_nav %}{% endblock %}
 {% block page %}
-    <div id="view-{{ request.resolver_match.view_name }}" class="container">
+    <div id="view-{{ request.resolver_match.view_name }}"
+         class="container min-vh-100 d-flex flex-column justify-content-center">
         <div class="text-center pt-3">
             <h1 class="m-0">
                 <img src="{{ branding.logo_url }}"
