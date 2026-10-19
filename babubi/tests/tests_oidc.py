@@ -7,6 +7,7 @@ from urllib.parse import parse_qs, urlsplit
 import jwt
 from cryptography.hazmat.primitives.asymmetric import rsa
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.models import Session
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from requests import Response
@@ -23,6 +24,8 @@ PUBLIC_JWK = {
     "alg": "RS256",
     "use": "sig",
 }
+OTHER_KEY = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+LOGOUT_EVENT = {"http://schemas.openid.net/event/backchannel-logout": {}}
 
 OIDC_SETTINGS = {
     "SOCIAL_AUTH_OIDC_OIDC_ENDPOINT": ISSUER,
@@ -199,3 +202,58 @@ class LoginMethodsTestCase(TestCase):
             "/api/children/", HTTP_AUTHORIZATION=f"Token {token.key}"
         )
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(LOGIN_METHODS=["oidc"], **OIDC_SETTINGS)
+class BackchannelLogoutTestCase(TestCase):
+    url = "/oidc/logout/backchannel/"
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username="isaac")
+        UserSocialAuth.objects.create(user=self.user, provider="oidc", uid="sub-isaac")
+        self.other = get_user_model().objects.create_user(username="anna")
+        self.client.force_login(self.user)
+        self.other_client = self.client_class()
+        self.other_client.force_login(self.other)
+
+    def claims(self, **changes):
+        claims = {
+            "iss": ISSUER,
+            "aud": CLIENT_ID,
+            "sub": "sub-isaac",
+            "iat": int(time.time()),
+            "jti": "logout-1",
+            "events": LOGOUT_EVENT,
+        }
+        claims.update(changes)
+        return {k: v for k, v in claims.items() if v is not None}
+
+    def post(self, token):
+        with mock.patch("social_core.backends.base.requests.request", FakeProvider()):
+            return self.client_class().post(self.url, {"logout_token": token})
+
+    def test_logout_ends_the_user_sessions(self):
+        response = self.post(sign(self.claims()))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.get("/welcome/").status_code, 302)
+        self.assertEqual(self.other_client.get("/welcome/").status_code, 200)
+        self.assertEqual(Session.objects.count(), 1)
+
+    def test_invalid_tokens_are_rejected(self):
+        cases = {
+            "signature": sign(self.claims(), key=OTHER_KEY),
+            "issuer": sign(self.claims(iss="https://other.example.com")),
+            "audience": sign(self.claims(aud="other-client")),
+            "event": sign(self.claims(events={})),
+            "nonce": sign(self.claims(nonce="n")),
+            "sid only": sign(self.claims(sub=None, sid="session")),
+            "garbage": "not-a-token",
+        }
+        for name, token in cases.items():
+            with self.subTest(name):
+                self.assertEqual(self.post(token).status_code, 400)
+        self.assertEqual(self.client.get("/welcome/").status_code, 200)
+
+    @override_settings(LOGIN_METHODS=["password"])
+    def test_hidden_without_oidc(self):
+        self.assertEqual(self.post(sign(self.claims())).status_code, 404)

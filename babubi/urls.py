@@ -50,6 +50,11 @@ app_patterns = [
     path("user/settings/", views.UserSettings.as_view(), name="user-settings"),
     path("user/add-device/", views.UserAddDevice.as_view(), name="user-add-device"),
     path("settings/", include("dbsettings.urls")),
+    path(
+        "oidc/logout/backchannel/",
+        oidc.backchannel_logout,
+        name="oidc-backchannel-logout",
+    ),
 ]
 
 # The views of social-auth-app-django that OIDC login uses, under its

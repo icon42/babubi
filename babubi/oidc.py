@@ -1,20 +1,30 @@
 # -*- coding: utf-8 -*-
 """
 OpenID Connect login on top of social-auth-app-django: the views gated by
-LOGIN_METHODS, the user matching step of the pipeline and translated error
-messages.
+LOGIN_METHODS, the user matching step of the pipeline, translated error
+messages and back-channel logout.
 """
 
 from functools import wraps
 
+import jwt
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.http import Http404
+from django.contrib.auth import SESSION_KEY, get_user_model
+from django.contrib.sessions.models import Session
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.utils import timezone
 from django.utils.translation import gettext as _
-from social_core.exceptions import AuthPolicyError
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from social_core.exceptions import AuthPolicyError, SocialAuthBaseException
 from social_django.middleware import SocialAuthExceptionMiddleware
+from social_django.models import UserSocialAuth
+from social_django.utils import load_backend, load_strategy
 
 from .models import access_expired
+
+BACKCHANNEL_LOGOUT_EVENT = "http://schemas.openid.net/event/backchannel-logout"
 
 
 def oidc_login_required(view):
@@ -51,3 +61,53 @@ class OIDCExceptionMiddleware(SocialAuthExceptionMiddleware):
         if isinstance(exception, AuthPolicyError):
             return _("This account is not allowed to log in.")
         return _("Login with the identity provider failed. Try again later.")
+
+
+@csrf_exempt
+@require_POST
+@never_cache
+@oidc_login_required
+def backchannel_logout(request):
+    """
+    OpenID Connect Back-Channel Logout 1.0: the provider posts a signed
+    logout token, and every session of the user it names ends.
+    """
+    backend = load_backend(load_strategy(request), "oidc", redirect_uri=None)
+    token = request.POST.get("logout_token", "")
+    try:
+        key = backend.find_valid_key(token)
+        if key is None:
+            raise jwt.InvalidSignatureError
+        claims = jwt.decode(
+            token,
+            jwt.PyJWK(key).key,
+            algorithms=[key["alg"]],
+            audience=backend.setting("KEY"),
+            issuer=backend.id_token_issuer(),
+            leeway=backend.JWT_LEEWAY,
+            options={"require": ["iat"]},
+        )
+    except (jwt.PyJWTError, ValueError, SocialAuthBaseException):
+        return HttpResponseBadRequest()
+    # Logout tokens never carry a nonce, which keeps ID tokens out. Logging
+    # out by session ID alone (sid without sub) is not supported.
+    events = claims.get("events")
+    if (
+        not isinstance(events, dict)
+        or BACKCHANNEL_LOGOUT_EVENT not in events
+        or "nonce" in claims
+        or not claims.get("sub")
+    ):
+        return HttpResponseBadRequest()
+
+    user_ids = {
+        str(user_id)
+        for user_id in UserSocialAuth.objects.filter(
+            provider=backend.name, uid=claims["sub"]
+        ).values_list("user_id", flat=True)
+    }
+    if user_ids:
+        for session in Session.objects.filter(expire_date__gt=timezone.now()):
+            if session.get_decoded().get(SESSION_KEY) in user_ids:
+                session.delete()
+    return HttpResponse()
