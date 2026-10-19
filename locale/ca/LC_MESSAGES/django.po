@@ -2659,6 +2659,25 @@ msgstr "Percentils de pes de l'OMS per a nens, en kg"
 msgid "WHO Weight Percentiles for Girls in kg"
 msgstr "Percentils de pes de l'OMS per a nenes, en kg"
 
+#: babubi/oidc.py:62
+msgid "This account is not allowed to log in."
+msgstr "Aquest compte no té permís per iniciar la sessió."
+
+#: babubi/oidc.py:63
+msgid "Login with the identity provider failed. Try again later."
+msgstr ""
+"No s'ha pogut iniciar la sessió amb el proveïdor d'identitat. Torneu-ho a "
+"provar més tard."
+
+#: babubi/templates/registration/login.html:13
+#, python-format
+msgid "Log in with %(provider)s"
+msgstr "Inicia la sessió amb %(provider)s"
+
+#: babubi/templates/registration/login.html:15
+msgid "Log in with single sign-on"
+msgstr "Inicia la sessió amb SSO"
+
 #, python-format
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"

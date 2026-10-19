@@ -2,6 +2,7 @@ import json
 import os
 import dj_database_url
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv, find_dotenv
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     "import_export",
     "qr_code",
     "dbsettings",
+    "social_django",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -78,6 +80,7 @@ MIDDLEWARE = [
     "babubi.middleware.AccessExpiry",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "axes.middleware.AxesMiddleware",
+    "babubi.oidc.OIDCExceptionMiddleware",
 ]
 
 
@@ -156,6 +159,8 @@ WSGI_APPLICATION = "babubi.wsgi.application"
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesBackend",
     "django.contrib.auth.backends.ModelBackend",
+    # Only reachable through the /oidc/ views, which LOGIN_METHODS gates.
+    "social_core.backends.open_id_connect.OpenIdConnectAuth",
 ]
 
 LOGIN_REDIRECT_URL = "babubi:root-router"
@@ -171,6 +176,45 @@ if REVERSE_PROXY_AUTH:
     # Must appear AFTER AuthenticationMiddleware.
     MIDDLEWARE.append("babubi.middleware.CustomRemoteUser")
     AUTHENTICATION_BACKENDS.append("django.contrib.auth.backends.RemoteUserBackend")
+
+# Login methods: "password", "oidc" or both, separated by commas.
+LOGIN_METHODS = [
+    method.strip()
+    for method in (os.environ.get("LOGIN_METHODS") or "password").split(",")
+    if method.strip()
+]
+if not LOGIN_METHODS or not set(LOGIN_METHODS) <= {"password", "oidc"}:
+    raise ImproperlyConfigured("LOGIN_METHODS must be password, oidc or password,oidc.")
+
+# OpenID Connect login through social-auth-app-django.
+# See https://python-social-auth.readthedocs.io/en/latest/backends/oidc.html
+SOCIAL_AUTH_OIDC_OIDC_ENDPOINT = (os.environ.get("OIDC_ENDPOINT") or "").rstrip("/")
+SOCIAL_AUTH_OIDC_KEY = os.environ.get("OIDC_CLIENT_ID") or ""
+SOCIAL_AUTH_OIDC_SECRET = os.environ.get("OIDC_CLIENT_SECRET") or ""
+SOCIAL_AUTH_OIDC_SCOPE = (
+    os.environ.get("OIDC_SCOPES") or "openid profile email"
+).split()
+SOCIAL_AUTH_OIDC_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_OIDC_USE_PKCE = True
+if "oidc" in LOGIN_METHODS and not (
+    SOCIAL_AUTH_OIDC_OIDC_ENDPOINT and SOCIAL_AUTH_OIDC_KEY and SOCIAL_AUTH_OIDC_SECRET
+):
+    raise ImproperlyConfigured(
+        "OIDC login needs OIDC_ENDPOINT, OIDC_CLIENT_ID and OIDC_CLIENT_SECRET."
+    )
+OIDC_PROVIDER_NAME = os.environ.get("OIDC_PROVIDER_NAME") or None
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+SOCIAL_AUTH_LOGIN_ERROR_URL = LOGIN_URL
+# Babubi never creates users from OIDC: an administrator adds them first.
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "babubi.oidc.associate_by_username",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+)
 
 
 # Timezone

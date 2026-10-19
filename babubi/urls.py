@@ -3,35 +3,40 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, reverse_lazy
+from social_django import views as social_views
 
-from . import branding, views
+from . import branding, oidc, views
 
 app_patterns = [
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("login/", views.LoginView.as_view(), name="login"),
     path("branding/<str:name>", branding.serve, name="branding"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path(
         "reset/",
-        auth_views.PasswordResetView.as_view(
-            success_url=reverse_lazy("babubi:password_reset_done")
+        views.password_login_required(
+            auth_views.PasswordResetView.as_view(
+                success_url=reverse_lazy("babubi:password_reset_done")
+            )
         ),
         name="password_reset",
     ),
     path(
         "reset/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(
-            success_url=reverse_lazy("babubi:password_reset_complete")
+        views.password_login_required(
+            auth_views.PasswordResetConfirmView.as_view(
+                success_url=reverse_lazy("babubi:password_reset_complete")
+            )
         ),
         name="password_reset_confirm",
     ),
     path(
         "reset/done/",
-        auth_views.PasswordResetDoneView.as_view(),
+        views.password_login_required(auth_views.PasswordResetDoneView.as_view()),
         name="password_reset_done",
     ),
     path(
         "reset/complete/",
-        auth_views.PasswordResetCompleteView.as_view(),
+        views.password_login_required(auth_views.PasswordResetCompleteView.as_view()),
         name="password_reset_complete",
     ),
     path("", views.RootRouter.as_view(), name="root-router"),
@@ -47,8 +52,32 @@ app_patterns = [
     path("settings/", include("dbsettings.urls")),
 ]
 
+# The views of social-auth-app-django that OIDC login uses, under its
+# namespace, so they stay hidden while OIDC is not a login method.
+oidc_patterns = [
+    path(
+        "login/<str:backend>/",
+        oidc.oidc_login_required(social_views.auth),
+        name="begin",
+    ),
+    path(
+        "complete/<str:backend>/",
+        oidc.oidc_login_required(social_views.complete),
+        name="complete",
+    ),
+]
+
 urlpatterns = [
+    # Other password login pages follow LOGIN_METHODS too.
+    path("admin/login/", views.password_login_required(admin.site.login)),
+    path(
+        "api/auth/login/",
+        views.password_login_required(
+            auth_views.LoginView.as_view(template_name="rest_framework/login.html")
+        ),
+    ),
     path("admin/", admin.site.urls),
+    path("oidc/", include((oidc_patterns, "social"), namespace="social")),
     path("", include("api.urls", namespace="api")),
     path("", include((app_patterns, "babubi"), namespace="babubi")),
     path("user/lang", include("django.conf.urls.i18n")),

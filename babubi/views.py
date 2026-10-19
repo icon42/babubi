@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+from functools import wraps
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import REDIRECT_FIELD_NAME, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import redirect_to_login
+from django.contrib.auth.views import LoginView as LoginViewBase
 from django.contrib.auth.views import LogoutView as LogoutViewBase
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import BadRequest, SuspiciousFileOperation
 from django.forms import Form
-from django.http import FileResponse, Http404, HttpResponseForbidden
+from django.http import (
+    FileResponse,
+    Http404,
+    HttpResponseForbidden,
+    HttpResponseNotAllowed,
+)
 from django.middleware.csrf import REASON_BAD_ORIGIN
 from django.shortcuts import redirect, render
 from django.template import loader
@@ -99,6 +106,38 @@ class BabubiFilterView(FilterView):
 class BabubiPaginatedView(View):
     def get_paginate_by(self, queryset):
         return self.request.user.settings.pagination_count
+
+
+def password_login_required(view):
+    """Sends password pages to the login page while password login is off."""
+
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        if "password" in settings.LOGIN_METHODS:
+            return view(request, *args, **kwargs)
+        next_url = request.GET.get(REDIRECT_FIELD_NAME)
+        return redirect_to_login(next_url) if next_url else redirect(settings.LOGIN_URL)
+
+    return wrapped
+
+
+class LoginView(LoginViewBase):
+    """
+    Password and OpenID Connect login, as LOGIN_METHODS sets. The OIDC button
+    posts to social-auth's begin view, which only takes CSRF-protected POSTs.
+    """
+
+    def post(self, request, *args, **kwargs):
+        if "password" not in settings.LOGIN_METHODS:
+            return HttpResponseNotAllowed(["GET"])
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["password_login"] = "password" in settings.LOGIN_METHODS
+        context["oidc_login"] = "oidc" in settings.LOGIN_METHODS
+        context["oidc_provider_name"] = settings.OIDC_PROVIDER_NAME
+        return context
 
 
 @method_decorator(csrf_protect, name="dispatch")
