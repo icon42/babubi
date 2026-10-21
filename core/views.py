@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
+from django.contrib.auth import get_permission_codename
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
 from django.db.models.functions import Lower
 from django.forms import Form, ValidationError
 from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.urls import NoReverseMatch, reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.generic.base import RedirectView, TemplateView
@@ -76,6 +77,31 @@ class CoreAddView(
 class CoreUpdateView(
     CoreFormMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView
 ):
+    def get_context_data(self, **kwargs):
+        """
+        Add the URL of the entry's delete view, when there is one and the user
+        may use it: on mobile the edit form is the only way to an entry.
+        """
+        context = super().get_context_data(**kwargs)
+        match = self.request.resolver_match
+        opts = self.model._meta
+        permission = "{}.{}".format(
+            opts.app_label, get_permission_codename("delete", opts)
+        )
+        if match.url_name.endswith("-update") and self.request.user.has_perm(
+            permission
+        ):
+            try:
+                context["delete_url"] = reverse(
+                    "{}:{}-delete".format(
+                        match.namespace, match.url_name.removesuffix("-update")
+                    ),
+                    kwargs=match.kwargs,
+                )
+            except NoReverseMatch:
+                pass
+        return context
+
     def get_success_message(self, cleaned_data):
         cleaned_data["model"] = self.model._meta.verbose_name.title()
         if cleaned_data.get("child"):

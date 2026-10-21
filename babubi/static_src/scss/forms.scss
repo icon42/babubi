@@ -33,6 +33,14 @@
     z-index: 1030;
 }
 
+// The edit form's delete link: a full width button below the fields on smaller
+// screens, where the fixed submit button takes the bottom edge.
+.form-delete {
+    display: block;
+    width: 100%;
+    margin: 1.5rem 0 2.5rem;
+}
+
 .pill-container {
     display: flex;
     flex-wrap: wrap;
@@ -64,6 +72,13 @@
         width: auto;
         padding: 0.25rem 0.5rem;
         position: relative;
+    }
+
+    .form-delete {
+        display: inline-block;
+        width: auto;
+        margin: 0 0 0 .5rem;
+        padding: 0.25rem 0.5rem;
     }
 }
 
