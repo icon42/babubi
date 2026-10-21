@@ -25,6 +25,9 @@
         {{ field|add_class:"form-control" }}
     {% endif %}
 {% endif %}
+{% if field.field.suggestions %}
+    {% include "babubi/form_field_suggestions.html" %}
+{% endif %}
 {% if field.help_text %}
     <div class="help-block">
         <small>{{ field.help_text }}</small>

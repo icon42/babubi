@@ -12,6 +12,7 @@ from taggit.forms import TagField, TagWidgetMixin
 from babubi.widgets import DateInput, DateTimeInput, TimeInput
 from core import models
 from core.models import Timer
+from core.suggestions import SHORT, SuggestionsMixin
 from core.widgets import TagsEditor, ChildRadioSelect, PillRadioSelect
 
 
@@ -257,7 +258,9 @@ class TaggableModelForm(forms.ModelForm):
         return tags
 
 
-class BMIForm(CoreModelForm, TaggableModelForm):
+class BMIForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "bmi", "date"],
@@ -276,7 +279,9 @@ class BMIForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class BottleFeedingForm(CoreModelForm, TaggableModelForm):
+class BottleFeedingForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+
     fieldsets = [
         {"fields": ["child", "type", "start", "amount"], "layout": "required"},
         {"fields": ["notes", "tags"], "layout": "advanced"},
@@ -364,7 +369,9 @@ class ChildDeleteForm(forms.ModelForm):
         return instance
 
 
-class DiaperChangeForm(CoreModelForm, TaggableModelForm):
+class DiaperChangeForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+
     fieldsets = [
         {"fields": ["child", "time"], "layout": "required"},
         {
@@ -387,7 +394,9 @@ class DiaperChangeForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class FeedingForm(CoreModelForm, TaggableModelForm):
+class FeedingForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+
     fieldsets = [
         {"fields": ["child", "start", "end", "type", "method"], "layout": "required"},
         {"fields": ["amount"]},
@@ -407,7 +416,9 @@ class FeedingForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class HeadCircumferenceForm(CoreModelForm, TaggableModelForm):
+class HeadCircumferenceForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "head_circumference", "date"],
@@ -426,7 +437,9 @@ class HeadCircumferenceForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class HeightForm(CoreModelForm, TaggableModelForm):
+class HeightForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "height", "date"],
@@ -445,7 +458,18 @@ class HeightForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class MedicationForm(CoreModelForm, TaggableModelForm):
+class MedicationForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {
+        "name": "name",
+        "notes": ("notes", SHORT),
+        "dosage": "dosage",
+        # Stored as a duration, entered in hours.
+        "next_dose_interval": (
+            "next_dose_interval",
+            {"to_form": lambda interval: interval.total_seconds() / 3600},
+        ),
+    }
+
     next_dose_interval = forms.DecimalField(
         label=_("Time Until Next Dosage"),
         required=False,
@@ -502,7 +526,9 @@ class MedicationForm(CoreModelForm, TaggableModelForm):
         return None
 
 
-class PumpingForm(CoreModelForm, TaggableModelForm):
+class PumpingForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+
     fieldsets = [
         {"fields": ["child", "start", "end"], "layout": "required"},
         {"fields": ["amount"]},
@@ -520,7 +546,9 @@ class PumpingForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class NoteForm(CoreModelForm, TaggableModelForm):
+class NoteForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"note": ("note", SHORT)}
+
     class Meta:
         model = models.Note
         fields = ["child", "note", "time", "tags"]
@@ -532,7 +560,9 @@ class NoteForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class SleepForm(CoreModelForm, TaggableModelForm):
+class SleepForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "start", "end", "nap"],
@@ -571,7 +601,9 @@ class TagAdminForm(CoreModelForm):
         }
 
 
-class TemperatureForm(CoreModelForm, TaggableModelForm):
+class TemperatureForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "temperature", "time"],
@@ -637,7 +669,9 @@ class TimerForm(CoreModelForm):
         return instance
 
 
-class TummyTimeForm(CoreModelForm, TaggableModelForm):
+class TummyTimeForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {"fields": ["child", "start", "end"], "layout": "required"},
         {"fields": ["milestone"]},
@@ -655,7 +689,9 @@ class TummyTimeForm(CoreModelForm, TaggableModelForm):
         }
 
 
-class WeightForm(CoreModelForm, TaggableModelForm):
+class WeightForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+    suggestions = {"notes": ("notes", SHORT)}
+
     fieldsets = [
         {
             "fields": ["child", "weight", "date"],

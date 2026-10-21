@@ -60,6 +60,21 @@ Babubi.PullToRefresh = (function (ptr) {
   });
 })();
 
+/**
+ * Quick picks under a form field (core/suggestions.py): a click fills the
+ * field with the picked value.
+ */
+document.addEventListener("click", function (event) {
+  var button = event.target.closest("[data-suggestion-for]");
+  if (!button) return;
+  var input = document.getElementById(button.dataset.suggestionFor);
+  if (!input) return;
+  input.value = button.dataset.value;
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  input.focus();
+});
+
 Babubi.RememberAdvancedToggle = function (ptr) {
   localStorage.setItem("advancedForm", event.newState);
 };

@@ -1,0 +1,11 @@
+{% comment %}
+    Quick picks for a field (core/suggestions.py): clicking one fills it.
+{% endcomment %}
+<div class="field-suggestions">
+    {% for value in field.field.suggestions %}
+        <button type="button"
+                class="btn btn-sm field-suggestion"
+                data-suggestion-for="{{ field.id_for_label }}"
+                data-value="{{ value }}">{{ value }}</button>
+    {% endfor %}
+</div>

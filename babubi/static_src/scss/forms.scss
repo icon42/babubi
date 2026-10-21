@@ -97,3 +97,24 @@
     //on the form at the left hand side of the box
     padding-right: 0;
 }
+
+// Quick picks under a field (babubi/form_field_suggestions.html).
+.field-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    margin-top: .35rem;
+}
+
+.field-suggestion {
+    --bs-btn-padding-y: .05rem;
+    --bs-btn-padding-x: .5rem;
+    --bs-btn-font-size: .8125rem;
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-bg: var(--bs-tertiary-bg);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bs-secondary-bg);
+    --bs-btn-hover-border-color: var(--bs-border-color);
+    border-radius: 50rem;
+}
