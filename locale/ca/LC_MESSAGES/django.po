@@ -2679,6 +2679,98 @@ msgid "Log in with single sign-on"
 msgstr "Inicia la sessió amb SSO"
 
 #, python-format
+#: core/templatetags/days.py
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d h %(minutes)d min"
+
+#: core/templatetags/days.py
+#, python-format
+msgid "%(hours)d h"
+msgstr "%(hours)d h"
+
+#: core/templatetags/days.py
+#, python-format
+msgid "%(minutes)d min"
+msgstr "%(minutes)d min"
+
+#: core/templatetags/days.py
+msgid "Yesterday"
+msgstr "Ahir"
+
+#: core/day_groups.py
+#, python-format
+msgid "max. %(temperature)s"
+msgstr "màx. %(temperature)s"
+
+#: core/templates/core/sleep_list.html
+msgid "Night"
+msgstr "Nit"
+
+#: core/templates/core/sleep_list.html
+msgid "Awake before"
+msgstr "Despert abans"
+
+#: core/templates/core/medication_list.html
+msgid "Next dose"
+msgstr "Propera dosi"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d change"
+msgid_plural "%(count)d changes"
+msgstr[0] "%(count)d canvi"
+msgstr[1] "%(count)d canvis"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d feeding"
+msgid_plural "%(count)d feedings"
+msgstr[0] "%(count)d presa"
+msgstr[1] "%(count)d preses"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d pumping"
+msgid_plural "%(count)d pumpings"
+msgstr[0] "%(count)d extracció"
+msgstr[1] "%(count)d extraccions"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d nap"
+msgid_plural "%(count)d naps"
+msgstr[0] "%(count)d becaina"
+msgstr[1] "%(count)d becaines"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d session"
+msgid_plural "%(count)d sessions"
+msgstr[0] "%(count)d sessió"
+msgstr[1] "%(count)d sessions"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d dose"
+msgid_plural "%(count)d doses"
+msgstr[0] "%(count)d dosi"
+msgstr[1] "%(count)d dosis"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d reading"
+msgid_plural "%(count)d readings"
+msgstr[0] "%(count)d presa"
+msgstr[1] "%(count)d preses"
+
+#: core/day_groups.py
+#, python-format
+msgid "%(count)d note"
+msgid_plural "%(count)d notes"
+msgstr[0] "%(count)d nota"
+msgstr[1] "%(count)d notes"
+
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"
 

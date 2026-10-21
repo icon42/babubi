@@ -23,11 +23,13 @@
     </div>
     <input type="hidden" name="filtered" value="1" />
 </form>
-<p>
-    <a class="btn btn btn-sm"
-       data-bs-toggle="collapse"
-       href="#filter_form"
-       role="button"
-       aria-expanded="false"
-       aria-controls="filter_form">{% trans "Filters" %}</a>
-</p>
+{% if not hide_filter_toggle %}
+    <p>
+        <a class="btn btn btn-sm"
+           data-bs-toggle="collapse"
+           href="#filter_form"
+           role="button"
+           aria-expanded="false"
+           aria-controls="filter_form">{% trans "Filters" %}</a>
+    </p>
+{% endif %}

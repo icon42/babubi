@@ -1,0 +1,4 @@
+{% load days %}
+<span class="day-span"><span>{{ item.start|time:"TIME_FORMAT" }}</span><span>– {{ item.end|time:"TIME_FORMAT" }}
+    {% if item|ends_next_day %}<sup class="day-next">+1</sup>{% endif %}
+</span></span>

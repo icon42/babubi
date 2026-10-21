@@ -1,0 +1,429 @@
+// Activity lists grouped by day (core/templates/core/day_list.html). One
+// table for every width: from md up it reads as a table with buttons; below
+// md each entry becomes a line that opens its edit form when tapped.
+
+.day-list {
+    max-width: 65rem;
+    margin: 0 auto;
+}
+
+.day-list-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .75rem;
+
+    h1 {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+}
+
+.day-list-card {
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.day-table {
+    margin: 0;
+    --day-line: 1.875rem;
+    --day-muted: rgba(var(--bs-emphasis-color-rgb), .55);
+    --day-stripe: rgba(var(--bs-emphasis-color-rgb), .05);
+
+    > :not(caption) > * > * {
+        padding: .3rem .75rem;
+        vertical-align: top;
+        white-space: nowrap;
+        border-bottom-color: var(--bs-secondary-bg);
+    }
+
+    thead th {
+        white-space: normal;
+        font-size: .75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: var(--bs-secondary-color);
+        // A neutral grey: the theme's tertiary background leans to lilac.
+        background: rgba(var(--bs-emphasis-color-rgb), .07);
+        border-bottom-color: var(--bs-border-color);
+    }
+}
+
+// A tint of the brand colour sets the day apart from the neutral stripes.
+.day-table .day-row > td {
+    background: rgba(var(--bs-primary-rgb), .22);
+    border-top: 1px solid rgba(var(--bs-primary-rgb), .35);
+    border-bottom-color: rgba(var(--bs-primary-rgb), .35);
+}
+
+.day-row-name {
+    font-weight: 700;
+    margin-right: .75rem;
+}
+
+.day-row-part {
+    color: var(--bs-secondary-color);
+    font-size: .875rem;
+    font-variant-numeric: tabular-nums;
+
+    & + &::before {
+        content: "·";
+        margin: 0 .4rem;
+    }
+}
+
+.day-item > * {
+    line-height: var(--day-line);
+}
+
+// Every other entry of a day, with its note row, on a faint band.
+.day-item_alt {
+    --bs-table-bg-type: var(--day-stripe);
+}
+
+.day-cell_time {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+
+    a {
+        color: inherit;
+    }
+}
+
+.day-span {
+    display: inline-flex;
+    column-gap: .3em;
+}
+
+.day-next {
+    font-weight: 400;
+    color: var(--bs-secondary-color);
+}
+
+.day-cell_icons i {
+    font-size: 1.4rem;
+}
+
+.day-table td.day-cell_previous {
+    color: var(--day-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.day-dot {
+    display: inline-block;
+    width: .75rem;
+    height: .75rem;
+    margin-right: .4rem;
+    border-radius: 50%;
+    vertical-align: -.05rem;
+    background: var(--day-dot);
+    box-shadow: inset 0 0 0 1px rgba(var(--bs-emphasis-color-rgb), .25);
+}
+
+.day-dot_compact {
+    display: none;
+    margin: 0 0 0 .2rem;
+    vertical-align: .2rem;
+}
+
+$day-dots: (
+    "black": #2b2b2b,
+    "brown": #8b5a2b,
+    "gray": #9aa0a6,
+    "green": #5a8f3c,
+    "orange": #e8892f,
+    "red": #d64545,
+    "white": #ffffff,
+    "yellow": #e9c53a,
+);
+
+@each $name, $color in $day-dots {
+    .day-dot_#{$name} {
+        --day-dot: #{$color};
+    }
+}
+
+.day-cell_text {
+    white-space: normal !important;
+    width: 100%;
+}
+
+.day-thumb img {
+    max-height: var(--day-line);
+}
+
+// The note stays in its column while it fits on one line; otherwise
+// day_list.js marks the row and the note shows in full on the row below.
+.day-cell_note {
+    width: 35%;
+    font-size: .875rem;
+}
+
+.day-note-text {
+    display: block;
+    width: 0;
+    min-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.day-cell_tags {
+    width: 15%;
+    white-space: normal !important;
+}
+
+.day-item-note {
+    display: none;
+}
+
+.day-item_note-below {
+    > * {
+        border-bottom: 0;
+    }
+
+    .day-note-text {
+        display: none;
+    }
+
+    + .day-item-note {
+        display: table-row;
+    }
+}
+
+.day-item-note > td {
+    padding-top: 0 !important;
+    padding-bottom: .5rem !important;
+    white-space: normal !important;
+    font-size: .875rem;
+
+    .icon-note {
+        margin-right: .4rem;
+        color: var(--bs-secondary-color);
+    }
+}
+
+.day-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .4rem;
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        line-height: 1;
+        height: var(--day-line);
+    }
+}
+
+.day-cell_chevron {
+    display: none;
+    color: var(--bs-secondary-color);
+}
+
+.day-duration {
+    display: inline-block;
+    min-width: 6.25rem;
+}
+
+.day-bar {
+    display: inline-block;
+    width: calc(var(--day-bar) * .1rem);
+    height: .375rem;
+    border-radius: .2rem;
+    background: currentColor;
+    opacity: .45;
+    vertical-align: middle;
+}
+
+.day-badge {
+    font-weight: 500;
+}
+
+.day-badge_nap {
+    background: rgba($warning, .18);
+    color: var(--bs-body-color);
+}
+
+.day-badge_night {
+    background: rgba($info, .2);
+    color: var(--bs-body-color);
+}
+
+.day-badge_dose {
+    background: rgba($secondary, .2);
+    color: var(--bs-body-color);
+    font-variant-numeric: tabular-nums;
+}
+
+@include media-breakpoint-down(md) {
+    .day-list-head h1 {
+        font-size: 1.375rem;
+    }
+
+    .day-list-card {
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+        margin-left: calc(var(--bs-gutter-x) * -.5);
+        margin-right: calc(var(--bs-gutter-x) * -.5);
+    }
+
+    .day-table {
+        display: block;
+
+        thead,
+        .day-cell_secondary,
+        .day-cell_actions {
+            display: none !important;
+        }
+
+        tbody {
+            display: block;
+        }
+
+        tr {
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+        }
+
+        > :not(caption) > * > * {
+            padding: .6rem 0;
+            border: 0;
+            background: none;
+        }
+
+        tbody tr {
+            padding: 0 .75rem;
+            border-bottom: 1px solid var(--bs-secondary-bg);
+        }
+
+        > :not(caption) > * > * {
+            box-shadow: none;
+        }
+
+        tbody tr.day-item_alt {
+            background: var(--day-stripe);
+        }
+    }
+
+    // The colour column is hidden; its dot joins the icons.
+    .day-dot_compact {
+        display: inline-block;
+    }
+
+    .day-table tbody tr.day-row {
+        background: rgba(var(--bs-primary-rgb), .22);
+        border-top: 1px solid rgba(var(--bs-primary-rgb), .35);
+        border-bottom-color: rgba(var(--bs-primary-rgb), .35);
+
+        // The row carries the tint; its cell would paint it twice.
+        > td {
+            background: none;
+            border: 0;
+        }
+
+        > td {
+            padding-top: .7rem !important;
+            padding-bottom: .4rem !important;
+            white-space: normal;
+        }
+    }
+
+    .day-row-name {
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        font-size: .8125rem;
+    }
+
+    .day-item {
+        position: relative;
+    }
+
+    // Cells wrap their words rather than push the line past the screen; a
+    // time never breaks, and a span breaks only between its start and end.
+    .day-table > tbody > .day-item > * {
+        white-space: normal;
+    }
+
+    .day-table > tbody > .day-item > .day-cell_time,
+    .day-table > tbody > .day-item > .day-cell_previous {
+        white-space: nowrap;
+    }
+
+    // A fixed width keeps the cells after the time lined up from row to row;
+    // a span shows its end under its start.
+    .day-table > tbody > .day-item > .day-cell_time {
+        flex: none;
+        width: 3.25rem;
+    }
+
+    .day-span {
+        flex-direction: column;
+    }
+
+    // The whole line opens the edit form.
+    .day-item-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+    }
+
+    .day-cell_note,
+    .day-cell_text {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+    }
+
+    .day-cell_previous {
+        order: 1;
+        margin-left: auto;
+        font-size: .875rem;
+    }
+
+    .day-cell_chevron {
+        display: block;
+        order: 2;
+    }
+
+    // With no "previous" shown, the chevron takes the right edge itself.
+    .day-item:not(:has(> .day-cell_previous:not(.day-cell_secondary))) > .day-cell_chevron {
+        margin-left: auto;
+    }
+
+    .day-table tr.day-item-note {
+        display: none;
+    }
+
+    .day-item_note-below {
+        border-bottom: 0 !important;
+
+        + tr.day-item-note {
+            display: block;
+
+            > td:first-child,
+            > td:last-child {
+                display: none;
+            }
+
+            > td {
+                display: block;
+                padding: 0 0 .6rem !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,134 @@
+{% extends "babubi/page.html" %}
+{% load days i18n %}
+{% comment %}
+    Activity list grouped by day (core/day_groups.py). A list extends it with
+    the blocks `heading`, `head` (its column headers), `time` and `cells` (the
+    time and the cells of `item`) and `empty`; `time_heading` names the first
+    column when it is not a time.
+{% endcomment %}
+{% block content %}
+    <div class="day-list">
+        <div class="day-list-head">
+            <h1>
+                {% block heading %}{% endblock %}
+            </h1>
+            <a class="btn btn-sm btn-outline-secondary"
+               data-bs-toggle="collapse"
+               href="#filter_form"
+               role="button"
+               aria-expanded="false"
+               aria-controls="filter_form"
+               title="{% trans "Filters" %}">
+                <i class="icon-filter" aria-hidden="true"></i><span class="d-none d-sm-inline">{% trans "Filters" %}</span>
+            </a>
+            {% block extra_actions %}{% endblock %}
+            {% if day_list.can_add %}
+                <a href="{% url day_list.add_url %}" class="btn btn-sm btn-primary">
+                    <i class="icon-add" aria-hidden="true"></i>{% trans "Add" %}
+                </a>
+            {% endif %}
+        </div>
+        {% include "babubi/filter.html" with hide_filter_toggle=True %}
+        <div class="day-list-card">
+            <table class="table day-table">
+                <thead>
+                    <tr>
+                        <th class="day-cell_time">
+                            {% block time_heading %}
+                                {% trans "Time" %}
+                            {% endblock %}
+                        </th>
+                        {% if not unique_child %}
+                            <th>{% trans "Child" %}</th>
+                        {% endif %}
+                        {% block head %}{% endblock %}
+                        {% if day_list.notes %}
+                            <th class="day-cell_note">{% trans "Notes" %}</th>
+                        {% endif %}
+                        <th class="day-cell_secondary">{% trans "Tags" %}</th>
+                        <th class="day-cell_actions">
+                            <span class="visually-hidden">{% trans "Actions" %}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %}
+                        {% if day.date %}
+                            <tr class="day-row">
+                                <td colspan="{{ day_list.columns }}">
+                                    <span class="day-row-name">{{ day.date|day_label }}</span>
+                                    {% for part in day.summary %}
+                                        <span class="day-row-part">
+                                            {% if part.icon %}<i class="{{ part.icon }}" aria-hidden="true"></i>{% endif %}
+                                            {{ part.text }}
+                                        </span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% for item in day.items %}
+                            <tr class="day-item{% if forloop.counter|divisibleby:2 %} day-item_alt{% endif %}"{% if item.notes %} data-note{% endif %}>
+                                <th scope="row" class="day-cell_time">
+                                    {% if day_list.can_change %}
+                                        <a href="{% url day_list.update_url item.pk %}" class="day-item-link">
+                                        {% endif %}
+                                        {% block time %}{% endblock %}
+                                        {% if day_list.can_change %}</a>{% endif %}
+                                </th>
+                                {% if not unique_child %}
+                                    <td>
+                                        <a href="{% url 'core:child' item.child.slug %}">{{ item.child }}</a>
+                                    </td>
+                                {% endif %}
+                                {% block cells %}{% endblock %}
+                                {% if day_list.notes %}
+                                    <td class="day-cell_note">
+                                        <span class="day-note-text">{{ item.notes|default_if_none:"" }}</span>
+                                    </td>
+                                {% endif %}
+                                <td class="day-cell_secondary day-cell_tags">{% include "core/render_tag_list.html" with tags=item.tags.all %}</td>
+                                <td class="day-cell_actions">
+                                    <div class="day-actions">
+                                        {% if day_list.can_change %}
+                                            <a href="{% url day_list.update_url item.pk %}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="icon-update" aria-hidden="true"></i>{% trans "Edit" %}
+                                            </a>
+                                        {% endif %}
+                                        {% if day_list.can_delete %}
+                                            <a href="{% url day_list.delete_url item.pk %}"
+                                               class="btn btn-sm btn-outline-danger">
+                                                <i class="icon-delete" aria-hidden="true"></i>{% trans "Delete" %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% if day_list.can_change %}
+                                    <td class="day-cell_chevron" aria-hidden="true">
+                                        <i class="icon-angle-right"></i>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% if day_list.notes and item.notes %}
+                                <tr class="day-item-note{% if forloop.counter|divisibleby:2 %} day-item_alt{% endif %}">
+                                    <td></td>
+                                    <td colspan="{{ day_list.note_columns }}">
+                                        <i class="icon-note" aria-hidden="true"></i>{{ item.notes }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% empty %}
+                        <tr>
+                            <th colspan="{{ day_list.columns }}">
+                                {% block empty %}{% endblock %}
+                            </th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include "babubi/paginator.html" %}
+    </div>
+{% endblock %}
