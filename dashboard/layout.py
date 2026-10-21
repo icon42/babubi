@@ -69,9 +69,13 @@ class Action:
     default: bool = False
     # For a child's shortcut, the child whose dashboard it opens.
     child: object = None
+    # For a timer of a kind, the activity it times (core.timer_kinds).
+    timer_kind: str = None
 
     @property
     def activity(self):
+        if self.timer_kind:
+            return self.timer_kind
         return {"headcircumference": "head-circumference"}.get(self.model, self.model)
 
 
@@ -217,6 +221,7 @@ ACTIONS = [
 ]
 ACTIONS_BY_KEY = {action.key: action for action in ACTIONS}
 CHILD_PREFIX = "child:"
+TIMER_PREFIX = "timer:"
 
 
 def action(key):
@@ -226,6 +231,13 @@ def action(key):
     """
     if key in ACTIONS_BY_KEY:
         return ACTIONS_BY_KEY[key]
+    if key.startswith(TIMER_PREFIX):
+        from core.timer_kinds import KINDS
+
+        kind = key[len(TIMER_PREFIX) :]
+        if kind in KINDS:
+            # Named after the activity; the card marks it as a timer.
+            return Action(key, ACTIONS_BY_KEY[kind].label, "timer", timer_kind=kind)
     if key.startswith(CHILD_PREFIX):
         from core.models import Child
 
@@ -311,9 +323,14 @@ def arrangement(layout):
     for fixed in ACTIONS:
         if fixed.key not in seen:
             (actions if fixed.default else hidden_actions).append(fixed.key)
-    # Every child as a shortcut: one the layout has not placed yet waits among
-    # the hidden actions.
+    # A timer of each kind, and every child as a shortcut: one the layout has
+    # not placed yet waits among the hidden actions.
     from core.models import Child
+    from core.timer_kinds import KINDS
+
+    for kind in KINDS:
+        if TIMER_PREFIX + kind not in seen:
+            hidden_actions.append(TIMER_PREFIX + kind)
 
     for slug in Child.objects.order_by("last_name", "first_name").values_list(
         "slug", flat=True

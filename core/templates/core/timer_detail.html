@@ -1,5 +1,5 @@
 {% extends "babubi/page.html" %}
-{% load babubi duration i18n timers %}
+{% load babubi duration i18n timer_kinds timers %}
 {% get_child_count as CHILD_COUNT %}
 {% block title %}{{ object }}{% endblock %}
 {% block breadcrumbs %}
@@ -23,36 +23,53 @@
                     {{ timer }} created by {{ user }}
                 {% endblocktrans %}
             </p>
-            <div class="d-grid gap-4 mb-4">
-                {% if perms.core.add_feeding %}
-                    <a class="btn btn-lg btn-activity activity-feeding"
-                       href="{% instance_add_url 'core:feeding-add' %}"
-                       role="button"><i class="icon-feeding" aria-hidden="true"></i>
-                        {% trans "Feeding" %}
-                    </a>
+            {% timer_kinds object as kinds %}
+            {% with current=object|timer_kind %}
+                {% if perms.core.change_timer or object.user == request.user %}
+                    {# What it times, chosen or changed at any time while it runs. #}
+                    <form method="post"
+                          action="{% url 'dashboard:timer-kind' object.pk %}"
+                          class="timer-kinds mb-4"
+                          aria-label="{% trans "Type" %}">
+                        {% csrf_token %}
+                        {% for option in kinds|dictsort:"kind" %}
+                            <button class="btn btn-sm timer-kind activity-{{ option.kind }}{% if option.kind == current %} active{% endif %}"
+                                    name="kind"
+                                    value="{{ option.kind }}"
+                                    {% if option.kind == current %}aria-pressed="true"{% endif %}>
+                                <i class="icon-{{ option.kind }}" aria-hidden="true"></i> {{ option.label }}
+                            </button>
+                        {% endfor %}
+                        <button class="btn btn-sm timer-kind{% if not current %} active{% endif %}"
+                                name="kind"
+                                value="">{% trans "Not specified" %}</button>
+                    </form>
                 {% endif %}
-                {% if perms.core.add_pumping %}
-                    <a class="btn btn-lg btn-activity activity-pumping"
-                       href="{% instance_add_url 'core:pumping-add' %}"
-                       role="button"><i class="icon-pumping" aria-hidden="true"></i>
-                        {% trans "Pumping" %}
-                    </a>
+                {# Finish as its own kind; the others stay at hand, smaller. #}
+                <div class="d-grid gap-4 mb-4">
+                    {% for option in kinds %}
+                        {% if not current or option.kind == current %}
+                            <a class="btn btn-lg btn-activity activity-{{ option.kind }}"
+                               href="{{ option.url }}"
+                               role="button"><i class="icon-{{ option.kind }}" aria-hidden="true"></i>
+                                {{ option.label }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if current and kinds|length > 1 %}
+                    <div class="timer-other-kinds mb-4">
+                        <span class="text-body-secondary small">{% trans "Finish as" %}</span>
+                        {% for option in kinds %}
+                            {% if option.kind != current %}
+                                <a class="btn btn-sm dash-btn" href="{{ option.url }}">
+                                    <i class="icon-{{ option.kind }}" aria-hidden="true"></i> {{ option.label }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 {% endif %}
-                {% if perms.core.add_sleep %}
-                    <a class="btn btn-lg btn-activity activity-sleep"
-                       href="{% instance_add_url 'core:sleep-add' %}"
-                       role="button"><i class="icon-sleep" aria-hidden="true"></i>
-                        {% trans "Sleep" %}
-                    </a>
-                {% endif %}
-                {% if perms.core.add_tummytime %}
-                    <a class="btn btn-lg btn-activity activity-tummytime"
-                       href="{% instance_add_url 'core:tummytime-add' %}"
-                       role="button"><i class="icon-tummytime" aria-hidden="true"></i>
-                        {% trans "Tummy Time" %}
-                    </a>
-                {% endif %}
-            </div>
+            {% endwith %}
             <div class="center-block"
                  role="group"
                  aria-label="{% trans "Timer actions" %}">

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views import View
 
 from babubi.mixins import LoginRequiredMixin
-from core.models import Child
+from core.models import Child, Timer
+from core.timer_kinds import set_kind
 
 from . import layout
 from .models import DashboardLayout
@@ -54,3 +56,21 @@ class DashboardLayoutEdit(LoginRequiredMixin, View):
         return HttpResponseRedirect(
             "{}?edit=1{}".format(url, "#dashboard-" + anchor if anchor else "")
         )
+
+
+class TimerKindUpdate(LoginRequiredMixin, View):
+    """
+    Sets or changes what a running timer times, from its page: its owner, or
+    whoever may change timers.
+    """
+
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        timer = get_object_or_404(Timer, pk=pk)
+        if timer.user_id != request.user.pk and not request.user.has_perm(
+            "core.change_timer"
+        ):
+            raise PermissionDenied
+        set_kind(timer, request.POST.get("kind", ""))
+        return HttpResponseRedirect(reverse("core:timer-detail", args=[timer.pk]))

@@ -591,6 +591,21 @@ class TemperatureForm(CoreModelForm, TaggableModelForm):
 
 
 class TimerForm(CoreModelForm):
+    # What it times, kept in Babubi's dashboard.TimerProfile; it can also be
+    # set or changed from the timer's page while it runs.
+    kind = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", _("Not specified")),
+            ("feeding", _("Feeding")),
+            ("pumping", _("Pumping")),
+            ("sleep", _("Sleep")),
+            ("tummytime", _("Tummy Time")),
+        ],
+        label=_("Type"),
+        widget=PillRadioSelect,
+    )
+
     class Meta:
         model = models.Timer
         fields = ["child", "name", "start"]
@@ -602,8 +617,14 @@ class TimerForm(CoreModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")
         super(TimerForm, self).__init__(*args, **kwargs)
+        from core.timer_kinds import kind_of
+
+        if self.instance.pk:
+            self.fields["kind"].initial = kind_of(self.instance)
 
     def save(self, commit=True):
+        from core.timer_kinds import set_kind
+
         instance = super(TimerForm, self).save(commit=False)
         if instance.user_id is None:
             instance.user = self.user
@@ -612,6 +633,7 @@ class TimerForm(CoreModelForm):
             # Editing a timer does not change its owner, including an owner
             # changed by someone else while the form was open.
             instance.save(update_fields=self._meta.fields)
+        set_kind(instance, self.cleaned_data.get("kind", ""))
         return instance
 
 

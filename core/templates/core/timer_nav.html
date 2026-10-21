@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load dashboard_layout i18n %}
 <li class="nav-item dropdown">
     <a id="nav-timer-menu-link"
        class="nav-link dropdown-toggle"
@@ -20,34 +20,9 @@
             </a>
         {% endif %}
         {% if perms.core.add_timer %}
-            {% if children.count > 1 %}
-                <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header">{% trans "Quick Start Timer For…" %}</h6>
-                {% for child in children %}
-                    <form action="{% url 'core:timer-add-quick' %}"
-                          role="form"
-                          method="post"
-                          class="d-inline">
-                        {% csrf_token %}
-                        <input type="hidden" name="child" value="{{ child.pk }}">
-                        <button class="dropdown-item d-flex align-items-center w-100 border-0 bg-transparent text-start px-3 py-1"
-                                type="submit">
-                            {% include "core/child_thumbnail.html" %}
-                            <span class="text-wrap ms-2">{{ child }}</span>
-                        </button>
-                    </form>
-                {% endfor %}
-            {% else %}
-                <form action="{% url 'core:timer-add-quick' %}"
-                      role="form"
-                      method="post"
-                      class="d-inline">
-                    {% csrf_token %}
-                    <button class="dropdown-item" type="submit">
-                        <i class="icon-timer" aria-hidden="true"></i> {% trans "Quick Start Timer" %}
-                    </button>
-                </form>
-            {% endif %}
+            {% active_child as active %}
+            <div class="dropdown-divider"></div>
+            {% include "core/timer_quick_kinds.html" with child=active.child %}
         {% endif %}
         {% if timers %}
             <div class="dropdown-divider"></div>

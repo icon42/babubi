@@ -12,4 +12,9 @@ urlpatterns = [
         layout_views.DashboardLayoutEdit.as_view(),
         name="dashboard-layout",
     ),
+    path(
+        "timers/<int:pk>/kind/",
+        layout_views.TimerKindUpdate.as_view(),
+        name="timer-kind",
+    ),
 ]

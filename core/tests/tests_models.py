@@ -4,7 +4,7 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
-from django.utils import timezone
+from django.utils import formats, timezone
 
 from core import models
 
@@ -350,7 +350,16 @@ class TimerTestCase(TestCase):
         self.assertEqual(self.named, models.Timer.objects.get(name="Named"))
         self.assertEqual(str(self.named), "Named")
         self.assertEqual(self.unnamed, models.Timer.objects.get(name=None))
-        self.assertEqual(str(self.unnamed), "Timer #{}".format(self.unnamed.id))
+        since = formats.time_format(
+            timezone.localtime(self.unnamed.start), "TIME_FORMAT"
+        )
+        self.assertEqual(str(self.unnamed), "Timer since {}".format(since))
+        from core.timer_kinds import set_kind
+
+        set_kind(self.unnamed, "sleep")
+        self.assertEqual(str(self.unnamed), "Sleep since {}".format(since))
+        set_kind(self.named, "sleep")
+        self.assertEqual(str(self.named), "Named")
 
     def test_timer_title_with_child(self):
         self.assertEqual(self.named.title_with_child, str(self.named))

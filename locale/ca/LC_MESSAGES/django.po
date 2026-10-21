@@ -2866,6 +2866,20 @@ msgstr "Tria les corbes de creixement de l'OMS; si no s'especifica, no se'n fa s
 msgid "Set whether the child is a boy or a girl to compare with the WHO standards."
 msgstr "Indica si és nen o nena per comparar-ho amb els estàndards de l'OMS."
 
+#, python-format
+msgid "%(kind)s since %(time)s"
+msgstr "%(kind)s des de les %(time)s"
+
+msgid "Finish as"
+msgstr "Finalitza com a"
+
+msgid "Start a timer"
+msgstr "Inicia un temporitzador"
+
+#, python-format
+msgid "Start a timer for %(name)s"
+msgstr "Inicia un temporitzador per a %(name)s"
+
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"
 

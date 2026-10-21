@@ -1,5 +1,5 @@
 {% extends "babubi/page.html" %}
-{% load bootstrap datetime duration i18n widget_tweaks %}
+{% load bootstrap datetime duration i18n timer_kinds widget_tweaks %}
 {% block title %}
     {% trans "Timers" %}
 {% endblock %}
@@ -38,6 +38,9 @@
                     <tr>
                         <th scope="row">{{ timer.start|datetime_short }}</th>
                         <td>
+                            {% with kind=timer|timer_kind %}
+                                {% if kind %}<i class="icon-{{ kind }}" aria-hidden="true"></i>{% endif %}
+                            {% endwith %}
                             <a href="{% url 'core:timer-detail' timer.id %}">{{ timer }}</a>
                         </td>
                         {% if not unique_child %}

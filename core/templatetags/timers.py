@@ -24,6 +24,7 @@ def timer_nav(context):
         "children": children,
         "perms": perms,
         "next": request.path,
+        "request": request,
     }
 
 
@@ -31,7 +32,7 @@ def timer_nav(context):
 def quick_timer_nav(context):
     children = Child.objects.all()
     perms = context["perms"] or None
-    return {"children": children, "perms": perms}
+    return {"children": children, "perms": perms, "request": context.get("request")}
 
 
 @register.simple_tag(takes_context=True)

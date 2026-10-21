@@ -664,7 +664,19 @@ class Timer(models.Model):
         verbose_name_plural = _("Timers")
 
     def __str__(self):
-        return self.name or str(format_lazy(_("Timer #{id}"), id=self.id))
+        """
+        The name given, or what the timer times and since when, e.g. "Sleep
+        since 18:44" (the kind is Babubi's, core.timer_kinds).
+        """
+        if self.name:
+            return self.name
+        from core.timer_kinds import kind_label
+
+        since = formats.time_format(timezone.localtime(self.start), "TIME_FORMAT")
+        return _("%(kind)s since %(time)s") % {
+            "kind": kind_label(self) or _("Timer"),
+            "time": since,
+        }
 
     @property
     def title_with_child(self):

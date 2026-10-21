@@ -338,3 +338,70 @@ class ChildSexTestCase(TestCase):
         keys = [report.key for report in reports]
         self.assertIn("weight-change-girl", keys)
         self.assertNotIn("weight-change-boy", keys)
+
+
+class TimerKindTestCase(TestCase):
+    def setUp(self):
+        from core.models import Timer
+
+        self.child = Child.objects.create(
+            first_name="Ada", last_name="X", birth_date=timezone.localdate()
+        )
+        self.owner = get_user_model().objects.create_user(
+            username="owner", password="secret", is_superuser=True
+        )
+        self.timer = Timer.objects.create(user=self.owner, child=self.child)
+        self.c = HttpClient()
+        self.c.login(username="owner", password="secret")
+
+    def test_kind_changes_and_shapes_the_page(self):
+        from core.models import Timer
+        from core.timer_kinds import kind_of
+
+        url = "/timers/{}/".format(self.timer.pk)
+        response = self.c.post(url + "kind/", {"kind": "sleep"})
+        self.assertRedirects(response, url, fetch_redirect_response=False)
+        self.assertEqual(kind_of(self.timer), "sleep")
+        page = self.c.get(url)
+        self.assertContains(page, "timer-other-kinds")
+        self.c.post(url + "kind/", {"kind": "nonsense"})
+        self.assertEqual(kind_of(Timer.objects.get(pk=self.timer.pk)), "")
+        self.assertNotContains(self.c.get(url), "timer-other-kinds")
+
+    def test_only_owner_or_change_permission(self):
+        get_user_model().objects.create_user(username="other", password="secret")
+        other = HttpClient()
+        other.login(username="other", password="secret")
+        url = "/timers/{}/kind/".format(self.timer.pk)
+        response = other.post(url, {"kind": "sleep"})
+        self.assertEqual(response.status_code, 403)
+
+    def test_quick_timer_and_form_set_the_kind(self):
+        from core.forms import TimerForm
+        from core.models import Timer
+        from core.timer_kinds import kind_of
+
+        self.c.post("/timers/add/quick/", {"child": self.child.pk, "kind": "pumping"})
+        newest = Timer.objects.order_by("-id").first()
+        self.assertEqual(kind_of(newest), "pumping")
+        self.c.post("/timers/add/quick/", {"child": self.child.pk, "kind": "x"})
+        self.assertEqual(kind_of(Timer.objects.order_by("-id").first()), "")
+
+        form = TimerForm(
+            {"child": self.child.pk, "start": timezone.localtime(), "kind": "feeding"},
+            instance=self.timer,
+            user=self.owner,
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        form.save()
+        self.assertEqual(kind_of(self.timer), "feeding")
+
+    def test_timer_kind_quick_actions(self):
+        key = layout.TIMER_PREFIX + "sleep"
+        url = "/children/{}/".format(self.child.slug)
+        dash = self.c.get(url + "?edit=1").context["dash"]
+        self.assertIn(key, [a.key for a in dash["hidden_actions"]])
+        self.c.post(url + "layout/", {"kind": "action", "key": key, "op": "show"})
+        page = self.c.get(url)
+        self.assertContains(page, 'name="kind" value="sleep"')
+        self.assertIsNone(layout.action(layout.TIMER_PREFIX + "nope"))

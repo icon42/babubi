@@ -9,7 +9,7 @@
             {% for item in actions %}
                 <li>
                     <i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
-                    <span class="quick-actions-edit-label">{{ item.action.label }}</span>
+                    <span class="quick-actions-edit-label">{{ item.action.label }}{% if item.action.timer_kind %} · {% trans "Timer" %}{% endif %}</span>
                     <form method="post"
                           action="{% url 'dashboard:dashboard-layout' child.slug %}"
                           class="dash-controls-buttons">
@@ -33,7 +33,7 @@
             {% for action in hidden_actions %}
                 <li class="quick-actions-edit_hidden">
                     <i class="icon-{{ action.activity }}" aria-hidden="true"></i>
-                    <span class="quick-actions-edit-label">{{ action.label }}</span>
+                    <span class="quick-actions-edit-label">{{ action.label }}{% if action.timer_kind %} · {% trans "Timer" %}{% endif %}</span>
                     <form method="post"
                           action="{% url 'dashboard:dashboard-layout' child.slug %}"
                           class="dash-controls-buttons">
@@ -62,9 +62,11 @@
                     <form method="post" action="{% url 'core:timer-add-quick' %}">
                         {% csrf_token %}
                         <input type="hidden" name="child" value="{{ child.pk }}">
+                        {% if item.action.timer_kind %}<input type="hidden" name="kind" value="{{ item.action.timer_kind }}">{% endif %}
                         <button class="quick-action activity-{{ item.action.activity }}"
-                                type="submit">
-                            <span class="quick-action-icon"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i></span>
+                                type="submit"
+                                {% if item.action.timer_kind %}title="{% trans "Start a timer" %}"{% endif %}>
+                            <span class="quick-action-icon{% if item.action.timer_kind %} quick-action-icon_timer{% endif %}"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>{% if item.action.timer_kind %}<i class="icon-timer quick-action-badge" aria-hidden="true"></i>{% endif %}</span>
                             {{ item.action.label }}
                         </button>
                     </form>

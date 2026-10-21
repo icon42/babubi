@@ -215,6 +215,22 @@
     line-height: 1;
     color: var(--activity);
 
+    // A timer of a kind: its activity's icon with a small stopwatch.
+    &_timer {
+        position: relative;
+    }
+
+    .quick-action-badge {
+        position: absolute;
+        right: -.15em;
+        bottom: -.1em;
+        padding: .06em;
+        border-radius: 50%;
+        background: var(--card-surface, var(--bs-body-bg));
+        font-size: .42em;
+        line-height: 1;
+    }
+
     // A child's shortcut shows the child's picture, at the icons' size.
     &_child img {
         width: .85em;
@@ -293,4 +309,37 @@
 
 .percentiles-settings fieldset {
     margin-bottom: .75rem;
+}
+
+// The timer page's type selector (core/timer_detail.html): pills in each
+// activity's colour, filled when chosen.
+.timer-kinds {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .4rem;
+}
+
+.timer-kind {
+    --bs-btn-color: var(--activity, var(--bs-body-color));
+    --bs-btn-border-color: var(--activity, var(--bs-border-color));
+    --bs-btn-hover-color: var(--activity, var(--bs-body-color));
+    --bs-btn-hover-bg: color-mix(in srgb, var(--activity, var(--bs-body-color)) 12%, transparent);
+    --bs-btn-hover-border-color: var(--activity, var(--bs-border-color));
+    --bs-btn-active-color: var(--bs-body-bg);
+    --bs-btn-active-bg: var(--activity, var(--bs-secondary-color));
+    --bs-btn-active-border-color: var(--activity, var(--bs-secondary-color));
+    border-radius: 50rem;
+
+    &.active [class^="icon-"] {
+        color: inherit;
+    }
+}
+
+.timer-other-kinds {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: .4rem;
 }

@@ -68,3 +68,30 @@ class ChildProfile(models.Model):
 
     def __str__(self):
         return str(self.child)
+
+
+class TimerProfile(models.Model):
+    """
+    What Babubi records about a timer beyond upstream's Timer model: the
+    activity it times, which can be set or changed while it runs.
+    """
+
+    KINDS = [
+        ("feeding", _("Feeding")),
+        ("pumping", _("Pumping")),
+        ("sleep", _("Sleep")),
+        ("tummytime", _("Tummy Time")),
+    ]
+
+    timer = models.OneToOneField(
+        "core.Timer", on_delete=models.CASCADE, related_name="profile"
+    )
+    kind = models.CharField(
+        blank=True, default="", max_length=16, choices=KINDS, verbose_name=_("Type")
+    )
+
+    class Meta:
+        default_permissions = ()
+
+    def __str__(self):
+        return str(self.timer)

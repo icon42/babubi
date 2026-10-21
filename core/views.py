@@ -639,6 +639,11 @@ class TimerAddQuick(PermissionRequiredMixin, RedirectView):
         elif models.Child.count() == 1:
             instance.child = models.Child.objects.first()
         instance.save()
+        # What it times, when the button names it (Babubi's timer kinds).
+        if request.POST.get("kind"):
+            from core import timer_kinds
+
+            timer_kinds.set_kind(instance, request.POST["kind"])
         self.url = request.GET.get(
             "next", reverse("core:timer-detail", args={instance.id})
         )
