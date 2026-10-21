@@ -6,7 +6,6 @@ from django.utils.translation import gettext as _
 
 import plotly.offline as plotly
 import plotly.graph_objs as go
-import plotly.colors as colors
 
 from core.utils import duration_string
 
@@ -15,7 +14,8 @@ from reports import utils
 from datetime import timedelta
 
 ASLEEP_COLOR = "rgb(35, 110, 150)"
-AWAKE_COLOR = colors.DEFAULT_PLOTLY_COLORS[2]
+# The brand coral (the right breast of the dashboard), not Plotly's green.
+AWAKE_COLOR = "rgb(244, 119, 133)"
 
 
 def sleep_pattern(sleeps):
