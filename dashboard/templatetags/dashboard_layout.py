@@ -3,7 +3,9 @@ from django import template
 from django.utils.safestring import mark_safe
 
 from core import growth
+from core.models import Child
 from dashboard import layout
+from dashboard.layout_views import ACTIVE_CHILD
 from dashboard.models import DashboardLayout
 from dashboard.templatetags import cards
 
@@ -152,3 +154,20 @@ def card_percentiles(context, child):
         "measures": [growth.MEASURES[key] for key in allowed],
         "chosen": chosen,
     }
+
+
+@register.simple_tag(takes_context=True)
+def active_child(context):
+    """
+    The child whose dashboard the user opened last, or the first child.
+    :returns: a dict with the child (or None without children) and the others.
+    """
+    request = context.get("request")
+    if request is None or not request.user.is_authenticated:
+        return {"child": None, "others": []}
+    children = list(Child.objects.order_by("last_name", "first_name", "id"))
+    slug = request.session.get(ACTIVE_CHILD)
+    child = next((c for c in children if c.slug == slug), None)
+    if child is None and children:
+        child = children[0]
+    return {"child": child, "others": [c for c in children if c != child]}

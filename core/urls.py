@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.urls import path
 
-from dashboard.views import ChildDashboard
+from dashboard.layout_views import ActiveChildDashboard
 
 from . import views
 
@@ -23,7 +23,7 @@ urlpatterns = [
     path("children/", views.ChildList.as_view(), name="child-list"),
     path("children/add/", views.ChildAdd.as_view(), name="child-add"),
     # A child's own page is its dashboard; its timeline has a page of its own.
-    path("children/<str:slug>/", ChildDashboard.as_view(), name="child"),
+    path("children/<str:slug>/", ActiveChildDashboard.as_view(), name="child"),
     path(
         "children/<str:slug>/timeline/",
         views.ChildDetail.as_view(),

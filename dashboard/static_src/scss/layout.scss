@@ -55,6 +55,27 @@
     }
 }
 
+// The main menu's dropdowns open on hover on wide screens with a pointer.
+@include media-breakpoint-up(md) {
+    @media (hover: hover) {
+        // Placed below the item: until Bootstrap opens it once, a menu has no
+        // position of its own, and beside a split toggle it would sit behind
+        // the name.
+        .navbar .nav-item.dropdown:hover > .dropdown-menu {
+            display: block;
+            top: 100%;
+            left: 0;
+            margin-top: 0;
+        }
+
+        // A menu at the right end opens leftwards, inside the window.
+        .navbar .nav-item.dropdown:hover > .dropdown-menu-end {
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
 // Edit mode.
 .dash-controls {
     display: flex;

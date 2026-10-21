@@ -9,6 +9,22 @@ from core.models import Child
 
 from . import layout
 from .models import DashboardLayout
+from .views import ChildDashboard
+
+ACTIVE_CHILD = "dashboard_active_child"
+
+
+class ActiveChildDashboard(ChildDashboard):
+    """
+    A child's dashboard, which also makes that child the active one: the main
+    menu names it and leads back to it (dashboard_layout.active_child).
+    """
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        request.session[ACTIVE_CHILD] = self.object.slug
+        return response
+
 
 class DashboardLayoutEdit(LoginRequiredMixin, View):
     """

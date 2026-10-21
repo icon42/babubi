@@ -2842,6 +2842,12 @@ msgstr "Desa"
 msgid "No measurements"
 msgstr "Sense mesures"
 
+msgid "Other children"
+msgstr "Altres nadons"
+
+msgid "Configure"
+msgstr "Configura"
+
 msgid "WHO Head Circumference Percentiles for Boys in cm"
 msgstr "Percentils de perímetre cranial de l'OMS per a nens, en cm"
 
