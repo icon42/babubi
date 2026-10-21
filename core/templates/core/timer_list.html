@@ -26,6 +26,11 @@
                         <th>{% trans "Child" %}</th>
                     {% endif %}
                     <th>{% trans "User" %}</th>
+                    {% if perms.core.delete_timer %}
+                        <th>
+                            <span class="visually-hidden">{% trans "Actions" %}</span>
+                        </th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -43,10 +48,19 @@
                             </td>
                         {% endif %}
                         <td>{{ timer.user_username }}</td>
+                        {% if perms.core.delete_timer %}
+                            <td class="text-end">
+                                <a href="{% url 'core:timer-delete' timer.id %}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="{% trans "Delete" %}">
+                                    <i class="icon-delete" aria-hidden="true"></i><span class="visually-hidden">{% trans "Delete" %}</span>
+                                </a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% empty %}
                     <tr>
-                        <th colspan="{% if not unique_child %}4{% else %}3{% endif %}">{% trans "No timer entries found." %}</th>
+                        <th colspan="5">{% trans "No timer entries found." %}</th>
                     </tr>
                 {% endfor %}
             </tbody>

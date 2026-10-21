@@ -199,6 +199,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(page.status_code, 200)
 
         entry = models.Timer.objects.first()
+        page = self.c.get("/timers/")
+        self.assertContains(page, "/timers/{}/delete/".format(entry.id))
         page = self.c.get("/timers/{}/".format(entry.id))
         self.assertEqual(page.status_code, 200)
         page = self.c.get("/timers/{}/edit/".format(entry.id))
