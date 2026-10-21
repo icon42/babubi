@@ -2,7 +2,7 @@
 from django.views.generic.detail import DetailView
 
 from babubi.mixins import PermissionRequiredMixin
-from core import models
+from core import growth, models
 
 from . import graphs
 
@@ -236,6 +236,9 @@ class HeadCircumferenceChangeChildReport(PermissionRequiredMixin, DetailView):
         "core.view_headcircumference",
     )
     template_name = "reports/head_circumference_change.html"
+    # The sex whose WHO percentile curves are drawn behind, if any.
+    sex = None
+    target_url = "reports:report-head-circumference-change-child"
 
     def get_context_data(self, **kwargs):
         context = super(HeadCircumferenceChangeChildReport, self).get_context_data(
@@ -243,12 +246,28 @@ class HeadCircumferenceChangeChildReport(PermissionRequiredMixin, DetailView):
         )
         child = context["object"]
         objects = models.HeadCircumference.objects.filter(child=child)
+        context["target_url"] = self.target_url
         if objects:
+            curves = None
+            if self.sex:
+                last = max(objects.values_list("date", flat=True))
+                days = (last - child.birth_date).days + 2
+                curves = growth.curves("head_circumference", self.sex, days)
             (
                 context["html"],
                 context["js"],
-            ) = graphs.head_circumference_change(objects)
+            ) = graphs.head_circumference_change(objects, curves, child.birth_date)
         return context
+
+
+class HeadCircumferenceChangeChildBoyReport(HeadCircumferenceChangeChildReport):
+    sex = "boy"
+    target_url = "reports:report-head-circumference-change-child-boy"
+
+
+class HeadCircumferenceChangeChildGirlReport(HeadCircumferenceChangeChildReport):
+    sex = "girl"
+    target_url = "reports:report-head-circumference-change-child-girl"
 
 
 class HeightChangeChildReport(PermissionRequiredMixin, DetailView):

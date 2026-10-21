@@ -2782,6 +2782,12 @@ msgid_plural "%(count)d notes"
 msgstr[0] "%(count)d nota"
 msgstr[1] "%(count)d notes"
 
+msgid "WHO Head Circumference Percentiles for Boys in cm"
+msgstr "Percentils de perímetre cranial de l'OMS per a nens, en cm"
+
+msgid "WHO Head Circumference Percentiles for Girls in cm"
+msgstr "Percentils de perímetre cranial de l'OMS per a nenes, en cm"
+
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"
 
