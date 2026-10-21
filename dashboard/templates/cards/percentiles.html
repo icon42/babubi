@@ -1,0 +1,61 @@
+{% extends "cards/base.html" %}
+{% load i18n %}
+{% block header %}
+    {% trans "Percentiles" %}
+{% endblock %}
+{% block content %}
+    {% if edit %}
+        <form method="post"
+              action="{% url 'dashboard:dashboard-layout' child.slug %}"
+              class="percentiles-settings">
+            {% csrf_token %}
+            <input type="hidden" name="op" value="configure">
+            <input type="hidden" name="key" value="percentiles">
+            <fieldset>
+                <legend class="form-label">{% trans "Measures" %}</legend>
+                {% for measure in measures %}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="measures" value="{{ measure.key }}" id="percentiles-{{ measure.key }}" {% if measure.key in chosen %}checked{% endif %}>
+                        <label class="form-check-label" for="percentiles-{{ measure.key }}">{{ measure.label }}</label>
+                    </div>
+                {% endfor %}
+            </fieldset>
+            <button class="btn btn-sm btn-primary" type="submit">{% trans "Save" %}</button>
+        </form>
+    {% elif not sex %}
+        <p class="text-body-secondary mb-0">
+            {% trans "Set whether the child is a boy or a girl to compare with the WHO standards." %}
+            {% if perms.core.change_child %}
+                <a href="{% url 'core:child-update' child.slug %}">{% trans "Edit" %}</a>
+            {% endif %}
+        </p>
+    {% else %}
+        <div class="percentiles">
+            {% for row in rows %}
+                <div class="percentiles-item activity-{{ row.measure.activity }}">
+                    <div class="percentiles-value">
+                        {% if row.percentile is None %}
+                            –
+                        {% elif row.percentile < 1 %}
+                            &lt;1&nbsp;%
+                        {% elif row.percentile > 99 %}
+                            &gt;99&nbsp;%
+                        {% else %}
+                            {{ row.percentile|floatformat:0 }}&nbsp;%
+                        {% endif %}
+                    </div>
+                    <div class="percentiles-label">
+                        <i class="icon-{{ row.measure.activity }}" aria-hidden="true"></i> {{ row.measure.label }}
+                    </div>
+                    <div class="percentiles-detail">
+                        {% if row.instance %}
+                            {{ row.value|floatformat:"-2" }}&nbsp;{{ row.measure.unit }} · {{ row.instance.date|date:"SHORT_DATE_FORMAT" }}
+                        {% else %}
+                            {% trans "No measurements" %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

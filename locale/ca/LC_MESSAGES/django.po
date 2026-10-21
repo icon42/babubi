@@ -2782,6 +2782,66 @@ msgid_plural "%(count)d notes"
 msgstr[0] "%(count)d nota"
 msgstr[1] "%(count)d notes"
 
+msgid "Quick Actions"
+msgstr "Accions ràpides"
+
+msgid "Quick actions"
+msgstr "Accions ràpides"
+
+msgid "Hidden quick actions"
+msgstr "Accions ràpides amagades"
+
+msgid "Customize"
+msgstr "Personalitza"
+
+msgid "Done"
+msgstr "Fet"
+
+msgid "Hidden cards"
+msgstr "Caixes amagades"
+
+msgid "Columns"
+msgstr "Columnes"
+
+msgid "Show"
+msgstr "Mostra"
+
+msgid "Hide"
+msgstr "Amaga"
+
+msgid "Move left"
+msgstr "Mou a l'esquerra"
+
+msgid "Move right"
+msgstr "Mou a la dreta"
+
+msgid "Move up"
+msgstr "Mou amunt"
+
+msgid "Move down"
+msgstr "Mou avall"
+
+msgid "Add a graph card"
+msgstr "Afegeix una caixa de gràfic"
+
+msgid "Remove"
+msgstr "Treu"
+
+msgid "Percentiles"
+msgstr "Percentils"
+
+msgid "Card settings"
+msgstr "Configuració de les caixes"
+
+msgid "Measures"
+msgstr "Mesures"
+
+msgid "Save"
+msgstr "Desa"
+
+msgid "No measurements"
+msgstr "Sense mesures"
+
 msgid "WHO Head Circumference Percentiles for Boys in cm"
 msgstr "Percentils de perímetre cranial de l'OMS per a nens, en cm"
 
@@ -2796,6 +2856,9 @@ msgstr "No especificat"
 
 msgid "Picks the WHO growth standards; none when not specified."
 msgstr "Tria les corbes de creixement de l'OMS; si no s'especifica, no se'n fa servir cap."
+
+msgid "Set whether the child is a boy or a girl to compare with the WHO standards."
+msgstr "Indica si és nen o nena per comparar-ho amb els estàndards de l'OMS."
 
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"

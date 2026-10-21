@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-The WHO Child Growth Standards, from the WHO expanded tables (one row per
-day of age, 0 to 1856). Weight and height read the tables the upstream
-percentile reports import (core/migrations); head circumference reads the
-WHO tables kept here, in the same format, converted from the WHO's expanded
-tables (who.int/tools/child-growth-standards).
+Where a child's measurements fall on the WHO Child Growth Standards: the
+exact percentile, from the L, M and S parameters of the WHO expanded tables
+(one row per day of age, 0 to 1856). Weight and height read the tables the
+upstream percentile reports import (core/migrations); head circumference
+reads the WHO tables kept here, in the same format, converted from the WHO's
+expanded tables (who.int/tools/child-growth-standards).
 """
 import csv
+import math
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -81,6 +83,12 @@ def _table(measure_key, sex):
         ]
 
 
+@cache
+def _lms(measure_key, sex):
+    """The (L, M, S) of each day of age, for a measure and a sex."""
+    return [(row["L"], row["M"], row["S"]) for row in _table(measure_key, sex)]
+
+
 def curves(measure_key, sex, days):
     """
     The WHO percentile curves P3, P15, P50, P85 and P97 for the first days
@@ -111,3 +119,39 @@ def set_sex(child, sex):
     sex = sex if sex in SEXES else ""
     ChildProfile.objects.update_or_create(child=child, defaults={"sex": sex})
     return sex
+
+
+def percentile(measure_key, sex, age_in_days, value):
+    """
+    The percentile of a measurement, by the WHO's LMS method.
+    :returns: a float between 0 and 100, or None outside the tables' ages.
+    """
+    table = _lms(measure_key, sex)
+    if not 0 <= age_in_days < len(table) or value <= 0:
+        return None
+    lam, mu, sigma = table[age_in_days]
+    if lam == 0:
+        z = math.log(value / mu) / sigma
+    else:
+        z = ((value / mu) ** lam - 1) / (lam * sigma)
+    return 50 * (1 + math.erf(z / math.sqrt(2)))
+
+
+def latest(child, measure_key, sex):
+    """
+    The child's latest measurement of a kind and its percentile.
+    :returns: a dict with the measure, the instance, its value and its
+        percentile (None when out of the tables), or None without data.
+    """
+    measure = MEASURES[measure_key]
+    instance = measure.model.objects.filter(child=child).order_by("-date").first()
+    if instance is None:
+        return None
+    value = getattr(instance, measure.field)
+    age = (instance.date - child.birth_date).days
+    return {
+        "measure": measure,
+        "instance": instance,
+        "value": value,
+        "percentile": percentile(measure_key, sex, age, value),
+    }

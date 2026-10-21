@@ -1,0 +1,36 @@
+{% load i18n %}
+{% comment %}
+    Edit-mode controls of one dashboard card: `card` is the registry entry,
+    `column` and `row` its place, `last_row` whether it is its column's last.
+{% endcomment %}
+<form method="post"
+      action="{% url 'dashboard:dashboard-layout' object.slug %}"
+      class="dash-controls">
+    {% csrf_token %}
+    <input type="hidden" name="kind" value="card">
+    <input type="hidden" name="key" value="{{ card.key }}">
+    <span class="dash-controls-label">{{ card.label }}</span>
+    <span class="dash-controls-buttons">
+        <button class="btn btn-sm dash-btn"
+                name="op"
+                value="left"
+                title="{% trans "Move left" %}"
+                {% if column == 1 %}disabled{% endif %}>←</button>
+        <button class="btn btn-sm dash-btn"
+                name="op"
+                value="up"
+                title="{% trans "Move up" %}"
+                {% if row == 1 %}disabled{% endif %}>↑</button>
+        <button class="btn btn-sm dash-btn"
+                name="op"
+                value="down"
+                title="{% trans "Move down" %}"
+                {% if last_row %}disabled{% endif %}>↓</button>
+        <button class="btn btn-sm dash-btn"
+                name="op"
+                value="right"
+                title="{% trans "Move right" %}"
+                {% if column == 3 %}disabled{% endif %}>→</button>
+        <button class="btn btn-sm dash-btn" name="op" value="hide">{% trans "Hide" %}</button>
+    </span>
+</form>

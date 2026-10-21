@@ -1,0 +1,75 @@
+{% extends "cards/base.html" %}
+{% load i18n %}
+{% block header %}
+    {% trans "Quick Actions" %}
+{% endblock %}
+{% block content %}
+    {% if edit %}
+        <ul class="quick-actions-edit list-unstyled mb-0">
+            {% for item in actions %}
+                <li>
+                    <i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
+                    <span class="quick-actions-edit-label">{{ item.action.label }}</span>
+                    <form method="post"
+                          action="{% url 'dashboard:dashboard-layout' child.slug %}"
+                          class="dash-controls-buttons">
+                        {% csrf_token %}
+                        <input type="hidden" name="kind" value="action">
+                        <input type="hidden" name="key" value="{{ item.action.key }}">
+                        <button class="btn btn-sm dash-btn"
+                                name="op"
+                                value="up"
+                                title="{% trans "Move up" %}"
+                                {% if forloop.first %}disabled{% endif %}>↑</button>
+                        <button class="btn btn-sm dash-btn"
+                                name="op"
+                                value="down"
+                                title="{% trans "Move down" %}"
+                                {% if forloop.last %}disabled{% endif %}>↓</button>
+                        <button class="btn btn-sm dash-btn" name="op" value="hide">{% trans "Hide" %}</button>
+                    </form>
+                </li>
+            {% endfor %}
+            {% for action in hidden_actions %}
+                <li class="quick-actions-edit_hidden">
+                    <i class="icon-{{ action.activity }}" aria-hidden="true"></i>
+                    <span class="quick-actions-edit-label">{{ action.label }}</span>
+                    <form method="post"
+                          action="{% url 'dashboard:dashboard-layout' child.slug %}"
+                          class="dash-controls-buttons">
+                        {% csrf_token %}
+                        <input type="hidden" name="kind" value="action">
+                        <input type="hidden" name="key" value="{{ action.key }}">
+                        <button class="btn btn-sm dash-btn dash-btn_show" name="op" value="show">{% trans "Show" %}</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="quick-actions">
+            {% for item in actions %}
+                {% if item.url %}
+                    <a class="quick-action activity-{{ item.action.activity }}"
+                       href="{{ item.url }}">
+                        {% if item.action.child %}
+                            <span class="quick-action-icon quick-action-icon_child">{% include "core/child_thumbnail.html" with child=item.action.child %}</span>
+                        {% else %}
+                            <span class="quick-action-icon"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i></span>
+                        {% endif %}
+                        {{ item.action.label }}
+                    </a>
+                {% else %}
+                    <form method="post" action="{% url 'core:timer-add-quick' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="child" value="{{ child.pk }}">
+                        <button class="quick-action activity-{{ item.action.activity }}"
+                                type="submit">
+                            <span class="quick-action-icon"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i></span>
+                            {{ item.action.label }}
+                        </button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

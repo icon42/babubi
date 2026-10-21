@@ -1,0 +1,275 @@
+// The child dashboard's columns (dashboard/layout.py). From lg up the three
+// columns stand side by side as the user arranged them; below lg they merge
+// and their cards interleave row by row (--dash-order), two abreast on
+// medium screens and one on small ones.
+
+.dash-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-bottom: .75rem;
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+}
+
+.dash-columns {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    column-gap: 1.5rem;
+}
+
+.dash-column {
+    display: contents;
+}
+
+.dash-card {
+    order: var(--dash-order);
+    width: 100%;
+    min-width: 0;
+}
+
+@include media-breakpoint-up(sm) {
+    .dash-card {
+        width: calc(50% - .75rem);
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .dash-columns {
+        flex-wrap: nowrap;
+    }
+
+    .dash-column {
+        display: block;
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .dash-card {
+        width: auto;
+    }
+}
+
+// Edit mode.
+.dash-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .4rem;
+    margin-bottom: .4rem;
+}
+
+.dash-controls-label {
+    font-weight: 600;
+    font-size: .875rem;
+}
+
+.dash-controls-buttons {
+    display: inline-flex;
+    gap: .25rem;
+
+    .btn {
+        min-width: 2rem;
+    }
+}
+
+.dash-columns_editing .dash-card {
+    padding: .5rem;
+    margin-bottom: 1rem;
+    border: 1px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg);
+
+    .card-dashboard {
+        margin-bottom: 0;
+    }
+}
+
+// Below the columns in edit mode: the report picker and the hidden cards,
+// shown whole so they can be judged before bringing them back.
+.dash-extra {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--bs-border-color);
+}
+
+.dash-add-report {
+    max-width: 30rem;
+    margin-bottom: 1.5rem;
+}
+
+.dash-hidden {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    align-items: start;
+    gap: 1rem;
+
+    .dash-card {
+        width: auto;
+        padding: .5rem;
+        border: 1px dashed var(--bs-border-color);
+        border-radius: var(--bs-border-radius-lg);
+        opacity: .75;
+    }
+
+    .card-dashboard {
+        margin-bottom: 0;
+    }
+}
+
+.card-report-graph {
+    margin: 0 -1rem;
+
+    // Plotly wraps the graph in a div of the report's full height; the card
+    // sets its own (dashboard/layout.py, Report.height).
+    > div {
+        height: auto !important;
+    }
+
+    .plotly-graph-div {
+        height: var(--graph-height, 280px) !important;
+    }
+
+    // The range buttons (Babubi.GraphRanges), smaller in a card.
+    .graph-ranges {
+        margin-bottom: .25rem;
+
+        .btn {
+            --bs-btn-padding-y: .1rem;
+            --bs-btn-padding-x: .55rem;
+            --bs-btn-font-size: .75rem;
+        }
+    }
+}
+
+// The quick actions card: a grid of desktop-like launchers, each the
+// activity's icon, large and in its colour, with its name small below; in
+// edit mode, a list.
+// The chosen actions share the card's width in equal columns: as many as
+// fit, and when fewer actions than that, the columns widen to fill the row.
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+    align-items: start;
+    gap: .75rem .25rem;
+
+    form {
+        display: contents;
+    }
+}
+
+.quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+    padding: .25rem;
+    border: 0;
+    border-radius: var(--bs-border-radius);
+    background: none;
+    color: var(--bs-body-color);
+    font-size: .75rem;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--bs-body-color);
+        background: var(--bs-tertiary-bg);
+    }
+}
+
+.quick-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1em;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--activity);
+
+    // A child's shortcut shows the child's picture, at the icons' size.
+    &_child img {
+        width: .85em;
+        height: .85em;
+        object-fit: cover;
+    }
+
+    [class^="icon-"] {
+        color: inherit;
+    }
+}
+
+.quick-actions-edit {
+    li {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .3rem 0;
+    }
+
+    li + li {
+        border-top: 1px solid var(--bs-border-color-translucent);
+    }
+
+    .quick-actions-edit-label {
+        flex-grow: 1;
+    }
+}
+
+.quick-actions-edit_hidden {
+    color: var(--bs-secondary-color);
+}
+
+// Edit-mode buttons: neutral, so the activity colours stay the only colour
+// on the dashboard.
+.dash-btn {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bs-tertiary-bg);
+    --bs-btn-hover-border-color: var(--bs-border-color);
+    --bs-btn-active-bg: var(--bs-secondary-bg);
+    --bs-btn-disabled-color: var(--bs-secondary-color);
+    --bs-btn-disabled-border-color: var(--bs-border-color-translucent);
+}
+
+.dash-btn_show {
+    --bs-btn-color: var(--bs-link-color);
+    --bs-btn-hover-color: var(--bs-link-hover-color);
+}
+
+// The percentiles card: up to three large percentiles, side by side.
+.percentiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: .75rem;
+    text-align: center;
+}
+
+.percentiles-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--activity);
+}
+
+.percentiles-label {
+    font-size: .8125rem;
+    font-weight: 600;
+}
+
+.percentiles-detail {
+    font-size: .75rem;
+    color: var(--bs-secondary-color);
+}
+
+.percentiles-settings fieldset {
+    margin-bottom: .75rem;
+}
