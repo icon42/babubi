@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -9,7 +9,7 @@ from babubi.mixins import LoginRequiredMixin
 from core.models import Child, Timer
 from core.timer_kinds import set_kind
 
-from . import layout
+from . import layout, versions
 from .models import DashboardLayout
 from .views import ChildDashboard
 
@@ -74,3 +74,16 @@ class TimerKindUpdate(LoginRequiredMixin, View):
             raise PermissionDenied
         set_kind(timer, request.POST.get("kind", ""))
         return HttpResponseRedirect(reverse("core:timer-detail", args=[timer.pk]))
+
+
+class DashboardVersion(LoginRequiredMixin, View):
+    """
+    The version of a child's dashboard data (dashboard/versions.py), which an
+    open dashboard polls to fetch its cards only after a change.
+    """
+
+    def get(self, request, slug):
+        if not request.user.has_perm("core.view_child"):
+            raise PermissionDenied
+        child = get_object_or_404(Child, slug=slug)
+        return JsonResponse({"version": versions.version(child)})

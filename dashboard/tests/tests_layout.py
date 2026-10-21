@@ -405,3 +405,50 @@ class TimerKindTestCase(TestCase):
         page = self.c.get(url)
         self.assertContains(page, 'name="kind" value="sleep"')
         self.assertIsNone(layout.action(layout.TIMER_PREFIX + "nope"))
+
+
+class DashboardVersionTestCase(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+
+        cache.clear()
+        self.child = Child.objects.create(
+            first_name="Ada", last_name="X", birth_date=timezone.localdate()
+        )
+        self.other = Child.objects.create(
+            first_name="Bru", last_name="X", birth_date=timezone.localdate()
+        )
+        get_user_model().objects.create_user(
+            username="tester", password="secret", is_superuser=True
+        )
+        self.c = HttpClient()
+        self.c.login(username="tester", password="secret")
+
+    def version(self, child):
+        url = "/children/{}/version/".format(child.slug)
+        return self.c.get(url).json()["version"]
+
+    def test_changes_bump_only_their_child(self):
+        from core.models import DiaperChange
+
+        before, other_before = self.version(self.child), self.version(self.other)
+        change = DiaperChange.objects.create(
+            child=self.child, time=timezone.now(), wet=True, solid=False
+        )
+        after = self.version(self.child)
+        self.assertNotEqual(after, before)
+        self.assertEqual(self.version(self.other), other_before)
+        change.delete()
+        self.assertNotEqual(self.version(self.child), after)
+
+    def test_page_carries_the_version_and_refresh_skips_graphs(self):
+        url = "/children/{}/".format(self.child.slug)
+        key = layout.REPORT_PREFIX + "sleep-totals"
+        self.c.post(url + "layout/", {"kind": "card", "key": key, "op": "add"})
+        page = self.c.get(url)
+        self.assertContains(page, 'data-version="{}"'.format(self.version(self.child)))
+        self.assertContains(page, 'id="dashboard-time-words"')
+        refresh = self.c.get(url + "?refresh=1").content.decode()
+        self.assertIn('id="dashboard-{}"'.format(key), refresh)
+        after_card = refresh.split('id="dashboard-{}"'.format(key))[1][:400]
+        self.assertNotIn("card-report", after_card)

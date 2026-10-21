@@ -13,6 +13,11 @@ urlpatterns = [
         name="dashboard-layout",
     ),
     path(
+        "children/<str:slug>/version/",
+        layout_views.DashboardVersion.as_view(),
+        name="dashboard-version",
+    ),
+    path(
         "timers/<int:pk>/kind/",
         layout_views.TimerKindUpdate.as_view(),
         name="timer-kind",

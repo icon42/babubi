@@ -5,7 +5,7 @@
 {% endblock %}
 {% block title %}
     {% if sleep %}
-        <div>
+        <div data-since="{{ sleep_diff_base|date:'c' }}">
             {% blocktrans trimmed with time_ago=sleep_diff_base|deltasince|duration_string:'m' %}
                 {{ time_ago }} ago
             {% endblocktrans %}

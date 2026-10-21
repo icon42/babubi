@@ -140,14 +140,19 @@
                 </a>
             {% endif %}
         </div>
+        {% dashboard_version object as version %}
         <div id="dashboard-child"
-             class="dash-columns{% if edit %} dash-columns_editing{% endif %}">
+             class="dash-columns{% if edit %} dash-columns_editing{% endif %}"
+             data-version-url="{% url 'dashboard:dashboard-version' object.slug %}"
+             data-version="{{ version }}"
+             data-day="{% now "Y-m-d" %}">
             {% for column in dash.columns %}
                 <div class="dash-column">
                     {% for item in column %}
                         <div class="dash-card"
                              id="dashboard-{{ item.card.key }}"
-                             style="--dash-order: {{ item.order }}">
+                             style="--dash-order: {{ item.order }}"
+                             {% if item.card.report %}data-dash-static{% endif %}>
                             {% if edit %}
                                 {% include "dashboard/card_controls.html" with card=item.card column=forloop.parentloop.counter row=forloop.counter last_row=forloop.last %}
                             {% endif %}
@@ -204,6 +209,8 @@
     {% endwith %}
 {% endblock %}
 {% block javascript %}
+    {% dashboard_time_words as time_words %}
+    {{ time_words|json_script:"dashboard-time-words" }}
     {% if request.GET.edit %}
     {% elif user.settings.dashboard_refresh_rate %}
         <script type="application/javascript">

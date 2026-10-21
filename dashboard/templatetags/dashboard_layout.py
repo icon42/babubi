@@ -72,6 +72,10 @@ def shown_cards(columns):
 @register.simple_tag(takes_context=True)
 def dashboard_card(context, card, child):
     """Renders one card of the registry, as its own inclusion tag would."""
+    # The in-place refresh (dashboard.js) leaves graph cards as drawn: no
+    # need to build them again.
+    if card.report and context["request"].GET.get("refresh"):
+        return ""
     function = getattr(cards, card.tag, None) or globals()[card.tag]
     if card.report:
         values = function(context, child, card.report)
@@ -171,3 +175,31 @@ def active_child(context):
     if child is None and children:
         child = children[0]
     return {"child": child, "others": [c for c in children if c != child]}
+
+
+@register.simple_tag
+def dashboard_version(child):
+    """The version of the child's data the page was rendered with."""
+    from dashboard import versions
+
+    return versions.version(child)
+
+
+@register.simple_tag
+def dashboard_time_words():
+    """
+    The words dashboard.js writes "… ago" times with, in the page's language:
+    the singular and plural of an hour and a minute, and the "ago" phrase.
+    """
+    from django.utils.translation import gettext, ngettext
+
+    def forms(singular, plural, name):
+        return [
+            ngettext(singular, plural, n) % {name: "%(n)s"} for n in (1, 2)
+        ]
+
+    return {
+        "hour": forms("%(hours)s hour", "%(hours)s hours", "hours"),
+        "minute": forms("%(minutes)s minute", "%(minutes)s minutes", "minutes"),
+        "ago": gettext("%(time_ago)s ago"),
+    }
