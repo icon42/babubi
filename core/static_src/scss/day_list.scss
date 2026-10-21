@@ -18,6 +18,10 @@
         flex-grow: 1;
         margin: 0;
         font-size: 1.5rem;
+
+        i {
+            margin-right: .4rem;
+        }
     }
 
     .btn {
@@ -60,11 +64,17 @@
     }
 }
 
-// A tint of the brand colour sets the day apart from the neutral stripes.
+// A tint of the activity's colour sets the day apart from the neutral
+// stripes; a list outside any activity falls back on the brand violet.
+.day-list {
+    --day-tint: color-mix(in srgb, var(--activity, var(--bs-primary)) 20%, transparent);
+    --day-edge: color-mix(in srgb, var(--activity, var(--bs-primary)) 40%, transparent);
+}
+
 .day-table .day-row > td {
-    background: rgba(var(--bs-primary-rgb), .22);
-    border-top: 1px solid rgba(var(--bs-primary-rgb), .35);
-    border-bottom-color: rgba(var(--bs-primary-rgb), .35);
+    background: var(--day-tint);
+    border-top: 1px solid var(--day-edge);
+    border-bottom-color: var(--day-edge);
 }
 
 .day-row-name {
@@ -263,7 +273,7 @@ $day-dots: (
 }
 
 .day-badge_dose {
-    background: rgba($secondary, .2);
+    background: color-mix(in srgb, var(--activity, var(--bs-primary)) 20%, transparent);
     color: var(--bs-body-color);
     font-variant-numeric: tabular-nums;
 }
@@ -326,9 +336,9 @@ $day-dots: (
     }
 
     .day-table tbody tr.day-row {
-        background: rgba(var(--bs-primary-rgb), .22);
-        border-top: 1px solid rgba(var(--bs-primary-rgb), .35);
-        border-bottom-color: rgba(var(--bs-primary-rgb), .35);
+        background: var(--day-tint);
+        border-top: 1px solid var(--day-edge);
+        border-bottom-color: var(--day-edge);
 
         // The row carries the tint; its cell would paint it twice.
         > td {

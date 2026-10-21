@@ -7,9 +7,10 @@
     column when it is not a time.
 {% endcomment %}
 {% block content %}
-    <div class="day-list">
+    <div class="day-list activity-{{ day_list.activity }}">
         <div class="day-list-head">
             <h1>
+                <i class="icon-{{ day_list.activity }}" aria-hidden="true"></i>
                 {% block heading %}{% endblock %}
             </h1>
             <a class="btn btn-sm btn-outline-secondary"

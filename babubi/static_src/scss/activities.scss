@@ -1,0 +1,73 @@
+// Activity colours ($activity-colors in _variables.scss). Each activity gets
+// a custom property per theme, `--activity-<name>`; its icon takes that
+// colour everywhere, and `.activity-<name>` sets `--activity` for a block
+// that belongs to it (a dashboard card, a list).
+
+@include color-mode("light") {
+    @each $name, $colors in $activity-colors {
+        --activity-#{$name}: #{nth($colors, 1)};
+    }
+}
+
+@include color-mode("dark") {
+    @each $name, $colors in $activity-colors {
+        --activity-#{$name}: #{nth($colors, 2)};
+    }
+}
+
+@each $name, $colors in $activity-colors {
+    .icon-#{$name} {
+        color: var(--activity-#{$name});
+    }
+
+    .activity-#{$name} {
+        --activity: var(--activity-#{$name});
+    }
+
+    // Dashboard cards, as cards/base.html names them (card-<type>).
+    .card-dashboard.card-#{$name} {
+        --card-accent: var(--activity-#{$name});
+    }
+}
+
+// The large icons of the mobile navigation bar are buttons, not activities:
+// they all take the bar's grey.
+.navbar .icon-2x {
+    color: inherit;
+}
+
+// A button for one activity (`btn btn-activity activity-<name>`): filled with
+// the activity's colour, its icon and text in the page colour, which reads on
+// the strong light-theme hues and on the pale dark-theme tints alike.
+.btn-activity {
+    --bs-btn-color: var(--bs-body-bg);
+    --bs-btn-bg: var(--activity);
+    --bs-btn-border-color: var(--activity);
+    --bs-btn-hover-color: var(--bs-body-bg);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--activity) 85%, var(--bs-emphasis-color));
+    --bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+    --bs-btn-active-color: var(--bs-body-bg);
+    --bs-btn-active-bg: color-mix(in srgb, var(--activity) 75%, var(--bs-emphasis-color));
+    --bs-btn-active-border-color: var(--bs-btn-active-bg);
+
+    [class^="icon-"] {
+        color: inherit;
+    }
+}
+
+// Timeline circles: filled with the activity's colour, and only ringed with
+// it where an activity ends, so a start and its end still read apart.
+.timeline .timeline-badge.timeline-badge_activity {
+    background-color: var(--activity, var(--bs-secondary-color));
+    color: var(--bs-body-bg);
+
+    [class^="icon-"] {
+        color: inherit;
+    }
+}
+
+.timeline .timeline-badge.timeline-badge_end {
+    background-color: var(--bs-body-bg);
+    box-shadow: inset 0 0 0 3px var(--activity, var(--bs-secondary-color));
+    color: var(--activity, var(--bs-secondary-color));
+}

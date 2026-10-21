@@ -217,6 +217,7 @@ class DayGroupedListMixin:
         user = self.request.user
         columns = 1 + spec.cells + spec.notes + 2 + (not context.get("unique_child"))
         context["day_list"] = {
+            "activity": spec.url.split(":")[1],
             "add_url": spec.url + "-add",
             "update_url": spec.url + "-update",
             "delete_url": spec.url + "-delete",

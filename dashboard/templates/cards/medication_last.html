@@ -24,7 +24,7 @@
         {% if medication.next_dose_time %}
             <div class="mt-1">
                 {% if medication.next_dose_ready %}
-                    <span class="badge bg-success">{% trans "Next dose ready" %}</span>
+                    <span class="badge card-badge">{% trans "Next dose ready" %}</span>
                 {% else %}
                     <small class="text-muted">
                         {% blocktrans trimmed with next_time=medication.next_dose_time|time %}

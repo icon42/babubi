@@ -43,6 +43,31 @@ $tummytime-color: #8352e6;
 // Accent of the cards that belong to no activity (notes, timers, statistics).
 $card-neutral-color: #7a7590;
 
+// One colour per activity, used by its icon, its dashboard cards and its
+// list (babubi/static_src/scss/activities.scss): (light theme, dark theme).
+// Hues spread around the wheel from the brand violet and coral; the dark
+// theme takes lighter tints of the same hues.
+$activity-colors: (
+    "feeding": (#e05a6d, #f47785),
+    "pumping": (#c2509f, #e68bcb),
+    "sleep": (#4c63e6, #7d92f2),
+    "tummytime": ($tummytime-color, #ab8af0),
+    // Diaper changes share the coral of their solid contents; wet ones keep
+    // a blue.
+    "diaperchange": (#e8705a, #f59f8c),
+    "wet": (#2f80d9, #74b0f0),
+    "solid": (#e8705a, #f59f8c),
+    "medication": (#13998a, #4fd1c0),
+    "temperature": (#e8762d, #f5a46b),
+    "weight": (#c99a1a, #e6c35c),
+    "height": (#3f9d5a, #7ccf90),
+    "head-circumference": (#7f9a2b, #b5cf5e),
+    "bmi": (#b5806a, #dba892),
+    "note": ($card-neutral-color, #a8a3bd),
+    "timer": ($card-neutral-color, #a8a3bd),
+    "tag": ($card-neutral-color, #a8a3bd),
+);
+
 // White text on the brand violet is 4.47:1; keep it white on buttons.
 $min-contrast-ratio: 4.4;
 

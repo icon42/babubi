@@ -23,13 +23,13 @@
 
 // Contents of a diaper: the colours read on both themes.
 @include color-mode("light") {
-    --icon-wet-color: #{$diaper-color};
-    --icon-solid-color: #9a6a33;
+    --icon-wet-color: var(--activity-wet);
+    --icon-solid-color: var(--activity-solid);
 }
 
 @include color-mode("dark") {
-    --icon-wet-color: #8fa5f5;
-    --icon-solid-color: #d9a66b;
+    --icon-wet-color: var(--activity-wet);
+    --icon-solid-color: var(--activity-solid);
 }
 
 .icon-wet {

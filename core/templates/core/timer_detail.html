@@ -25,28 +25,28 @@
             </p>
             <div class="d-grid gap-4 mb-4">
                 {% if perms.core.add_feeding %}
-                    <a class="btn btn-success btn-lg"
+                    <a class="btn btn-lg btn-activity activity-feeding"
                        href="{% instance_add_url 'core:feeding-add' %}"
                        role="button"><i class="icon-feeding" aria-hidden="true"></i>
                         {% trans "Feeding" %}
                     </a>
                 {% endif %}
                 {% if perms.core.add_pumping %}
-                    <a class="btn btn-success btn-lg"
+                    <a class="btn btn-lg btn-activity activity-pumping"
                        href="{% instance_add_url 'core:pumping-add' %}"
                        role="button"><i class="icon-pumping" aria-hidden="true"></i>
                         {% trans "Pumping" %}
                     </a>
                 {% endif %}
                 {% if perms.core.add_sleep %}
-                    <a class="btn btn-success btn-lg"
+                    <a class="btn btn-lg btn-activity activity-sleep"
                        href="{% instance_add_url 'core:sleep-add' %}"
                        role="button"><i class="icon-sleep" aria-hidden="true"></i>
                         {% trans "Sleep" %}
                     </a>
                 {% endif %}
                 {% if perms.core.add_tummytime %}
-                    <a class="btn btn-success btn-lg"
+                    <a class="btn btn-lg btn-activity activity-tummytime"
                        href="{% instance_add_url 'core:tummytime-add' %}"
                        role="button"><i class="icon-tummytime" aria-hidden="true"></i>
                         {% trans "Tummy Time" %}

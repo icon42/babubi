@@ -40,7 +40,13 @@
 }
 
 // Activity cards: a surface marked by a stripe and a title in the activity's
-// colour, set per card type in --card-accent. The themes set the surface.
+// colour, set per card type in --card-accent (neutral by default, and per
+// activity in activities.scss). The themes set the surface.
+.card-dashboard {
+    --card-accent: #{$card-neutral-color};
+}
+
+.card-dashboard,
 .card-medication,
 .card-diaperchange,
 .card-feeding,
@@ -76,17 +82,26 @@
     }
 }
 
+// A badge in a card takes the card's activity colour.
+.card-badge {
+    background-color: var(--card-accent);
+    color: var(--bs-body-bg);
+}
+
 .card-medication {
-    --card-accent: #{$danger};
+    --card-accent: var(--activity-medication);
 }
 
 .card-diaperchange {
-    --card-accent: #{$diaper-color};
+    --card-accent: var(--activity-diaperchange);
+}
+
+.card-feeding {
+    --card-accent: var(--activity-feeding);
 }
 
 .card-feeding,
 .card-pumping {
-    --card-accent: #{$primary};
 
     // Last feeding method header in card.
     .card-body .last-feeding-method {
@@ -94,8 +109,33 @@
     }
 }
 
+.card-pumping {
+    --card-accent: var(--activity-pumping);
+}
+
+// Diaper contents per day: a blue for wet, the section's coral for solid, and the
+// changes with neither on a neutral track. The labels take the page colour,
+// so they stay readable on the lighter tints of the dark theme.
+.diaper-bar_wet,
+.diaper-bar_solid {
+    color: var(--bs-body-bg);
+}
+
+.diaper-bar_wet {
+    background-color: var(--activity-wet);
+}
+
+.diaper-bar_solid {
+    background-color: var(--activity-solid);
+}
+
+.diaper-bar_empty {
+    background-color: rgba(var(--bs-emphasis-color-rgb), .1);
+    color: var(--bs-body-color);
+}
+
 .card-sleep {
-    --card-accent: #{$secondary};
+    --card-accent: var(--activity-sleep);
 }
 
 .card-note,
@@ -111,7 +151,7 @@
 }
 
 .card-tummytime {
-    --card-accent: #{$tummytime-color};
+    --card-accent: var(--activity-tummytime);
 }
 
 // Medication Status Card
