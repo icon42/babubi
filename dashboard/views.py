@@ -19,7 +19,7 @@ class Dashboard(LoginRequiredMixin, TemplateView):
             return HttpResponseRedirect(reverse("babubi:welcome"))
         elif children == 1:
             return HttpResponseRedirect(
-                reverse("dashboard:dashboard-child", args={Child.objects.first().slug})
+                reverse("core:child", args={Child.objects.first().slug})
             )
         return super(Dashboard, self).get(request, *args, **kwargs)
 

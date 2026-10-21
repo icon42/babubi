@@ -1,11 +1,14 @@
 {% extends "babubi/page.html" %}
 {% load breadcrumb duration i18n imagekit static %}
-{% block title %}{{ object }}{% endblock %}
+{% block title %}
+    {% trans "Timeline" %} - {{ object }}
+{% endblock %}
 {% block breadcrumbs %}
     <li class="breadcrumb-item">
         <a href="{% url 'core:child-list' %}">{% trans "Children" %}</a>
     </li>
-    <li class="breadcrumb-item fw-bold">{% child_quick_switch object 'core:child' %}</li>
+    <li class="breadcrumb-item fw-bold">{% child_quick_switch object 'core:child-timeline' %}</li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Timeline" %}</li>
 {% endblock %}
 {% block content %}
     <div class="child-detail-column">

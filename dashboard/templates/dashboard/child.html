@@ -7,8 +7,7 @@
     <li class="breadcrumb-item">
         <a href="{% url 'core:child-list' %}">{% trans "Children" %}</a>
     </li>
-    <li class="breadcrumb-item fw-bold">{% child_quick_switch object 'dashboard:dashboard-child' %}</li>
-    <li class="breadcrumb-item active" aria-current="page">{% trans "Dashboard" %}</li>
+    <li class="breadcrumb-item fw-bold active" aria-current="page">{% child_quick_switch object 'core:child' %}</li>
 {% endblock %}
 {% block content %}
     <div id="dashboard-child"

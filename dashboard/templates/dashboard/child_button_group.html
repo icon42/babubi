@@ -3,12 +3,12 @@
      role="group"
      aria-label="{% trans "Child actions" %}">
     {% if perms.core.view_child %}
-        <a href="{% url 'dashboard:dashboard-child' object.slug %}"
+        <a href="{% url 'core:child' object.slug %}"
            class="btn"
            title="{% trans "Dashboard" %}">
             <i class="icon-dashboard" aria-hidden="true"></i>
         </a>
-        <a href="{% url 'core:child' object.slug %}"
+        <a href="{% url 'core:child-timeline' object.slug %}"
            class="btn"
            title="{% trans "Timeline" %}">
             <i class="icon-timeline" aria-hidden="true"></i>

@@ -52,9 +52,11 @@ class ViewsTestCase(TestCase):
 
         entry = models.Child.objects.first()
         page = self.c.get("/children/{}/".format(entry.slug))
+        self.assertTemplateUsed(page, "dashboard/child.html")
+        page = self.c.get("/children/{}/timeline/".format(entry.slug))
         self.assertEqual(page.status_code, 200)
         page = self.c.get(
-            "/children/{}/".format(entry.slug),
+            "/children/{}/timeline/".format(entry.slug),
             {"date": timezone.localdate() - timezone.timedelta(days=1)},
         )
         self.assertEqual(page.status_code, 200)
@@ -237,7 +239,7 @@ class ViewsTestCase(TestCase):
             first_name="Second", last_name="Child", birth_date="2000-01-01"
         )
         child = models.Child.objects.first()
-        page = self.c.get("/children/{}/".format(child.slug))
+        page = self.c.get("/children/{}/timeline/".format(child.slug))
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, 'id="quick-timer-menu-toggle"')
         self.assertContains(page, 'type="hidden" name="child"')
@@ -246,7 +248,7 @@ class ViewsTestCase(TestCase):
     def test_timeline_views(self):
         child = models.Child.objects.first()
         response = self.c.get("/timeline/")
-        self.assertRedirects(response, "/children/{}/".format(child.slug))
+        self.assertRedirects(response, "/children/{}/timeline/".format(child.slug))
 
         models.Child.objects.create(
             first_name="Second", last_name="Child", birth_date="2000-01-01"
@@ -318,7 +320,7 @@ class TimelinePermissionsTestCase(TestCase):
             amount=100,
         )
         self.c = HttpClient()
-        self.url = "/children/{}/".format(self.child.slug)
+        self.url = "/children/{}/timeline/".format(self.child.slug)
 
     def _login(self, username, codenames=None, read_only=False):
         user = get_user_model().objects.create_user(

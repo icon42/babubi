@@ -96,8 +96,8 @@ class CaregiverAccessTestCase(APITestCase):
             "/notes/add/",
             "/tummy-time/add/",
             "/user/settings/",
-            reverse("dashboard:dashboard-child", kwargs={"slug": child.slug}),
             reverse("core:child", kwargs={"slug": child.slug}),
+            reverse("core:child-timeline", kwargs={"slug": child.slug}),
             reverse(
                 "reports:report-medication-frequency-child", kwargs={"slug": child.slug}
             ),

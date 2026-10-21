@@ -38,13 +38,13 @@ class ViewsTestCase(TestCase):
         call_command("fake", verbosity=0, children=1, days=1)
         child = Child.objects.first()
         page = self.c.get("/dashboard/")
-        self.assertEqual(page.url, "/children/{}/dashboard/".format(child.slug))
+        self.assertEqual(page.url, "/children/{}/".format(child.slug))
 
         page = self.c.get("/dashboard/")
-        self.assertEqual(page.url, "/children/{}/dashboard/".format(child.slug))
+        self.assertEqual(page.url, "/children/{}/".format(child.slug))
         # Test the actual child dashboard (including cards).
         # TODO: Test cards more granularly.
-        page = self.c.get("/children/{}/dashboard/".format(child.slug))
+        page = self.c.get("/children/{}/".format(child.slug))
         self.assertEqual(page.status_code, 200)
 
         Child.objects.create(
@@ -92,7 +92,7 @@ class DashboardCardPermissionsTestCase(TestCase):
             end=now - timezone.timedelta(hours=3) + timezone.timedelta(minutes=5),
         )
         self.c = HttpClient()
-        self.url = "/children/{}/dashboard/".format(self.child.slug)
+        self.url = "/children/{}/".format(self.child.slug)
 
     def _login(self, username, codenames=None, read_only=False):
         user = get_user_model().objects.create_user(
