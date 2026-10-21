@@ -55,8 +55,10 @@ def rangeselector_date():
     :returns: a dict of settings for the selectors.
     """
     return {
-        "bgcolor": "rgb(35, 149, 86)",
-        "activecolor": "rgb(25, 108, 62)",
+        # A neutral grey, darker for the active range.
+        "bgcolor": "rgb(100, 116, 139)",
+        "activecolor": "rgb(51, 65, 85)",
+        "font": {"color": "rgb(255, 255, 255)"},
         "buttons": [
             {"count": 7, "label": "1w", "step": "day", "stepmode": "backward"},
             {"count": 14, "label": "2w", "step": "day", "stepmode": "backward"},
@@ -73,8 +75,10 @@ def rangeselector_time():
     :returns: a dict of settings for the selectors.
     """
     return {
-        "bgcolor": "rgb(35, 149, 86)",
-        "activecolor": "rgb(25, 108, 62)",
+        # A neutral grey, darker for the active range.
+        "bgcolor": "rgb(100, 116, 139)",
+        "activecolor": "rgb(51, 65, 85)",
+        "font": {"color": "rgb(255, 255, 255)"},
         "buttons": [
             {"count": 12, "label": "12h", "step": "hour", "stepmode": "backward"},
             {"count": 24, "label": "24h", "step": "hour", "stepmode": "backward"},

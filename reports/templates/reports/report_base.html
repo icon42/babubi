@@ -21,4 +21,9 @@
     <script src="{% static "babubi/js/graph.js" %}"></script>
     <script>Plotly.setPlotConfig({locale: '{{ LOCALE }}'})</script>
     {{ js|safe }}
+    <script>
+        window.addEventListener("load", function () {
+            Babubi.GraphRanges.replaceAll(document);
+        });
+    </script>
 {% endblock %}

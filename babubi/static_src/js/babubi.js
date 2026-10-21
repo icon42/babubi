@@ -75,3 +75,90 @@ Babubi.RememberAdvancedToggle = function (ptr) {
     });
   });
 })();
+
+/**
+ * A graph's range selector as one joined button group, for the reports and
+ * the dashboard's graph cards alike, in place of Plotly's separate buttons:
+ * each button sets the same span back from the graph's last date.
+ */
+Babubi.GraphRanges = (function () {
+  function pad(n) {
+    return (n < 10 ? "0" : "") + n;
+  }
+
+  function plotlyDate(date) {
+    return (
+      date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) +
+      " " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds())
+    );
+  }
+
+  function lastDate(graph) {
+    var end = null;
+    graph.data.forEach(function (trace) {
+      (trace.x || []).forEach(function (x) {
+        var date = new Date(String(x).replace(" ", "T"));
+        if (!isNaN(date) && (end === null || date > end)) end = date;
+      });
+    });
+    return end;
+  }
+
+  return {
+    // The button group for a graph's rangeselector buttons; the caller places
+    // it and hides Plotly's own.
+    group: function (graph, buttons) {
+      var end = lastDate(graph);
+      var group = document.createElement("div");
+      group.className = "btn-group btn-group-sm graph-ranges";
+      group.setAttribute("role", "group");
+      buttons.forEach(function (button) {
+        var element = document.createElement("button");
+        element.type = "button";
+        element.className = "btn";
+        // The reports leave the full range unlabelled, as Plotly names it itself.
+        element.textContent = button.label || (button.step === "all" ? "all" : "");
+        if (button.step === "all") element.classList.add("active");
+        element.addEventListener("click", function () {
+          group.querySelectorAll(".btn").forEach(function (other) {
+            other.classList.toggle("active", other === element);
+          });
+          if (button.step === "all" || end === null) {
+            Plotly.relayout(graph, { "xaxis.autorange": true });
+            return;
+          }
+          var start = new Date(end);
+          var count = button.count || 1;
+          if (button.step === "hour") start.setHours(start.getHours() - count);
+          else if (button.step === "day") start.setDate(start.getDate() - count);
+          else if (button.step === "month") start.setMonth(start.getMonth() - count);
+          else if (button.step === "year") start.setFullYear(start.getFullYear() - count);
+          Plotly.relayout(graph, { "xaxis.range": [plotlyDate(start), plotlyDate(end)] });
+        });
+        group.appendChild(element);
+      });
+      return group;
+    },
+
+    // Replaces the range selector of every graph in a report page, in the
+    // same place: centred over the plot, just above it.
+    replaceAll: function (container) {
+      container.querySelectorAll(".plotly-graph-div").forEach(function (graph) {
+        var selector = (graph.layout.xaxis || {}).rangeselector;
+        if (!selector || !selector.buttons || !selector.buttons.length) return;
+        Plotly.relayout(graph, { "xaxis.rangeselector.visible": false });
+        var group = Babubi.GraphRanges.group(graph, selector.buttons);
+        group.classList.add("graph-ranges_over");
+        graph.style.position = "relative";
+        graph.appendChild(group);
+        var place = function () {
+          var size = graph._fullLayout._size;
+          group.style.left = size.l + size.w / 2 + "px";
+          group.style.top = Math.max(size.t - group.offsetHeight - 6, 0) + "px";
+        };
+        place();
+        graph.on("plotly_afterplot", place);
+      });
+    },
+  };
+})();

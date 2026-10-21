@@ -60,3 +60,31 @@
     filter: grayscale(1);
     opacity: .6;
 }
+
+// A graph's range buttons (Babubi.GraphRanges): joined and centred, dark
+// grey, the active one lighter.
+.graph-ranges {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto .5rem;
+
+    .btn {
+        --bs-btn-color: rgb(203, 213, 225);
+        --bs-btn-bg: rgb(51, 65, 85);
+        --bs-btn-border-color: rgb(51, 65, 85);
+        --bs-btn-hover-color: #fff;
+        --bs-btn-hover-bg: rgb(71, 85, 105);
+        --bs-btn-hover-border-color: rgb(71, 85, 105);
+        --bs-btn-active-color: #fff;
+        --bs-btn-active-bg: rgb(100, 116, 139);
+        --bs-btn-active-border-color: rgb(100, 116, 139);
+    }
+}
+
+// Over a report's graph (Babubi.GraphRanges.replaceAll places it).
+.graph-ranges_over {
+    position: absolute;
+    z-index: 1;
+    margin: 0;
+    transform: translateX(-50%);
+}
