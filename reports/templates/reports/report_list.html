@@ -1,5 +1,5 @@
 {% extends "reports/base.html" %}
-{% load breadcrumb i18n static %}
+{% load breadcrumb growth i18n static %}
 {% block title %}
     {% trans "Reports" %} - {{ object }}
 {% endblock %}
@@ -39,18 +39,26 @@
             {% if perms.core.view_headcircumference %}
                 <a href="{% url 'reports:report-head-circumference-change-child' object.slug %}"
                    class="list-group-item list-group-item-action">{% trans "Head Circumference" %}</a>
-                <a href="{% url 'reports:report-head-circumference-change-child-boy' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Head Circumference Percentiles for Boys in cm" %}</a>
-                <a href="{% url 'reports:report-head-circumference-change-child-girl' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Head Circumference Percentiles for Girls in cm" %}</a>
+                {% if object|child_sex == "boy" %}
+                    <a href="{% url 'reports:report-head-circumference-change-child-boy' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Head Circumference Percentiles for Boys in cm" %}</a>
+                {% endif %}
+                {% if object|child_sex == "girl" %}
+                    <a href="{% url 'reports:report-head-circumference-change-child-girl' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Head Circumference Percentiles for Girls in cm" %}</a>
+                {% endif %}
             {% endif %}
             {% if perms.core.view_height %}
                 <a href="{% url 'reports:report-height-change-child' object.slug %}"
                    class="list-group-item list-group-item-action">{% trans "Height" %}</a>
-                <a href="{% url 'reports:report-height-change-child-boy' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Height Percentiles for Boys in cm" %}</a>
-                <a href="{% url 'reports:report-height-change-child-girl' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Height Percentiles for Girls in cm" %}</a>
+                {% if object|child_sex == "boy" %}
+                    <a href="{% url 'reports:report-height-change-child-boy' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Height Percentiles for Boys in cm" %}</a>
+                {% endif %}
+                {% if object|child_sex == "girl" %}
+                    <a href="{% url 'reports:report-height-change-child-girl' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Height Percentiles for Girls in cm" %}</a>
+                {% endif %}
             {% endif %}
             {% if perms.core.view_medication %}
                 <a href="{% url 'reports:report-medication-frequency-child' object.slug %}"
@@ -79,10 +87,14 @@
             {% if perms.core.view_weight %}
                 <a href="{% url 'reports:report-weight-change-child' object.slug %}"
                    class="list-group-item list-group-item-action">{% trans "Weight" %}</a>
-                <a href="{% url 'reports:report-weight-change-child-boy' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Weight Percentiles for Boys in kg" %}</a>
-                <a href="{% url 'reports:report-weight-change-child-girl' object.slug %}"
-                   class="list-group-item list-group-item-action">{% trans "WHO Weight Percentiles for Girls in kg" %}</a>
+                {% if object|child_sex == "boy" %}
+                    <a href="{% url 'reports:report-weight-change-child-boy' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Weight Percentiles for Boys in kg" %}</a>
+                {% endif %}
+                {% if object|child_sex == "girl" %}
+                    <a href="{% url 'reports:report-weight-change-child-girl' object.slug %}"
+                       class="list-group-item list-group-item-action">{% trans "WHO Weight Percentiles for Girls in kg" %}</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

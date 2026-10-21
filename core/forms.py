@@ -305,6 +305,18 @@ class BottleFeedingForm(CoreModelForm, TaggableModelForm):
 
 
 class ChildForm(forms.ModelForm):
+    # Kept in Babubi's own dashboard.ChildProfile, not on the Child model.
+    sex = forms.ChoiceField(
+        required=False,
+        choices=[
+            ("", _("Not specified")),
+            ("boy", _("Boy")),
+            ("girl", _("Girl")),
+        ],
+        label=_("Sex"),
+        help_text=_("Picks the WHO growth standards; none when not specified."),
+    )
+
     class Meta:
         model = models.Child
         fields = ["first_name", "last_name", "birth_date", "birth_time"]
@@ -314,6 +326,21 @@ class ChildForm(forms.ModelForm):
             "birth_date": DateInput(),
             "birth_time": TimeInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            from core.growth import sex_of
+
+            self.fields["sex"].initial = sex_of(self.instance)
+
+    def save(self, commit=True):
+        from core.growth import set_sex
+
+        child = super().save(commit=commit)
+        if commit:
+            set_sex(child, self.cleaned_data.get("sex", ""))
+        return child
 
 
 class ChildDeleteForm(forms.ModelForm):

@@ -89,3 +89,25 @@ def curves(measure_key, sex, days):
     """
     rows = _table(measure_key, sex)[:days]
     return {p: [row["P{}".format(p)] for row in rows] for p in CURVES}
+
+
+def sex_of(child):
+    """
+    The sex in the child's profile (dashboard.ChildProfile), which picks the
+    WHO standards: "boy", "girl", or "" when unspecified.
+    """
+    from django.core.exceptions import ObjectDoesNotExist
+
+    try:
+        return child.profile.sex
+    except ObjectDoesNotExist:
+        return ""
+
+
+def set_sex(child, sex):
+    """Sets the sex in the child's profile; an unknown one clears it."""
+    from dashboard.models import ChildProfile
+
+    sex = sex if sex in SEXES else ""
+    ChildProfile.objects.update_or_create(child=child, defaults={"sex": sex})
+    return sex

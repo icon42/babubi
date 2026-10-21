@@ -2788,6 +2788,15 @@ msgstr "Percentils de perímetre cranial de l'OMS per a nens, en cm"
 msgid "WHO Head Circumference Percentiles for Girls in cm"
 msgstr "Percentils de perímetre cranial de l'OMS per a nenes, en cm"
 
+msgid "Sex"
+msgstr "Sexe"
+
+msgid "Not specified"
+msgstr "No especificat"
+
+msgid "Picks the WHO growth standards; none when not specified."
+msgstr "Tria les corbes de creixement de l'OMS; si no s'especifica, no se'n fa servir cap."
+
 #~ msgid "Amount: %(amount).0f"
 #~ msgstr "Import: %(amount).0f"
 

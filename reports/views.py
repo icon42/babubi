@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import Http404
 from django.views.generic.detail import DetailView
 
 from babubi.mixins import PermissionRequiredMixin
@@ -225,7 +226,24 @@ class FeedingPatternChildReport(PermissionRequiredMixin, DetailView):
         return context
 
 
-class HeadCircumferenceChangeChildReport(PermissionRequiredMixin, DetailView):
+class WHOSexMixin:
+    """
+    A WHO percentile report exists only for a child of its sex (the sex in
+    the child's profile); with no sex, for no child.
+    """
+
+    sex = None
+
+    def get_object(self, queryset=None):
+        child = super().get_object(queryset)
+        if self.sex and growth.sex_of(child) != self.sex:
+            raise Http404
+        return child
+
+
+class HeadCircumferenceChangeChildReport(
+    WHOSexMixin, PermissionRequiredMixin, DetailView
+):
     """
     Graph of head circumference change over time.
     """
@@ -236,8 +254,6 @@ class HeadCircumferenceChangeChildReport(PermissionRequiredMixin, DetailView):
         "core.view_headcircumference",
     )
     template_name = "reports/head_circumference_change.html"
-    # The sex whose WHO percentile curves are drawn behind, if any.
-    sex = None
     target_url = "reports:report-head-circumference-change-child"
 
     def get_context_data(self, **kwargs):
@@ -270,7 +286,7 @@ class HeadCircumferenceChangeChildGirlReport(HeadCircumferenceChangeChildReport)
     target_url = "reports:report-head-circumference-change-child-girl"
 
 
-class HeightChangeChildReport(PermissionRequiredMixin, DetailView):
+class HeightChangeChildReport(WHOSexMixin, PermissionRequiredMixin, DetailView):
     """
     Graph of height change over time.
     """
@@ -435,7 +451,7 @@ class TummyTimeDurationChildReport(PermissionRequiredMixin, DetailView):
         return context
 
 
-class WeightChangeChildReport(PermissionRequiredMixin, DetailView):
+class WeightChangeChildReport(WHOSexMixin, PermissionRequiredMixin, DetailView):
     """
     Graph of weight change over time.
     """

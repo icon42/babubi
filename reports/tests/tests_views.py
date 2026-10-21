@@ -181,7 +181,12 @@ class ReportPermissionsTestCase(TestCase):
             self.assertNotIn("{}{}".format(self.base_url, path), content, path)
 
     def test_read_only_user_keeps_access_to_every_report(self):
+        from dashboard.models import ChildProfile
+
+        # The WHO percentile reports exist for the child's own sex only.
+        ChildProfile.objects.create(child=self.child, sex="boy")
         self._login("readonly", read_only=True)
         for path in self.allowed + self.denied:
             page = self.c.get("{}{}".format(self.base_url, path))
-            self.assertEqual(page.status_code, 200, path)
+            expected = 404 if path.endswith("/girl/") else 200
+            self.assertEqual(page.status_code, expected, path)
