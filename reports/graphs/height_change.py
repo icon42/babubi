@@ -53,31 +53,31 @@ def height_change(
             name=_("P3"),
             x=dates,
             y=list(percentile_heights.values_list("p3_height", flat=True))[:end_index],
-            line={"color": "red"},
+            **utils.percentile_line(3),
         )
         percentile_height_15_trace = go.Scatter(
             name=_("P15"),
             x=dates,
             y=list(percentile_heights.values_list("p15_height", flat=True))[:end_index],
-            line={"color": "orange"},
+            **utils.percentile_line(15),
         )
         percentile_height_50_trace = go.Scatter(
             name=_("P50"),
             x=dates,
             y=list(percentile_heights.values_list("p50_height", flat=True))[:end_index],
-            line={"color": "green"},
+            **utils.percentile_line(50),
         )
         percentile_height_85_trace = go.Scatter(
             name=_("P85"),
             x=dates,
             y=list(percentile_heights.values_list("p85_height", flat=True))[:end_index],
-            line={"color": "orange"},
+            **utils.percentile_line(85),
         )
         percentile_height_97_trace = go.Scatter(
             name=_("P97"),
             x=dates,
             y=list(percentile_heights.values_list("p97_height", flat=True))[:end_index],
-            line={"color": "red"},
+            **utils.percentile_line(97),
         )
 
     data = [

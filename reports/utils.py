@@ -90,6 +90,24 @@ def rangeselector_time():
     }
 
 
+def percentile_line(percentile):
+    """
+    How a WHO percentile curve is drawn: plain lines, the outer ones (P3,
+    P97) in red, the inner ones in a thin neutral grey, P50 dashed.
+    :param percentile: 3, 15, 50, 85 or 97.
+    :returns: keyword arguments for go.Scatter.
+    """
+    if percentile in (3, 97):
+        line = {"color": "rgb(217, 67, 79)", "width": 1.5}
+    else:
+        line = {
+            "color": "rgba(148, 163, 184, 0.7)",
+            "width": 1,
+            "dash": "dash" if percentile == 50 else "dot",
+        }
+    return {"mode": "lines", "line": line}
+
+
 def split_graph_output(output):
     """
     Split out of a Plotly graph in to html and javascript.

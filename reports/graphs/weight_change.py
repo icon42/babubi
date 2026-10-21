@@ -51,31 +51,31 @@ def weight_change(
             name=_("P3"),
             x=dates,
             y=list(percentile_weights.values_list("p3_weight", flat=True))[:end_index],
-            line={"color": "red"},
+            **utils.percentile_line(3),
         )
         percentile_weight_15_trace = go.Scatter(
             name=_("P15"),
             x=dates,
             y=list(percentile_weights.values_list("p15_weight", flat=True))[:end_index],
-            line={"color": "orange"},
+            **utils.percentile_line(15),
         )
         percentile_weight_50_trace = go.Scatter(
             name=_("P50"),
             x=dates,
             y=list(percentile_weights.values_list("p50_weight", flat=True))[:end_index],
-            line={"color": "green"},
+            **utils.percentile_line(50),
         )
         percentile_weight_85_trace = go.Scatter(
             name=_("P85"),
             x=dates,
             y=list(percentile_weights.values_list("p85_weight", flat=True))[:end_index],
-            line={"color": "orange"},
+            **utils.percentile_line(85),
         )
         percentile_weight_97_trace = go.Scatter(
             name=_("P97"),
             x=dates,
             y=list(percentile_weights.values_list("p97_weight", flat=True))[:end_index],
-            line={"color": "red"},
+            **utils.percentile_line(97),
         )
 
     data = [
