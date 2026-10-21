@@ -34,7 +34,8 @@
 .day-list-card {
     border: 1px solid var(--bs-border-color);
     border-radius: var(--bs-border-radius-lg);
-    overflow: hidden;
+    // Scrolls rather than cuts off the last columns when the table is wider.
+    overflow-x: auto;
     margin-bottom: 1rem;
 }
 
@@ -235,6 +236,10 @@ $day-dots: (
         gap: .35rem;
         line-height: 1;
         height: var(--day-line);
+        // Icon only: the name is its title, and read out by screen readers.
+        justify-content: center;
+        width: var(--day-line);
+        padding: 0;
     }
 }
 
