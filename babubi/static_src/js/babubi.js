@@ -43,6 +43,15 @@ Babubi.PullToRefresh = (function (ptr) {
       (event.originalEvent && event.originalEvent.submitter) ||
       $(this).find('[type="submit"]')[0];
     if (!submitter || $(submitter).prop("disabled")) return;
+    // A disabled button is left out of the submitted data, so a named one
+    // (e.g. one of several actions in a form) passes its value on first.
+    if (submitter.name) {
+      $("<input>", {
+        type: "hidden",
+        name: submitter.name,
+        value: submitter.value,
+      }).appendTo(this);
+    }
     $(submitter)
       .prop("disabled", true)
       .prepend(
