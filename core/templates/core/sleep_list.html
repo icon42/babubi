@@ -1,5 +1,5 @@
 {% extends "core/day_list.html" %}
-{% load days i18n %}
+{% load days i18n misc %}
 {% block title %}
     {% trans "Sleep" %}
 {% endblock %}
@@ -15,7 +15,14 @@
 {% block head %}
     <th>{% trans "Duration" %}</th>
     <th>{% trans "Type" %}</th>
-    <th class="day-cell_previous day-cell_secondary">{% trans "Awake before" %}</th>
+    <th class="day-cell_previous day-cell_secondary">
+        {% sleep_diff_end as from_end %}
+        {% if from_end %}
+            {% trans "Awake before" %}
+        {% else %}
+            {% trans "Previous" %}
+        {% endif %}
+    </th>
 {% endblock %}
 {% block time %}
     {% include "core/day_list_span.html" %}

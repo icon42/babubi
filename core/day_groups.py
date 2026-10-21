@@ -104,8 +104,9 @@ def _since_previous_feeding(item, older):
     return item.start - base
 
 
-def _awake_before_sleep(item, older):
-    return item.start - older.end
+def _since_previous_sleep(item, older):
+    base = older.end if models.Sleep.diff_settings.sleep_diff_end else older.start
+    return item.start - base
 
 
 def _mark_next_doses(items):
@@ -156,7 +157,7 @@ DAY_LISTS = {
     "pumping": DayList(
         "start", "core:pumping", 3, _pumping_summary, _since_previous_start("start")
     ),
-    "sleep": DayList("start", "core:sleep", 3, _sleep_summary, _awake_before_sleep),
+    "sleep": DayList("start", "core:sleep", 3, _sleep_summary, _since_previous_sleep),
     "tummytime": DayList(
         "start",
         "core:tummytime",

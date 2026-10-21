@@ -52,3 +52,16 @@ class FeedingSettings(dbsettings.Group):
         ),
         widget=CheckboxInput,
     )
+
+
+class SleepSettings(dbsettings.Group):
+    # Counted from the end by default, as the sleep list's "awake before" was.
+    sleep_diff_end = FeedingDiffEndValue(
+        required=False,
+        default=True,
+        description=_("Time diff between sleeps based on end"),
+        help_text=_(
+            "Use sleep end instead of start time for displaying time between sleeps"
+        ),
+        widget=CheckboxInput,
+    )

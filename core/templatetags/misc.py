@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 
-from core.models import Feeding
+from core.models import Feeding, Sleep
 
 register = template.Library()
 
@@ -38,3 +38,16 @@ def feeding_time_diff_base(context, feeding):
         return feeding.end if Feeding.settings.feeding_diff_end else feeding.start
     else:
         return None
+
+
+@register.simple_tag
+def sleep_diff_end():
+    """Whether the time between sleeps is counted from the end of the last one."""
+    return Sleep.diff_settings.sleep_diff_end
+
+
+@register.simple_tag
+def sleep_time_diff_base(sleep):
+    if sleep:
+        return sleep.end if sleep_diff_end() else sleep.start
+    return None

@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 import collections
 
 from core import models
-from core.templatetags.misc import feeding_time_diff_base
+from core.templatetags.misc import feeding_time_diff_base, sleep_time_diff_base
 
 register = template.Library()
 
@@ -359,6 +359,7 @@ def card_sleep_last(context, child):
     return {
         "type": "sleep",
         "sleep": instance,
+        "sleep_diff_base": sleep_time_diff_base(instance),
         "empty": empty,
         "hide_empty": _hide_empty(context),
     }

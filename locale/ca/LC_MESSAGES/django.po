@@ -267,6 +267,17 @@ msgstr ""
 "Calcula el temps entre preses a partir de l'hora de final en lloc de la "
 "d'inici"
 
+#: babubi/site_settings.py:59
+msgid "Time diff between sleeps based on end"
+msgstr "Temps entre sons comptat des del final"
+
+#: babubi/site_settings.py:61
+msgid ""
+"Use sleep end instead of start time for displaying time between sleeps"
+msgstr ""
+"Calcula el temps entre sons a partir de l'hora de final en lloc de la "
+"d'inici"
+
 #: babubi/templates/admin/base_site.html:4
 #: babubi/templates/admin/base_site.html:8
 #: babubi/templates/babubi/nav-dropdown.html:363

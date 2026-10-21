@@ -6,11 +6,11 @@
 {% block title %}
     {% if sleep %}
         <div>
-            {% blocktrans trimmed with time_ago=sleep.end|deltasince|duration_string:'m' %}
+            {% blocktrans trimmed with time_ago=sleep_diff_base|deltasince|duration_string:'m' %}
                 {{ time_ago }} ago
             {% endblocktrans %}
         </div>
-        <small>{{ sleep.end|time }}</small>
+        <small>{{ sleep.start|time }} - {{ sleep.end|time }}</small>
     {% else %}
         {% trans "None" %}
     {% endif %}

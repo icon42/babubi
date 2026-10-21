@@ -94,3 +94,38 @@ class DayGroupedListTestCase(TestCase):
         page = self.c.get("/changes/?page=2")
         dates = [group["date"] for group in page.context["days"]]
         self.assertEqual(dates, [self.times[2].date(), self.yesterday.date()])
+
+
+class SleepDiffEndTestCase(TestCase):
+    def setUp(self):
+        child = models.Child.objects.create(
+            first_name="Test", last_name="Child", birth_date=timezone.localdate()
+        )
+        get_user_model().objects.create_user(
+            username="tester", password="secret", is_superuser=True
+        )
+        self.c = HttpClient()
+        self.c.login(username="tester", password="secret")
+        start = timezone.localtime().replace(hour=8, minute=0, second=0, microsecond=0)
+        for hours in (0, 3):
+            models.Sleep.objects.create(
+                child=child,
+                start=start + datetime.timedelta(hours=hours),
+                end=start + datetime.timedelta(hours=hours + 1),
+            )
+
+    def tearDown(self):
+        models.Sleep.diff_settings.sleep_diff_end = True
+
+    def test_from_the_end_by_default(self):
+        page = self.c.get("/sleep/")
+        item = page.context["days"][0]["items"][0]
+        self.assertEqual(item.since_previous, datetime.timedelta(hours=2))
+        self.assertContains(page, "Awake before")
+
+    def test_from_the_start(self):
+        models.Sleep.diff_settings.sleep_diff_end = False
+        page = self.c.get("/sleep/")
+        item = page.context["days"][0]["items"][0]
+        self.assertEqual(item.since_previous, datetime.timedelta(hours=3))
+        self.assertNotContains(page, "Awake before")
