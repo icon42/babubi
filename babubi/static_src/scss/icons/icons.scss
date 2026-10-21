@@ -1,0 +1,41 @@
+// Babubi's own icons. They keep Fontello's `icon-*` class names, so templates
+// shared with upstream need no change, but draw an SVG through a CSS mask
+// instead of a font glyph. The mask's alpha carries the two tones (an opaque
+// stroke and a fill at 18%), and `currentColor` paints both, so an icon takes
+// the colour of the text around it like a glyph did. Imported after Fontello
+// in babubi.scss so these rules win over its `content` codes.
+//
+// The drawings are the files in babubi/static_src/icons: gulp's `styles` task
+// turns them into the `$icons` map of `_generated.scss` (gulpfile.icons.js).
+
+@import 'generated';
+
+@each $name, $svg in $icons {
+    .icon-#{$name}::before {
+        content: "";
+        height: 1em;
+        vertical-align: -.125em;
+        background-color: currentColor;
+        -webkit-mask: url("data:image/svg+xml,#{$svg}") center / contain no-repeat;
+        mask: url("data:image/svg+xml,#{$svg}") center / contain no-repeat;
+    }
+}
+
+// Contents of a diaper: the colours read on both themes.
+@include color-mode("light") {
+    --icon-wet-color: #{$diaper-color};
+    --icon-solid-color: #9a6a33;
+}
+
+@include color-mode("dark") {
+    --icon-wet-color: #8fa5f5;
+    --icon-solid-color: #d9a66b;
+}
+
+.icon-wet {
+    color: var(--icon-wet-color, #{$diaper-color});
+}
+
+.icon-solid {
+    color: var(--icon-solid-color, #9a6a33);
+}

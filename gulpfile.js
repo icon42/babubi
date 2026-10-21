@@ -9,6 +9,7 @@ import fontello from "gulp-fontello";
 import gStylelintEsm from "gulp-stylelint-esm";
 import gulp from "gulp";
 import gulpSass from "gulp-sass";
+import { icons, iconsGlob } from "./gulpfile.icons.js";
 import minify from "gulp-minify";
 import sassGlob from "gulp-sass-glob";
 
@@ -290,6 +291,7 @@ function updateGlyphs() {
 function watch() {
   gulp.watch(config.watchConfig.scriptsGlob, scripts);
   gulp.watch(config.watchConfig.stylesGlob, styles);
+  gulp.watch(iconsGlob, gulp.series(icons, styles));
 }
 
 /**
@@ -402,7 +404,7 @@ gulp.task("lint", lint);
 
 gulp.task("scripts", scripts);
 
-gulp.task("styles", styles);
+gulp.task("styles", gulp.series(icons, styles));
 
 gulp.task("test", test);
 

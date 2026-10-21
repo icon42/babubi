@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="matrix(.0784 0 0 .0784 -1.21 -7.45)" stroke-width="20.4">
+    <path d="m125.2 211.1c-25.1 13.8-37.6 40.1-35.1 69 2.5 45.1 35.4 78.2 59.9 87.1 18.6 6.8 29.6 8.3 39.1 7 28.7-4.1 48.9-18.8 55.2-42.6 6.3-22.6-1.300-45.100-16.300-53.900-7.500-5-15-3.800-23.800 1.300 2.500-26.300-12.500-48.900-35.100-56.400-15-5-30.100-11.300-43.900-11.300z" fill="currentColor" fill-opacity=".18"/>
+    <circle cx="153" cy="150" r="42" fill="currentColor" fill-opacity=".18"/>
+  </g>
+</svg>
