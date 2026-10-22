@@ -6,22 +6,29 @@
 [![CI Status](https://github.com/icon42/babubi/actions/workflows/ci.yml/badge.svg)](https://github.com/icon42/babubi/actions/workflows/ci.yml)
 [![Support: none](https://img.shields.io/badge/support-none-lightgrey.svg)](SUPPORT.md)
 
-Babubi helps caregivers track sleep, feedings, diaper changes, tummy time and more, to learn about and predict a baby's needs with less guesswork.
+Babubi is a self-hosted baby tracker for the whole family: feedings, sleep, diaper changes, pumping, tummy time, medication, measurements and notes, logged in a couple of taps from a phone or a desktop, with a dashboard per child that each caregiver arranges to their liking.
 
 Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It starts from Baby Buddy's tagged releases and adds its own packaging and changes on top. It is not affiliated with the Baby Buddy project.
 
-![Babubi desktop view](screenshot.png)
+![A child's dashboard on the desktop, in the dark theme](screenshot.png)
 
-![Babubi mobile views](screenshot_mobile.png)
+![On a phone, in the light theme: the dashboard, the sleep list grouped by day and a running timer](screenshot_mobile.png)
 
 ## How Babubi differs from Baby Buddy
 
+- **A dashboard per child, arranged by each caregiver**: three columns of cards to order, hide and bring back, a card of quick actions drawn like a phone's home screen, graph cards with any report, and a percentiles card with the exact WHO percentiles of the latest weight, height and head circumference.
+- **Child-first menu.** The menu starts with the child whose dashboard was opened last and leads back to it; the other children are one tap away.
+- **Timers that know what they time.** A timer is started as a feeding, pumping, sleep or tummy time timer, from the quick actions, the phone's stopwatch button or the Timers menu, and finishes as that activity in one tap.
+- **Lists grouped by day**, with a summary row per day, the time since the previous entry, and sleep drawn as bars with its nap or night badge.
+- **Frequent values under form fields**: the medication names, doses and intervals, the amounts and the short notes used before, filled in with a click.
+- **WHO head circumference charts** for boys and girls, next to the weight and height ones; a child's sex picks the right charts.
+- **A colour and an icon per activity**, light, dark and automatic themes, and a baby placeholder drawn from the logo.
 - **Own container image**, published at `ghcr.io/icon42/babubi` for amd64 and arm64 and rebuilt every week so its base gets security fixes. It runs as an unprivileged user.
 - **Private uploads.** Child pictures and other uploads are served only to signed-in users and to API clients with a valid token, never to anyone who just has the URL.
 - **Locale defaults from the environment.** `LANGUAGE_CODE` and `TIME_ZONE` set the defaults for new users; without them Babubi uses Baby Buddy's (`en-US`, `UTC`).
-- **Light, dark and automatic themes** in Babubi's colours, chosen by each user, with the browser's preference as the default.
 - **Your own logo and styles** without rebuilding the image: drop `logo.svg`, `icon.svg` or `custom.css` into `/config/branding/` (see [`BRANDING_DIR`](docs/configuration/application.md#branding_dir)).
-- **OpenID Connect login** with any provider, alongside passwords or instead of them, including back-channel logout (see [`LOGIN_METHODS`](docs/configuration/security.md#login_methods)).
+- **OpenID Connect login** with any provider, alongside passwords or instead of them, including back-channel logout; accounts link by verified email or from the user's settings (see [`LOGIN_METHODS`](docs/configuration/security.md#login_methods)).
+- **A REST API that knows the additions** (a child's sex, a timer's kind) and a [Model Context Protocol server](https://github.com/icon42/babubi-mcp) to log and query from AI assistants.
 - **Drop-in migration from Baby Buddy.** Its `/config` volume matches the linuxserver Baby Buddy image, and the first start moves the database over to Babubi on its own.
 
 ## Getting started
