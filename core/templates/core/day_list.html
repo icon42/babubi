@@ -80,8 +80,10 @@
                                     {% if day_list.can_change %}</a>{% endif %}
                                 </th>
                                 {% if not unique_child %}
-                                    <td>
-                                        <a href="{% url 'core:child' item.child.slug %}">{{ item.child }}</a>
+                                    {# On narrow screens only the first name shows (day_list.scss). #}
+                                    <td class="day-cell_child">
+                                        <a href="{% url 'core:child' item.child.slug %}"
+                                           title="{{ item.child }}">{{ item.child.first_name }}<span class="day-child-surname"> {{ item.child.last_name }}</span></a>
                                     </td>
                                 {% endif %}
                                 {% block cells %}{% endblock %}

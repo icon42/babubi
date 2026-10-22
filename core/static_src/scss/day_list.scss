@@ -402,6 +402,15 @@ $day-dots: (
         }
     }
 
+    // The child goes by first name: the surname would wrap on its own line.
+    .day-cell_child {
+        white-space: nowrap;
+    }
+
+    .day-child-surname {
+        display: none;
+    }
+
     // The whole line opens the edit form.
     .day-item-link::after {
         content: "";

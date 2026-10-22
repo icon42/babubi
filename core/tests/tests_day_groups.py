@@ -95,6 +95,24 @@ class DayGroupedListTestCase(TestCase):
         dates = [group["date"] for group in page.context["days"]]
         self.assertEqual(dates, [self.times[2].date(), self.yesterday.date()])
 
+    def test_child_column_keeps_the_surname_apart(self):
+        # A page whose entries all belong to one child has no child column.
+        self.assertNotContains(self.c.get("/changes/"), "day-cell_child")
+        other = models.Child.objects.create(
+            first_name="Other", last_name="Child", birth_date=timezone.localdate()
+        )
+        models.DiaperChange.objects.create(
+            child=other,
+            time=self.times[0] - datetime.timedelta(hours=1),
+            wet=True,
+            solid=False,
+        )
+        page = self.c.get("/changes/")
+        # The surname sits in its own span, which the phone layout hides.
+        self.assertContains(
+            page, 'title="Test Child">Test<span class="day-child-surname"> Child</span>'
+        )
+
 
 class SleepDiffEndTestCase(TestCase):
     def setUp(self):
