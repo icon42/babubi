@@ -13174,7 +13174,7 @@ textarea.form-control-lg {
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(4.25rem, (100% - 0.75rem) / 4), 1fr));
   align-items: start;
   gap: 0.75rem 0.25rem;
 }
@@ -13196,6 +13196,8 @@ textarea.form-control-lg {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 .quick-action:hover, .quick-action:focus-visible {
   color: var(--bs-body-color);
