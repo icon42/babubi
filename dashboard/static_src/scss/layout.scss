@@ -173,9 +173,12 @@
 // edit mode, a list.
 // The chosen actions share the card's width in equal columns: as many as
 // fit, and when fewer actions than that, the columns widen to fill the row.
+// Four columns at most, like a phone's home screen, and four already on a
+// phone (a 390px screen leaves the card about 330px); a long name then
+// wraps, or hyphenates when the browser can.
 .quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(max(4.25rem, calc((100% - .75rem) / 4)), 1fr));
     align-items: start;
     gap: .75rem .25rem;
 
@@ -198,6 +201,8 @@
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
+    overflow-wrap: anywhere;
+    hyphens: auto;
 
     &:hover,
     &:focus-visible {
