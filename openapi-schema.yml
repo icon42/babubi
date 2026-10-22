@@ -5728,6 +5728,12 @@ components:
           type: string
           format: binary
           nullable: true
+        sex:
+          enum:
+          - ''
+          - boy
+          - girl
+          type: string
       required:
         - first_name
         - birth_date
@@ -6028,6 +6034,14 @@ components:
           type: string
           nullable: true
           maxLength: 255
+        kind:
+          enum:
+          - ''
+          - feeding
+          - pumping
+          - sleep
+          - tummytime
+          type: string
         start:
           type: string
           format: date-time

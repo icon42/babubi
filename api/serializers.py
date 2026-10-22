@@ -10,8 +10,37 @@ from django.utils import timezone
 
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
-from core import models
+from core import growth, models, timer_kinds
 from babubi import models as babubi_models
+
+
+class ProfileFieldsMixin:
+    """
+    Fields kept in Babubi's own profile models (dashboard.ChildProfile,
+    dashboard.TimerProfile) rather than on upstream's: `profile_fields` maps
+    each to the functions that read and write it on an instance.
+    """
+
+    profile_fields = {}
+
+    def validate(self, attrs):
+        # Taken out before the model's own validation, which knows nothing of them.
+        self.profile_values = {
+            name: attrs.pop(name) for name in self.profile_fields if name in attrs
+        }
+        return super().validate(attrs)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        for name, (read, _) in self.profile_fields.items():
+            data[name] = read(instance)
+        return data
+
+    def save(self, **kwargs):
+        instance = super().save(**kwargs)
+        for name, value in getattr(self, "profile_values", {}).items():
+            self.profile_fields[name][1](instance, value)
+        return instance
 
 
 class CoreModelSerializer(serializers.HyperlinkedModelSerializer):
@@ -158,7 +187,14 @@ class PumpingSerializer(CoreModelWithDurationSerializer, TaggableSerializer):
         )
 
 
-class ChildSerializer(serializers.HyperlinkedModelSerializer):
+class ChildSerializer(
+    ProfileFieldsMixin, serializers.HyperlinkedModelSerializer
+):
+    profile_fields = {"sex": (growth.sex_of, growth.set_sex)}
+    sex = serializers.ChoiceField(
+        choices=("",) + growth.SEXES, allow_blank=True, required=False
+    )
+
     class Meta:
         model = models.Child
         fields = (
@@ -169,6 +205,7 @@ class ChildSerializer(serializers.HyperlinkedModelSerializer):
             "birth_time",
             "slug",
             "picture",
+            "sex",
         )
         lookup_field = "slug"
 
@@ -276,7 +313,11 @@ class TemperatureSerializer(CoreModelSerializer, TaggableSerializer):
         fields = ("id", "child", "temperature", "time", "notes", "tags")
 
 
-class TimerSerializer(CoreModelSerializer):
+class TimerSerializer(ProfileFieldsMixin, CoreModelSerializer):
+    profile_fields = {"kind": (timer_kinds.kind_of, timer_kinds.set_kind)}
+    kind = serializers.ChoiceField(
+        choices=("",) + timer_kinds.KINDS, allow_blank=True, required=False
+    )
     child = serializers.PrimaryKeyRelatedField(
         allow_null=True,
         allow_empty=True,
@@ -293,7 +334,7 @@ class TimerSerializer(CoreModelSerializer):
 
     class Meta:
         model = models.Timer
-        fields = ("id", "child", "name", "start", "duration", "user")
+        fields = ("id", "child", "name", "kind", "start", "duration", "user")
 
     def validate(self, attrs):
         attrs = super(TimerSerializer, self).validate(attrs)

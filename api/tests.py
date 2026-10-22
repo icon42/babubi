@@ -148,6 +148,7 @@ class ChildAPITestCase(TestBase.BabubiAPITestCaseBase):
                 "birth_time": None,
                 "slug": "fake-child",
                 "picture": None,
+                "sex": "",
             },
         )
 
@@ -180,6 +181,18 @@ class ChildAPITestCase(TestBase.BabubiAPITestCaseBase):
         # The slug we be updated by the name change.
         entry["slug"] = "new-name"
         self.assertEqual(response.data, entry)
+
+    def test_sex(self):
+        data = {"first_name": "Test", "last_name": "Child", "birth_date": "2017-11-12"}
+        response = self.client.post(self.endpoint, dict(data, sex="girl"), format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["sex"], "girl")
+        endpoint = "{}{}/".format(self.endpoint, response.data["slug"])
+        response = self.client.patch(endpoint, {"sex": "boy"})
+        self.assertEqual(response.data["sex"], "boy")
+        self.assertEqual(self.client.get(endpoint).data["sex"], "boy")
+        response = self.client.patch(endpoint, {"sex": "other"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class PumpingAPITestCase(TestBase.BabubiAPITestCaseBase):
@@ -825,6 +838,17 @@ class TimerAPITestCase(TestBase.BabubiAPITestCaseBase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], entry["name"])
+
+    def test_kind(self):
+        response = self.client.post(self.endpoint, {"kind": "sleep"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["kind"], "sleep")
+        endpoint = "{}{}/".format(self.endpoint, response.data["id"])
+        response = self.client.patch(endpoint, {"kind": "feeding"})
+        self.assertEqual(response.data["kind"], "feeding")
+        self.assertEqual(self.client.get(endpoint).data["kind"], "feeding")
+        response = self.client.patch(endpoint, {"kind": "nap"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_start_restart_timer(self):
         endpoint = "{}{}/".format(self.endpoint, 1)
