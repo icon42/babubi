@@ -81,7 +81,11 @@ With both, the login page follows the order of the value, and the first method g
 
 With `oidc` alone, Babubi accepts no passwords on the web: the login form, the admin login, the API browser login and password reset are all turned off. API tokens keep working with any value.
 
-OIDC login only links a provider account to an existing user whose username matches the `preferred_username` claim, ignoring case. Babubi never creates users from OIDC: add each user first. Inactive users and users whose access has expired are turned away.
+Babubi never creates users from OIDC: add each user first. A provider account meets its Babubi user in one of two ways, and from then on the two stay linked by the provider's `sub` claim:
+
+- At the first OIDC login, by the user's email, which the provider must report as verified (`email_verified`), or by the username when [`OIDC_MATCH_BY`](#oidc_match_by) says so. Exactly one user must match, ignoring case.
+
+Inactive users and users whose access has expired are turned away.
 
 Register Babubi with the provider as a confidential client with these addresses:
 
@@ -125,6 +129,17 @@ The issuer URL of the OpenID Connect provider, without `/.well-known/openid-conf
 
     https://idp.example.com
 
+## `OIDC_MATCH_BY`
+
+_Default:_ `email`
+
+How a provider account that logs in for the first time finds its Babubi user:
+
+- `email`: the `email` claim must equal the user's email, and the provider must report it as verified (`email_verified`). A user without an email cannot log in through OIDC until one is set, or the account is linked from the user settings page.
+- `username`: the `preferred_username` claim must equal the username. Only safe with a provider where users cannot choose or change their own username: anyone who can register the username of a Babubi user at the provider would log in as that user.
+
+A user matched once stays linked by the `sub` claim, so changing this setting later only affects users not linked yet.
+
 ## `OIDC_PROVIDER_NAME`
 
 _Default:_ `None`
@@ -135,7 +150,7 @@ The provider name shown on the login button, as in "Log in with Example ID". Wit
 
 _Default:_ `openid profile email`
 
-The scopes Babubi requests from the OpenID Connect provider, separated by spaces. The `profile` scope carries the `preferred_username` claim that users are matched on.
+The scopes Babubi requests from the OpenID Connect provider, separated by spaces. The `email` scope carries the `email` and `email_verified` claims, and `profile` the `preferred_username` claim, which [`OIDC_MATCH_BY`](#oidc_match_by) chooses between.
 
 ## `PROXY_HEADER`
 

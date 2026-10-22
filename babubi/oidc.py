@@ -39,19 +39,42 @@ def oidc_login_required(view):
     return wrapped
 
 
-def associate_by_username(backend, details, user=None, *args, **kwargs):
+def associate_existing_user(backend, details, response, user=None, *args, **kwargs):
     """
-    Pipeline step: links the OIDC account to the existing user with the same
-    username. Unknown, inactive and expired users are turned away.
+    Pipeline step: the first time a provider account logs in, finds the one
+    existing user it belongs to, by the verified email or by the username
+    (OIDC_MATCH_BY).
+    Unknown, inactive and expired users are turned away.
     """
     if user is None:
-        users = get_user_model().objects.filter(
-            username__iexact=details.get("username") or ""
-        )
-        user = users[0] if len(users) == 1 else None
+        user = matching_user(backend, details, response)
     if user is None or not user.is_active or access_expired(user):
         raise AuthPolicyError(backend, stage="pipeline")
     return {"user": user}
+
+
+def matching_user(backend, details, response):
+    """
+    The existing user the provider's claims name, or None: exactly one match,
+    without case, and in email mode only an email the provider has verified.
+    """
+    if settings.OIDC_MATCH_BY == "username":
+        lookup = {"username__iexact": details.get("username") or ""}
+    else:
+        if not details.get("email") or not email_verified(backend, response):
+            return None
+        lookup = {"email__iexact": details["email"]}
+    if not any(lookup.values()):
+        return None
+    users = list(get_user_model().objects.filter(**lookup)[:2])
+    return users[0] if len(users) == 1 else None
+
+
+def email_verified(backend, response):
+    """The email_verified claim, from the user info or the ID token."""
+    id_token = getattr(backend, "id_token", None) or {}
+    value = response.get("email_verified", id_token.get("email_verified"))
+    return value is True or value == "true"
 
 
 class OIDCExceptionMiddleware(SocialAuthExceptionMiddleware):

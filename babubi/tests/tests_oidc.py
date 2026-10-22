@@ -42,9 +42,17 @@ def sign(claims, key=PRIVATE_KEY):
 class FakeProvider:
     """Answers the HTTP requests the OIDC backend makes to the provider."""
 
-    def __init__(self, sub="sub-isaac", username="isaac"):
+    def __init__(
+        self,
+        sub="sub-isaac",
+        username="isaac",
+        email="isaac@example.com",
+        email_verified=True,
+    ):
         self.sub = sub
         self.username = username
+        self.email = email
+        self.email_verified = email_verified
         self.nonce = None
 
     def __call__(self, method, url, **kwargs):
@@ -57,7 +65,11 @@ class FakeProvider:
                 "jwks_uri": f"{ISSUER}/jwks",
             },
             f"{ISSUER}/jwks": {"keys": [PUBLIC_JWK]},
-            f"{ISSUER}/userinfo": {"sub": self.sub},
+            f"{ISSUER}/userinfo": {
+                "sub": self.sub,
+                "email": self.email,
+                "email_verified": self.email_verified,
+            },
         }
         if url == f"{ISSUER}/token":
             now = int(time.time())
@@ -84,22 +96,36 @@ class FakeProvider:
         return response
 
 
-@override_settings(LOGIN_METHODS=["oidc"], **OIDC_SETTINGS)
-class OIDCLoginTestCase(TestCase):
+class OIDCTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(
-            username="isaac", password="password"
+            username="isaac", password="password", email="isaac@example.com"
         )
 
-    def log_in(self, provider):
+    def log_in(self, provider, next_url="/welcome/"):
         with mock.patch("social_core.backends.base.requests.request", provider):
-            response = self.client.post("/oidc/login/oidc/", {"next": "/welcome/"})
+            response = self.client.post("/oidc/login/oidc/", {"next": next_url})
             query = parse_qs(urlsplit(response["Location"]).query)
             provider.nonce = query["nonce"][0]
             return self.client.get(
                 "/oidc/complete/oidc/", {"state": query["state"][0], "code": "code"}
             )
 
+    def link(self, user, sub):
+        """A link as the backend stores it, keyed by the sub claim."""
+        return UserSocialAuth.objects.create(
+            user=user, provider="oidc", uid=sub, id_key="sub"
+        )
+
+    def assertTurnedAway(self, response, sub="sub-isaac"):
+        self.assertRedirects(response, "/login/", fetch_redirect_response=False)
+        self.assertFalse(UserSocialAuth.objects.filter(uid=sub).exists())
+        page = self.client.get("/login/")
+        self.assertContains(page, "This account is not allowed to log in.")
+
+
+@override_settings(LOGIN_METHODS=["oidc"], **OIDC_SETTINGS)
+class OIDCLoginTestCase(OIDCTestCase):
     def test_known_user_logs_in(self):
         response = self.log_in(FakeProvider())
         self.assertRedirects(response, "/welcome/", fetch_redirect_response=False)
@@ -108,16 +134,44 @@ class OIDCLoginTestCase(TestCase):
             UserSocialAuth.objects.filter(user=self.user, uid="sub-isaac").exists()
         )
 
-    def test_username_matches_without_case(self):
-        response = self.log_in(FakeProvider(username="Isaac"))
+    def test_email_matches_without_case(self):
+        response = self.log_in(FakeProvider(username="x", email="Isaac@Example.com"))
         self.assertRedirects(response, "/welcome/", fetch_redirect_response=False)
 
-    def test_unknown_user_is_turned_away(self):
-        response = self.log_in(FakeProvider(sub="sub-guest", username="guest"))
-        self.assertRedirects(response, "/login/", fetch_redirect_response=False)
+    def test_unverified_email_is_turned_away(self):
+        self.assertTurnedAway(self.log_in(FakeProvider(email_verified=False)))
+        self.assertTurnedAway(self.log_in(FakeProvider(email_verified="false")))
+
+    def test_unknown_email_is_turned_away(self):
+        self.assertTurnedAway(self.log_in(FakeProvider(email="guest@example.com")))
+        self.assertTurnedAway(self.log_in(FakeProvider(email=None)))
         self.assertFalse(get_user_model().objects.filter(username="guest").exists())
-        page = self.client.get("/login/")
-        self.assertContains(page, "This account is not allowed to log in.")
+
+    def test_user_without_email_is_turned_away(self):
+        self.user.email = ""
+        self.user.save()
+        self.assertTurnedAway(self.log_in(FakeProvider(email="")))
+
+    def test_shared_email_is_turned_away(self):
+        get_user_model().objects.create_user(
+            username="twin", password="password", email="isaac@example.com"
+        )
+        self.assertTurnedAway(self.log_in(FakeProvider()))
+
+    @override_settings(OIDC_MATCH_BY="username")
+    def test_username_mode(self):
+        response = self.log_in(FakeProvider(username="Isaac", email="x@example.com"))
+        self.assertRedirects(response, "/welcome/", fetch_redirect_response=False)
+        self.assertTrue(UserSocialAuth.objects.filter(user=self.user).exists())
+        self.client.logout()
+        self.assertTurnedAway(
+            self.log_in(FakeProvider(sub="sub-2", username="guest")), sub="sub-2"
+        )
+
+    def test_linked_account_logs_in_by_sub(self):
+        self.link(self.user, "sub-isaac")
+        response = self.log_in(FakeProvider(username="other", email="o@example.com"))
+        self.assertRedirects(response, "/welcome/", fetch_redirect_response=False)
 
     def test_inactive_user_is_turned_away(self):
         self.user.is_active = False

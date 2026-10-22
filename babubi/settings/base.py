@@ -210,6 +210,11 @@ if "oidc" in LOGIN_METHODS and not (
         "OIDC login needs OIDC_ENDPOINT, OIDC_CLIENT_ID and OIDC_CLIENT_SECRET."
     )
 OIDC_PROVIDER_NAME = os.environ.get("OIDC_PROVIDER_NAME") or None
+# How a provider account meets an existing user the first time: by the
+# verified email (the default) or by the username (babubi.oidc).
+OIDC_MATCH_BY = os.environ.get("OIDC_MATCH_BY") or "email"
+if OIDC_MATCH_BY not in ("email", "username"):
+    raise ImproperlyConfigured("OIDC_MATCH_BY must be email or username.")
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
 SOCIAL_AUTH_LOGIN_ERROR_URL = LOGIN_URL
 # Babubi never creates users from OIDC: an administrator adds them first.
@@ -218,7 +223,7 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.auth_allowed",
     "social_core.pipeline.social_auth.social_user",
-    "babubi.oidc.associate_by_username",
+    "babubi.oidc.associate_existing_user",
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
 )
