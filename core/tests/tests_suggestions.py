@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.utils import timezone
 
@@ -14,6 +16,12 @@ class SuggestionsTestCase(TestCase):
         self.child = models.Child.objects.create(
             first_name="Ada", last_name="X", birth_date=timezone.localdate()
         )
+        self.user = get_user_model().objects.create_user(
+            username="parent", password="secret", is_superuser=True
+        )
+
+    def form(self, form_class, **kwargs):
+        return form_class(user=self.user, **kwargs)
 
     def give(self, name, times, hours=8):
         for _ in range(times):
@@ -35,22 +43,30 @@ class SuggestionsTestCase(TestCase):
 
     def test_form_fields_offer_them(self):
         self.give("Vitamina D", 3, hours=24)
-        form = MedicationForm()
+        form = self.form(MedicationForm)
         self.assertEqual(form.fields["name"].suggestions, ["Vitamina D"])
         self.assertEqual(form.fields["next_dose_interval"].suggestions, ["24"])
         self.assertEqual(form.fields["dosage"].suggestions, ["1"])
-        self.assertEqual(FeedingForm().fields["amount"].suggestions, [])
+        self.assertEqual(self.form(FeedingForm).fields["amount"].suggestions, [])
+
+    def test_only_with_the_permission_to_view(self):
+        self.give("Vitamina D", 3)
+        adder = get_user_model().objects.create_user(username="adder", password="s")
+        adder.user_permissions.add(Permission.objects.get(codename="add_medication"))
+        form = MedicationForm(user=adder)
+        self.assertFalse(hasattr(form.fields["name"], "suggestions"))
+        self.assertFalse(hasattr(MedicationForm().fields["name"], "suggestions"))
 
     def test_notes_offer_only_short_values(self):
         short, long = "Ha vomitat una mica", "Ha fet una presa molt llarga i ha dormit bé"
         for note in (short, short, long, long):
             models.Note.objects.create(child=self.child, note=note, time=timezone.now())
-        self.assertEqual(NoteForm().fields["note"].suggestions, [short])
+        self.assertEqual(self.form(NoteForm).fields["note"].suggestions, [short])
         # Each form counts only its own table's notes.
-        self.assertEqual(SleepForm().fields["notes"].suggestions, [])
+        self.assertEqual(self.form(SleepForm).fields["notes"].suggestions, [])
 
     def test_whole_doses_read_without_decimals(self):
         self.give("Vitamina D", 1, hours=24)
-        form = MedicationForm(instance=models.Medication.objects.get())
+        form = self.form(MedicationForm, instance=models.Medication.objects.get())
         self.assertEqual(form["dosage"].value(), 1)
         self.assertEqual(form["next_dose_interval"].value(), 24)

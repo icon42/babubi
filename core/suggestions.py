@@ -56,6 +56,14 @@ class SuggestionsMixin:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # The picks show stored values, so they need the permission to view
+        # the model, not only to add to it.
+        meta = self._meta.model._meta
+        user = getattr(self, "user", None)
+        if user is None or not user.has_perm(
+            "{}.view_{}".format(meta.app_label, meta.model_name)
+        ):
+            return
         for name, source in self.suggestions.items():
             if name not in self.fields:
                 continue
