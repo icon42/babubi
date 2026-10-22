@@ -70,6 +70,7 @@ oidc_patterns = [
         oidc.oidc_login_required(social_views.complete),
         name="complete",
     ),
+    path("disconnect/<str:backend>/", oidc.disconnect, name="disconnect"),
 ]
 
 urlpatterns = [

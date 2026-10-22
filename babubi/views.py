@@ -50,7 +50,7 @@ from django_filters.views import FilterView
 from rest_framework.exceptions import AuthenticationFailed
 
 from api.authentication import TokenAuthentication
-from babubi import forms
+from babubi import forms, oidc
 from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin, StaffOnlyMixin
 
 
@@ -269,8 +269,21 @@ class UserSettings(LoginRequiredMixin, View):
             {
                 "form_user": self.form_user_class(instance=request.user),
                 "form_settings": self.form_settings_class(instance=settings),
+                **self.oidc_context(request.user),
             },
         )
+
+    @staticmethod
+    def oidc_context(user):
+        """The single sign-on section: whether the user is linked, and may unlink."""
+        if "oidc" not in settings.LOGIN_METHODS:
+            return {"oidc_enabled": False}
+        return {
+            "oidc_enabled": True,
+            "oidc_linked": oidc.oidc_linked(user),
+            "oidc_can_unlink": oidc.can_unlink(user),
+            "oidc_provider_name": settings.OIDC_PROVIDER_NAME,
+        }
 
     def post(self, request):
         if handle_api_regenerate_request(request):
@@ -292,7 +305,11 @@ class UserSettings(LoginRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {"user_form": form_user, "settings_form": form_settings},
+            {
+                "user_form": form_user,
+                "settings_form": form_settings,
+                **self.oidc_context(request.user),
+            },
         )
 
 

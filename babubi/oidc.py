@@ -11,13 +11,20 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, get_user_model
 from django.contrib.sessions.models import Session
+from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from social_core.exceptions import AuthPolicyError, SocialAuthBaseException
+from social_core.exceptions import (
+    AuthAssociationError,
+    AuthPolicyError,
+    SocialAuthBaseException,
+)
+from social_django import views as social_views
 from social_django.middleware import SocialAuthExceptionMiddleware
 from social_django.models import UserSocialAuth
 from social_django.utils import load_backend, load_strategy
@@ -43,7 +50,7 @@ def associate_existing_user(backend, details, response, user=None, *args, **kwar
     """
     Pipeline step: the first time a provider account logs in, finds the one
     existing user it belongs to, by the verified email or by the username
-    (OIDC_MATCH_BY).
+    (OIDC_MATCH_BY); a user who is already logged in links to it directly.
     Unknown, inactive and expired users are turned away.
     """
     if user is None:
@@ -78,12 +85,43 @@ def email_verified(backend, response):
 
 
 class OIDCExceptionMiddleware(SocialAuthExceptionMiddleware):
-    """Shows translated messages instead of the library's English ones."""
+    """
+    Shows translated messages instead of the library's English ones, and
+    sends a logged-in user (linking from the settings page) back there.
+    """
 
     def get_message(self, request, exception):
+        if isinstance(exception, AuthAssociationError):
+            return _("This provider account is already linked to another user.")
         if isinstance(exception, AuthPolicyError):
             return _("This account is not allowed to log in.")
         return _("Login with the identity provider failed. Try again later.")
+
+    def get_redirect_uri(self, request, exception):
+        if request.user.is_authenticated:
+            return reverse("babubi:user-settings")
+        return super().get_redirect_uri(request, exception)
+
+
+def oidc_linked(user):
+    """Whether the user has a provider account linked."""
+    return UserSocialAuth.objects.filter(user=user, provider="oidc").exists()
+
+
+def can_unlink(user):
+    """
+    Unlinking must leave a way in: a password, and password login allowed.
+    """
+    return "password" in settings.LOGIN_METHODS and user.has_usable_password()
+
+
+@require_POST
+@oidc_login_required
+def disconnect(request, backend):
+    """Unlinks the provider account from the logged-in user, when allowed."""
+    if not request.user.is_authenticated or not can_unlink(request.user):
+        raise PermissionDenied
+    return social_views.disconnect(request, backend)
 
 
 @csrf_exempt

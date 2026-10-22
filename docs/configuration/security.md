@@ -84,6 +84,7 @@ With `oidc` alone, Babubi accepts no passwords on the web: the login form, the a
 Babubi never creates users from OIDC: add each user first. A provider account meets its Babubi user in one of two ways, and from then on the two stay linked by the provider's `sub` claim:
 
 - At the first OIDC login, by the user's email, which the provider must report as verified (`email_verified`), or by the username when [`OIDC_MATCH_BY`](#oidc_match_by) says so. Exactly one user must match, ignoring case.
+- From the user settings page, where a user logged in with a password can link the provider account directly, whatever its claims say, and unlink it again while password login stays available.
 
 Inactive users and users whose access has expired are turned away.
 

@@ -79,6 +79,35 @@
                     {% endwith %}
                 </div>
             </fieldset>
+            {% if oidc_enabled %}
+                {# The buttons post their own forms, placed after this one. #}
+                <fieldset>
+                    <legend>{% trans "Single sign-on" %}</legend>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{{ oidc_provider_name|default:_("Account") }}</label>
+                        <div class="col-sm-10">
+                            {% if oidc_linked %}
+                                <span class="me-2">{% trans "Linked" %}</span>
+                                {% if oidc_can_unlink %}
+                                    <button type="submit"
+                                            form="oidc-unlink"
+                                            class="btn btn-outline-danger btn-xs">{% trans "Unlink" %}</button>
+                                {% endif %}
+                            {% else %}
+                                <button type="submit"
+                                        form="oidc-link"
+                                        class="btn btn-outline-primary btn-xs">
+                                    {% if oidc_provider_name %}
+                                        {% blocktrans with provider=oidc_provider_name %}Link with {{ provider }}{% endblocktrans %}
+                                    {% else %}
+                                        {% trans "Link with single sign-on" %}
+                                    {% endif %}
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </fieldset>
+            {% endif %}
             <fieldset>
                 <legend>{% trans "API" %}</legend>
                 <div class="form-group row">
@@ -94,5 +123,18 @@
             <input type="hidden" name="next" value="{% url 'babubi:user-settings' %}" />
             <button type="submit" name="save_settings" class="btn btn-primary">{% trans "Submit" %}</button>
         </form>
+        {% if oidc_enabled %}
+            {% if oidc_linked and oidc_can_unlink %}
+                <form id="oidc-unlink" method="post" action="{% url 'social:disconnect' 'oidc' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'babubi:user-settings' %}">
+                </form>
+            {% elif not oidc_linked %}
+                <form id="oidc-link" method="post" action="{% url 'social:begin' 'oidc' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'babubi:user-settings' %}">
+                </form>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}

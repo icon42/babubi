@@ -198,6 +198,85 @@ class OIDCLoginTestCase(OIDCTestCase):
         self.assertIn("code_challenge", query)
 
 
+@override_settings(LOGIN_METHODS=["password", "oidc"], **OIDC_SETTINGS)
+class OIDCLinkTestCase(OIDCTestCase):
+    """Linking a provider account from the user settings page."""
+
+    SETTINGS = "/user/settings/"
+
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+
+    def test_link_from_the_settings_page(self):
+        page = self.client.get(self.SETTINGS)
+        self.assertContains(page, "Link with single sign-on")
+        self.assertContains(page, 'action="/oidc/login/oidc/"')
+        self.assertNotContains(page, 'action="/oidc/disconnect/oidc/"')
+
+        # The claims need not match: the logged-in user is the one linked.
+        provider = FakeProvider(sub="sub-new", username="x", email="x@example.com")
+        response = self.log_in(provider, next_url=self.SETTINGS)
+        self.assertRedirects(response, self.SETTINGS, fetch_redirect_response=False)
+        self.assertTrue(
+            UserSocialAuth.objects.filter(user=self.user, uid="sub-new").exists()
+        )
+        page = self.client.get(self.SETTINGS)
+        self.assertContains(page, "Linked")
+        self.assertContains(page, 'action="/oidc/disconnect/oidc/"')
+        self.assertNotContains(page, 'action="/oidc/login/oidc/"')
+
+    def test_unlink(self):
+        self.link(self.user, "sub-isaac")
+        response = self.client.post(
+            "/oidc/disconnect/oidc/", {"next": self.SETTINGS}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(urlsplit(response["Location"]).path, self.SETTINGS)
+        self.assertFalse(UserSocialAuth.objects.exists())
+        self.assertEqual(self.client.get("/welcome/").status_code, 200)
+
+    def test_unlink_only_with_another_way_in(self):
+        self.link(self.user, "sub-isaac")
+        self.user.set_unusable_password()
+        self.user.save()
+        self.client.force_login(self.user)
+        page = self.client.get(self.SETTINGS)
+        self.assertContains(page, "Linked")
+        self.assertNotContains(page, 'action="/oidc/disconnect/oidc/"')
+        response = self.client.post("/oidc/disconnect/oidc/")
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(UserSocialAuth.objects.exists())
+
+    @override_settings(LOGIN_METHODS=["oidc"])
+    def test_no_unlink_with_oidc_only(self):
+        self.link(self.user, "sub-isaac")
+        self.assertNotContains(
+            self.client.get(self.SETTINGS), 'action="/oidc/disconnect/oidc/"'
+        )
+        self.assertEqual(self.client.post("/oidc/disconnect/oidc/").status_code, 403)
+
+    @override_settings(LOGIN_METHODS=["password"])
+    def test_hidden_without_oidc(self):
+        self.assertNotContains(self.client.get(self.SETTINGS), "Single sign-on")
+        self.assertEqual(self.client.post("/oidc/disconnect/oidc/").status_code, 404)
+
+    def test_account_linked_to_another_user(self):
+        other = get_user_model().objects.create_user(username="other", password="p")
+        self.link(other, "sub-isaac")
+        response = self.log_in(FakeProvider(), next_url=self.SETTINGS)
+        self.assertRedirects(response, self.SETTINGS, fetch_redirect_response=False)
+        page = self.client.get(self.SETTINGS)
+        self.assertContains(
+            page, "This provider account is already linked to another user."
+        )
+        self.assertFalse(UserSocialAuth.objects.filter(user=self.user).exists())
+
+    def test_anonymous_cannot_disconnect(self):
+        self.client.logout()
+        self.assertEqual(self.client.post("/oidc/disconnect/oidc/").status_code, 403)
+
+
 class LoginMethodsTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_superuser(
