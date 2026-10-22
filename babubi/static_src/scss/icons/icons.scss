@@ -4,7 +4,6 @@
 // stroke and a fill at 18%), and `currentColor` paints both, so an icon takes
 // the colour of the text around it like a glyph did. Imported after Fontello
 // in babubi.scss so these rules win over its `content` codes.
-//
 // The drawings are the files in babubi/static_src/icons: gulp's `styles` task
 // turns them into the `$icons` map of `_generated.scss` (gulpfile.icons.js).
 
@@ -16,7 +15,6 @@
         height: 1em;
         vertical-align: -.125em;
         background-color: currentColor;
-        -webkit-mask: url("data:image/svg+xml,#{$svg}") center / contain no-repeat;
         mask: url("data:image/svg+xml,#{$svg}") center / contain no-repeat;
     }
 }

@@ -5,6 +5,7 @@ of cards and of quick actions, the default arrangement, and the operations
 of the dashboard's edit mode. A user's arrangement of a child's dashboard is
 a DashboardLayout.
 """
+
 from dataclasses import dataclass
 
 from django.urls import resolve, reverse

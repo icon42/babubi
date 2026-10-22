@@ -15,7 +15,12 @@
                 <legend class="form-label">{% trans "Measures" %}</legend>
                 {% for measure in measures %}
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="measures" value="{{ measure.key }}" id="percentiles-{{ measure.key }}" {% if measure.key in chosen %}checked{% endif %}>
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="measures"
+                               value="{{ measure.key }}"
+                               id="percentiles-{{ measure.key }}"
+                               {% if measure.key in chosen %}checked{% endif %}>
                         <label class="form-check-label" for="percentiles-{{ measure.key }}">{{ measure.label }}</label>
                     </div>
                 {% endfor %}

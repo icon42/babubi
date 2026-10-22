@@ -228,9 +228,7 @@ class OIDCLinkTestCase(OIDCTestCase):
 
     def test_unlink(self):
         self.link(self.user, "sub-isaac")
-        response = self.client.post(
-            "/oidc/disconnect/oidc/", {"next": self.SETTINGS}
-        )
+        response = self.client.post("/oidc/disconnect/oidc/", {"next": self.SETTINGS})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(urlsplit(response["Location"]).path, self.SETTINGS)
         self.assertFalse(UserSocialAuth.objects.exists())

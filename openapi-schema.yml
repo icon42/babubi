@@ -5730,9 +5730,9 @@ components:
           nullable: true
         sex:
           enum:
-          - ''
-          - boy
-          - girl
+            - ""
+            - boy
+            - girl
           type: string
       required:
         - first_name
@@ -6036,11 +6036,11 @@ components:
           maxLength: 255
         kind:
           enum:
-          - ''
-          - feeding
-          - pumping
-          - sleep
-          - tummytime
+            - ""
+            - feeding
+            - pumping
+            - sleep
+            - tummytime
           type: string
         start:
           type: string

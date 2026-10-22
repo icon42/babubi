@@ -58,7 +58,10 @@ class SuggestionsTestCase(TestCase):
         self.assertFalse(hasattr(MedicationForm().fields["name"], "suggestions"))
 
     def test_notes_offer_only_short_values(self):
-        short, long = "Ha vomitat una mica", "Ha fet una presa molt llarga i ha dormit bé"
+        short, long = (
+            "Ha vomitat una mica",
+            "Ha fet una presa molt llarga i ha dormit bé",
+        )
         for note in (short, short, long, long):
             models.Note.objects.create(child=self.child, note=note, time=timezone.now())
         self.assertEqual(self.form(NoteForm).fields["note"].suggestions, [short])

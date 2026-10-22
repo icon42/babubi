@@ -12,9 +12,7 @@ from dashboard.models import DashboardLayout
 
 class ArrangementTestCase(TestCase):
     def test_new_layout_takes_the_defaults(self):
-        columns, hidden, actions, hidden_actions = layout.arrangement(
-            DashboardLayout()
-        )
+        columns, hidden, actions, hidden_actions = layout.arrangement(DashboardLayout())
         self.assertEqual(columns, layout.default_columns())
         self.assertEqual(columns[0][0], "quick_actions")
         self.assertEqual(hidden, layout.default_hidden())

@@ -20,7 +20,8 @@
                aria-expanded="false"
                aria-controls="filter_form"
                title="{% trans "Filters" %}">
-                <i class="icon-filter" aria-hidden="true"></i><span class="d-none d-sm-inline">{% trans "Filters" %}</span>
+                <i class="icon-filter"
+                   aria-hidden="true"></i><span class="d-none d-sm-inline">{% trans "Filters" %}</span>
             </a>
             {% block extra_actions %}{% endblock %}
             {% if day_list.can_add %}
@@ -68,13 +69,14 @@
                             </tr>
                         {% endif %}
                         {% for item in day.items %}
-                            <tr class="day-item{% if forloop.counter|divisibleby:2 %} day-item_alt{% endif %}"{% if item.notes %} data-note{% endif %}>
+                            <tr class="day-item{% if forloop.counter|divisibleby:2 %} day-item_alt{% endif %}"
+                                {% if item.notes %} data-note{% endif %}>
                                 <th scope="row" class="day-cell_time">
                                     {% if day_list.can_change %}
                                         <a href="{% url day_list.update_url item.pk %}" class="day-item-link">
-                                        {% endif %}
-                                        {% block time %}{% endblock %}
-                                        {% if day_list.can_change %}</a>{% endif %}
+                                    {% endif %}
+                                    {% block time %}{% endblock %}
+                                    {% if day_list.can_change %}</a>{% endif %}
                                 </th>
                                 {% if not unique_child %}
                                     <td>
@@ -94,14 +96,16 @@
                                             <a href="{% url day_list.update_url item.pk %}"
                                                class="btn btn-sm btn-outline-primary"
                                                title="{% trans "Edit" %}">
-                                                <i class="icon-update" aria-hidden="true"></i><span class="visually-hidden">{% trans "Edit" %}</span>
+                                                <i class="icon-update"
+                                                   aria-hidden="true"></i><span class="visually-hidden">{% trans "Edit" %}</span>
                                             </a>
                                         {% endif %}
                                         {% if day_list.can_delete %}
                                             <a href="{% url day_list.delete_url item.pk %}"
                                                class="btn btn-sm btn-outline-danger"
                                                title="{% trans "Delete" %}">
-                                                <i class="icon-delete" aria-hidden="true"></i><span class="visually-hidden">{% trans "Delete" %}</span>
+                                                <i class="icon-delete"
+                                                   aria-hidden="true"></i><span class="visually-hidden">{% trans "Delete" %}</span>
                                             </a>
                                         {% endif %}
                                     </div>

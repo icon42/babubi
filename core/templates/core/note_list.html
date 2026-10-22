@@ -20,13 +20,13 @@
     <td>
         {% if item.image %}
             {% thumbnail '40x40' item.image as thumb %}
-            <a href="{{ item.image.url }}" target="_blank" class="day-thumb">
-                <img src="{{ thumb.url }}" class="img-fluid" alt="" />
-            </a>
-        {% endif %}
-    </td>
-    <td class="day-cell_text">{{ item.note }}</td>
-{% endblock %}
-{% block empty %}
-    {% trans "No notes found." %}
-{% endblock %}
+                <a href="{{ item.image.url }}" target="_blank" class="day-thumb">
+                    <img src="{{ thumb.url }}" class="img-fluid" alt="" />
+                </a>
+            {% endif %}
+            </td>
+            <td class="day-cell_text">{{ item.note }}</td>
+        {% endblock %}
+        {% block empty %}
+            {% trans "No notes found." %}
+        {% endblock %}

@@ -19,7 +19,8 @@
         <div class="form-actions">
             <button type="submit" class="submit-primary btn btn-primary btn-lg">{% trans "Submit" %}</button>
             {% if delete_url %}
-                <a href="{{ delete_url }}" class="form-delete btn btn-outline-danger btn-lg">
+                <a href="{{ delete_url }}"
+                   class="form-delete btn btn-outline-danger btn-lg">
                     <i class="icon-delete" aria-hidden="true"></i> {% trans "Delete" %}
                 </a>
             {% endif %}

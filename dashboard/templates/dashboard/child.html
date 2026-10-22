@@ -127,7 +127,8 @@
                 <a class="btn btn-sm btn-primary"
                    href="{% url 'core:child' object.slug %}">{% trans "Done" %}</a>
             {% else %}
-                <a class="btn btn-sm dash-btn" href="{% url 'core:child-timeline' object.slug %}">
+                <a class="btn btn-sm dash-btn"
+                   href="{% url 'core:child-timeline' object.slug %}">
                     <i class="icon-timeline" aria-hidden="true"></i> {% trans "Timeline" %}
                 </a>
                 <a class="btn btn-sm dash-btn"
@@ -193,9 +194,13 @@
                                     <input type="hidden" name="key" value="{{ card.key }}">
                                     <span class="dash-controls-label">{{ card.label }}</span>
                                     <span class="dash-controls-buttons">
-                                        <button class="btn btn-sm dash-btn dash-btn_show" name="op" value="show">{% trans "Show" %}</button>
+                                        <button class="btn btn-sm dash-btn dash-btn_show"
+                                                name="op"
+                                                value="show">{% trans "Show" %}</button>
                                         {% if card.report %}
-                                            <button class="btn btn-sm dash-btn" name="op" value="remove">{% trans "Remove" %}</button>
+                                            <button class="btn btn-sm dash-btn"
+                                                    name="op"
+                                                    value="remove">{% trans "Remove" %}</button>
                                         {% endif %}
                                     </span>
                                 </form>

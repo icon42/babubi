@@ -103,8 +103,7 @@
                     {% active_child as active %}
                     {% if active.child %}
                         <li class="nav-item{% if active.others %} dropdown d-flex{% endif %}">
-                            <a class="nav-link"
-                               href="{% url 'core:child' active.child.slug %}">
+                            <a class="nav-link" href="{% url 'core:child' active.child.slug %}">
                                 <i class="icon-dashboard" aria-hidden="true"></i>
                                 {{ active.child.first_name }}
                             </a>
@@ -363,7 +362,8 @@
                                 {% if perms.core.view_child or perms.core.add_child %}
                                     <h6 class="dropdown-header">{% trans "Children" %}</h6>
                                     {% if perms.core.view_child %}
-                                        <a href="{% url 'core:child-list' %}" class="dropdown-item">{% trans "Configure" %}</a>
+                                        <a href="{% url 'core:child-list' %}"
+                                           class="dropdown-item">{% trans "Configure" %}</a>
                                     {% endif %}
                                     {% if perms.core.add_child %}
                                         <a href="{% url 'core:child-add' %}" class="dropdown-item">{% trans "Add" %}</a>

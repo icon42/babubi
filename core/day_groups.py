@@ -85,8 +85,7 @@ def _temperature_summary(items):
     return [
         _part(_count("%(count)d reading", "%(count)d readings", len(items))),
         _part(
-            _("max. %(temperature)s")
-            % {"temperature": formats.number_format(highest)}
+            _("max. %(temperature)s") % {"temperature": formats.number_format(highest)}
         ),
     ]
 

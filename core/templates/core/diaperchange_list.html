@@ -21,10 +21,16 @@
 {% block cells %}
     <td class="day-cell_icons">
         {% if item.wet %}
-            <i class="icon-wet" role="img" aria-label="{% trans "Wet" %}" title="{% trans "Wet" %}"></i>
+            <i class="icon-wet"
+               role="img"
+               aria-label="{% trans "Wet" %}"
+               title="{% trans "Wet" %}"></i>
         {% endif %}
         {% if item.solid %}
-            <i class="icon-solid" role="img" aria-label="{% trans "Solid" %}" title="{% trans "Solid" %}"></i>
+            <i class="icon-solid"
+               role="img"
+               aria-label="{% trans "Solid" %}"
+               title="{% trans "Solid" %}"></i>
         {% endif %}
         {% if item.color %}
             <span class="day-dot day-dot_{{ item.color }} day-dot_compact"

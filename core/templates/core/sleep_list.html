@@ -29,7 +29,8 @@
 {% endblock %}
 {% block cells %}
     <td>
-        <span class="day-duration">{{ item.duration|short_duration }}</span><span class="day-bar day-cell_secondary" style="--day-bar: {{ item.duration|duration_percent }}"></span>
+        <span class="day-duration">{{ item.duration|short_duration }}</span><span class="day-bar day-cell_secondary"
+      style="--day-bar: {{ item.duration|duration_percent }}"></span>
     </td>
     <td>
         {% if item.nap %}

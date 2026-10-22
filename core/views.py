@@ -569,9 +569,7 @@ class Timeline(LoginRequiredMixin, TemplateView):
         children = models.Child.objects.count()
         if children == 1:
             return HttpResponseRedirect(
-                reverse(
-                    "core:child-timeline", args={models.Child.objects.first().slug}
-                )
+                reverse("core:child-timeline", args={models.Child.objects.first().slug})
             )
         return super(Timeline, self).get(request, *args, **kwargs)
 

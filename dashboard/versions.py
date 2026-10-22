@@ -8,6 +8,7 @@ counter; a timer with no child, or a child's own record, bumps a shared one,
 since every dashboard shows it. The counters live in the cache, so reading a
 version costs one lookup by key and no query on the activity tables.
 """
+
 from django.core.cache import cache
 
 TIMEOUT = None  # Kept until the cache is cleared; a lost counter restarts at 1.

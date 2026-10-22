@@ -184,7 +184,9 @@ class ChildAPITestCase(TestBase.BabubiAPITestCaseBase):
 
     def test_sex(self):
         data = {"first_name": "Test", "last_name": "Child", "birth_date": "2017-11-12"}
-        response = self.client.post(self.endpoint, dict(data, sex="girl"), format="json")
+        response = self.client.post(
+            self.endpoint, dict(data, sex="girl"), format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["sex"], "girl")
         endpoint = "{}{}/".format(self.endpoint, response.data["slug"])

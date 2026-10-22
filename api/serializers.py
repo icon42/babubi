@@ -187,9 +187,7 @@ class PumpingSerializer(CoreModelWithDurationSerializer, TaggableSerializer):
         )
 
 
-class ChildSerializer(
-    ProfileFieldsMixin, serializers.HyperlinkedModelSerializer
-):
+class ChildSerializer(ProfileFieldsMixin, serializers.HyperlinkedModelSerializer):
     profile_fields = {"sex": (growth.sex_of, growth.set_sex)}
     sex = serializers.ChoiceField(
         choices=("",) + growth.SEXES, allow_blank=True, required=False

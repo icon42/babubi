@@ -94,9 +94,7 @@
                                             class="btn btn-outline-danger btn-xs">{% trans "Unlink" %}</button>
                                 {% endif %}
                             {% else %}
-                                <button type="submit"
-                                        form="oidc-link"
-                                        class="btn btn-outline-primary btn-xs">
+                                <button type="submit" form="oidc-link" class="btn btn-outline-primary btn-xs">
                                     {% if oidc_provider_name %}
                                         {% blocktrans with provider=oidc_provider_name %}Link with {{ provider }}{% endblocktrans %}
                                     {% else %}
@@ -125,7 +123,9 @@
         </form>
         {% if oidc_enabled %}
             {% if oidc_linked and oidc_can_unlink %}
-                <form id="oidc-unlink" method="post" action="{% url 'social:disconnect' 'oidc' %}">
+                <form id="oidc-unlink"
+                      method="post"
+                      action="{% url 'social:disconnect' 'oidc' %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{% url 'babubi:user-settings' %}">
                 </form>

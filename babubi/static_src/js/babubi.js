@@ -103,8 +103,17 @@ Babubi.GraphRanges = (function () {
 
   function plotlyDate(date) {
     return (
-      date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) +
-      " " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds())
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1) +
+      "-" +
+      pad(date.getDate()) +
+      " " +
+      pad(date.getHours()) +
+      ":" +
+      pad(date.getMinutes()) +
+      ":" +
+      pad(date.getSeconds())
     );
   }
 
@@ -132,7 +141,8 @@ Babubi.GraphRanges = (function () {
         element.type = "button";
         element.className = "btn";
         // The reports leave the full range unlabelled, as Plotly names it itself.
-        element.textContent = button.label || (button.step === "all" ? "all" : "");
+        element.textContent =
+          button.label || (button.step === "all" ? "all" : "");
         if (button.step === "all") element.classList.add("active");
         element.addEventListener("click", function () {
           group.querySelectorAll(".btn").forEach(function (other) {
@@ -145,10 +155,15 @@ Babubi.GraphRanges = (function () {
           var start = new Date(end);
           var count = button.count || 1;
           if (button.step === "hour") start.setHours(start.getHours() - count);
-          else if (button.step === "day") start.setDate(start.getDate() - count);
-          else if (button.step === "month") start.setMonth(start.getMonth() - count);
-          else if (button.step === "year") start.setFullYear(start.getFullYear() - count);
-          Plotly.relayout(graph, { "xaxis.range": [plotlyDate(start), plotlyDate(end)] });
+          else if (button.step === "day")
+            start.setDate(start.getDate() - count);
+          else if (button.step === "month")
+            start.setMonth(start.getMonth() - count);
+          else if (button.step === "year")
+            start.setFullYear(start.getFullYear() - count);
+          Plotly.relayout(graph, {
+            "xaxis.range": [plotlyDate(start), plotlyDate(end)],
+          });
         });
         group.appendChild(element);
       });

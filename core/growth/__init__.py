@@ -7,6 +7,7 @@ upstream percentile reports import (core/migrations); head circumference
 reads the WHO tables kept here, in the same format, converted from the WHO's
 expanded tables (who.int/tools/child-growth-standards).
 """
+
 import csv
 import math
 from dataclasses import dataclass

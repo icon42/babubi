@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 // Activity colours ($activity-colors in _variables.scss). Each activity gets
 // a custom property per theme, `--activity-<name>`; its icon takes that
 // colour everywhere, and `.activity-<name>` sets `--activity` for a block
@@ -5,13 +7,13 @@
 
 @include color-mode("light") {
     @each $name, $colors in $activity-colors {
-        --activity-#{$name}: #{nth($colors, 1)};
+        --activity-#{$name}: #{list.nth($colors, 1)};
     }
 }
 
 @include color-mode("dark") {
     @each $name, $colors in $activity-colors {
-        --activity-#{$name}: #{nth($colors, 2)};
+        --activity-#{$name}: #{list.nth($colors, 2)};
     }
 }
 

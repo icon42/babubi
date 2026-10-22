@@ -76,6 +76,7 @@ def ends_next_day(instance):
     """
     if not instance.end:
         return False
-    return timezone.localtime(instance.end).date() > timezone.localtime(
-        instance.start
-    ).date()
+    return (
+        timezone.localtime(instance.end).date()
+        > timezone.localtime(instance.start).date()
+    )

@@ -40,7 +40,13 @@ Babubi.Dashboard = (function () {
       var pad = function (n) {
         return (n < 10 ? "0" : "") + n;
       };
-      return now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+      return (
+        now.getFullYear() +
+        "-" +
+        pad(now.getMonth() + 1) +
+        "-" +
+        pad(now.getDate())
+      );
     },
 
     check: function () {
@@ -77,7 +83,10 @@ Babubi.Dashboard = (function () {
         .then(function (html) {
           var page = new DOMParser().parseFromString(html, "text/html");
           var fresh = page.getElementById(dashboardElement.id);
-          if (!fresh || Dashboard.cardIds(fresh) !== Dashboard.cardIds(dashboardElement)) {
+          if (
+            !fresh ||
+            Dashboard.cardIds(fresh) !== Dashboard.cardIds(dashboardElement)
+          ) {
             location.reload();
             return;
           }
@@ -131,10 +140,12 @@ Babubi.Dashboard = (function () {
     },
 
     tick: function () {
-      dashboardElement.querySelectorAll("[data-since]").forEach(function (element) {
-        var text = Dashboard.ago(new Date(element.dataset.since));
-        if (text !== null) element.textContent = text;
-      });
+      dashboardElement
+        .querySelectorAll("[data-since]")
+        .forEach(function (element) {
+          var text = Dashboard.ago(new Date(element.dataset.since));
+          if (text !== null) element.textContent = text;
+        });
     },
   };
 

@@ -4,6 +4,7 @@ Quick picks under a form field: the values most often entered in it before,
 as small buttons that fill the field when clicked (babubi.js). A value shows
 once it has been used at least twice; the most frequent come first.
 """
+
 from django.db.models import Count
 from django.db.models.functions import Length
 
@@ -15,9 +16,7 @@ MINIMUM = 2
 SHORT = {"max_length": 40}
 
 
-def frequent(
-    model, field, to_form=None, limit=LIMIT, minimum=MINIMUM, max_length=None
-):
+def frequent(model, field, to_form=None, limit=LIMIT, minimum=MINIMUM, max_length=None):
     """
     The values of a model field used at least `minimum` times, most frequent
     first.

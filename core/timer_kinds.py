@@ -4,6 +4,7 @@ The activity a timer times, kept in Babubi's dashboard.TimerProfile rather
 than on upstream's Timer model: "feeding", "pumping", "sleep", "tummytime",
 or "" when not set.
 """
+
 from django.core.exceptions import ObjectDoesNotExist
 
 KINDS = ("feeding", "pumping", "sleep", "tummytime")

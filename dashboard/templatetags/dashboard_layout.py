@@ -194,9 +194,7 @@ def dashboard_time_words():
     from django.utils.translation import gettext, ngettext
 
     def forms(singular, plural, name):
-        return [
-            ngettext(singular, plural, n) % {name: "%(n)s"} for n in (1, 2)
-        ]
+        return [ngettext(singular, plural, n) % {name: "%(n)s"} for n in (1, 2)]
 
     return {
         "hour": forms("%(hours)s hour", "%(hours)s hours", "hours"),
