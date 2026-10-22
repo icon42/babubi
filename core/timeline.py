@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
 
+from django.template.defaultfilters import floatformat
 from django.urls import reverse
 from django.utils import timezone, timesince
 from django.utils.translation import gettext as _
@@ -255,7 +256,7 @@ def _add_medication(min_date, max_date, events, child):
             details.append(
                 _("Dosage")
                 + ": "
-                + str(instance.dosage)
+                + floatformat(instance.dosage, -2)
                 + " "
                 + instance.get_dosage_unit_display()
             )

@@ -12,7 +12,7 @@ from taggit.forms import TagField, TagWidgetMixin
 from babubi.widgets import DateInput, DateTimeInput, TimeInput
 from core import models
 from core.models import Timer
-from core.suggestions import SHORT, SuggestionsMixin
+from core.suggestions import SHORT, SuggestionsMixin, plain
 from core.widgets import TagsEditor, ChildRadioSelect, PillRadioSelect
 
 
@@ -517,7 +517,10 @@ class MedicationForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         # Convert existing timedelta to hours for display
         if self.instance and self.instance.next_dose_interval:
             total_seconds = self.instance.next_dose_interval.total_seconds()
-            self.initial["next_dose_interval"] = total_seconds / 3600
+            self.initial["next_dose_interval"] = plain(total_seconds / 3600)
+        # A whole dose reads 1, not 1.0.
+        if self.instance and self.instance.dosage is not None:
+            self.initial["dosage"] = plain(self.instance.dosage)
 
     def clean_next_dose_interval(self):
         hours = self.cleaned_data.get("next_dose_interval")

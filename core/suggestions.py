@@ -62,12 +62,12 @@ class SuggestionsMixin:
             field, options = source if isinstance(source, tuple) else (source, {})
             widget = self.fields[name].widget
             self.fields[name].suggestions = [
-                widget.format_value(_plain(value))
+                widget.format_value(plain(value))
                 for value in frequent(self._meta.model, field, **options)
             ]
 
 
-def _plain(value):
+def plain(value):
     """A whole float as an integer, so 180.0 reads 180."""
     if isinstance(value, float) and value.is_integer():
         return int(value)

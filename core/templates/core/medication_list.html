@@ -20,7 +20,7 @@
 {% endblock %}
 {% block cells %}
     <td>{{ item.name }}</td>
-    <td>{{ item.dosage }} {{ item.get_dosage_unit_display }}</td>
+    <td>{{ item.dosage|floatformat:"-2" }} {{ item.get_dosage_unit_display }}</td>
     <td class="day-cell_secondary">
         {% if item.next_dose_interval %}
             {{ item.next_dose_interval|short_duration }}

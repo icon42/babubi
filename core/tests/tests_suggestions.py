@@ -48,3 +48,9 @@ class SuggestionsTestCase(TestCase):
         self.assertEqual(NoteForm().fields["note"].suggestions, [short])
         # Each form counts only its own table's notes.
         self.assertEqual(SleepForm().fields["notes"].suggestions, [])
+
+    def test_whole_doses_read_without_decimals(self):
+        self.give("Vitamina D", 1, hours=24)
+        form = MedicationForm(instance=models.Medication.objects.get())
+        self.assertEqual(form["dosage"].value(), 1)
+        self.assertEqual(form["next_dose_interval"].value(), 24)
