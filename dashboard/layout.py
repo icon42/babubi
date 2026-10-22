@@ -281,6 +281,9 @@ def card_allowed(user, card):
 def action_allowed(user, action):
     if action.child:
         return user.has_perm("core.view_child")
+    # A timer of a kind also needs the activity it times.
+    if action.timer_kind and not user.has_perm("core.add_" + action.timer_kind):
+        return False
     return user.has_perm("core.add_" + action.model)
 
 

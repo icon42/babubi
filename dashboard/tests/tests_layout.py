@@ -402,6 +402,61 @@ class TimerKindTestCase(TestCase):
         form.save()
         self.assertEqual(kind_of(self.timer), "feeding")
 
+    def test_kinds_follow_the_activity_permissions(self):
+        from core.forms import TimerForm
+        from core.models import Timer
+        from core.timer_kinds import kind_of
+
+        # A caregiver who tracks sleep but not feedings, pumping or tummy time.
+        carer = get_user_model().objects.create_user(username="carer", password="s")
+        carer.user_permissions.add(
+            *Permission.objects.filter(
+                codename__in=[
+                    "view_child",
+                    "view_timer",
+                    "add_timer",
+                    "change_timer",
+                    "view_sleep",
+                    "add_sleep",
+                ]
+            )
+        )
+        c = HttpClient()
+        c.login(username="carer", password="s")
+
+        # The quick timer menus offer sleep only.
+        page = c.get("/timers/")
+        self.assertContains(page, 'name="kind" value="sleep"')
+        self.assertNotContains(page, 'name="kind" value="feeding"')
+
+        # Quick timers and the kind buttons ignore a kind the user may not add.
+        c.post("/timers/add/quick/", {"child": self.child.pk, "kind": "feeding"})
+        timer = Timer.objects.order_by("-id").first()
+        self.assertEqual(kind_of(timer), "")
+        url = "/timers/{}/".format(timer.pk)
+        c.post(url + "kind/", {"kind": "feeding"})
+        self.assertEqual(kind_of(Timer.objects.get(pk=timer.pk)), "")
+        c.post(url + "kind/", {"kind": "sleep"})
+        self.assertEqual(kind_of(Timer.objects.get(pk=timer.pk)), "sleep")
+        page = c.get(url)
+        self.assertContains(page, 'value="sleep"')
+        self.assertNotContains(page, 'value="feeding"')
+
+        # The form offers sleep, and keeps a kind the timer already has.
+        form = TimerForm(user=carer)
+        self.assertEqual([k for k, _ in form.fields["kind"].choices], ["", "sleep"])
+        form = TimerForm(user=carer, instance=self.timer)
+        self.assertEqual([k for k, _ in form.fields["kind"].choices], ["", "sleep"])
+        self.c.post("/timers/{}/kind/".format(self.timer.pk), {"kind": "feeding"})
+        form = TimerForm(user=carer, instance=Timer.objects.get(pk=self.timer.pk))
+        self.assertEqual(
+            [k for k, _ in form.fields["kind"].choices], ["", "feeding", "sleep"]
+        )
+
+        # The quick actions of the dashboard follow too.
+        self.assertTrue(layout.action_allowed(carer, layout.action("timer:sleep")))
+        self.assertFalse(layout.action_allowed(carer, layout.action("timer:feeding")))
+
     def test_timer_kind_quick_actions(self):
         key = layout.TIMER_PREFIX + "sleep"
         url = "/children/{}/".format(self.child.slug)

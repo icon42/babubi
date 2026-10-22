@@ -10,6 +10,14 @@ from django.core.exceptions import ObjectDoesNotExist
 KINDS = ("feeding", "pumping", "sleep", "tummytime")
 
 
+def allowed(user):
+    """
+    The kinds the user may start or set: those whose activity they may add.
+    A user who does not track feedings gets no feeding timers anywhere.
+    """
+    return tuple(kind for kind in KINDS if user.has_perm("core.add_" + kind))
+
+
 def kind_of(timer):
     try:
         return timer.profile.kind

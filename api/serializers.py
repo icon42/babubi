@@ -322,6 +322,16 @@ class TimerSerializer(ProfileFieldsMixin, CoreModelSerializer):
         queryset=models.Child.objects.all(),
         required=False,
     )
+
+    def validate_kind(self, value):
+        # Only a kind whose activity the user may add, as in the web views.
+        user = self.context["request"].user
+        if value and value not in timer_kinds.allowed(user):
+            raise serializers.ValidationError(
+                "You may not add the activity this kind times."
+            )
+        return value
+
     user = serializers.PrimaryKeyRelatedField(
         allow_null=True,
         allow_empty=True,

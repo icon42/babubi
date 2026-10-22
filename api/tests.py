@@ -852,6 +852,23 @@ class TimerAPITestCase(TestBase.BabubiAPITestCaseBase):
         response = self.client.patch(endpoint, {"kind": "nap"})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_kind_needs_the_activity_permission(self):
+        from django.contrib.auth import get_user_model
+        from django.contrib.auth.models import Permission
+
+        carer = get_user_model().objects.create_user(username="carer", password="s")
+        carer.user_permissions.add(
+            *Permission.objects.filter(
+                codename__in=["view_timer", "add_timer", "change_timer", "add_sleep"]
+            )
+        )
+        self.client.force_authenticate(user=carer)
+        response = self.client.post(self.endpoint, {"kind": "feeding"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(self.endpoint, {"kind": "sleep"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["kind"], "sleep")
+
     def test_start_restart_timer(self):
         endpoint = "{}{}/".format(self.endpoint, 1)
         response = self.client.get(endpoint)

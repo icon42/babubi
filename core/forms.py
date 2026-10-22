@@ -665,10 +665,16 @@ class TimerForm(CoreModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")
         super(TimerForm, self).__init__(*args, **kwargs)
-        from core.timer_kinds import kind_of
+        from core.timer_kinds import allowed, kind_of
 
-        if self.instance.pk:
-            self.fields["kind"].initial = kind_of(self.instance)
+        current = kind_of(self.instance) if self.instance.pk else ""
+        if current:
+            self.fields["kind"].initial = current
+        # Only the kinds the user may add, plus the one the timer already has.
+        kinds = ("", current) + allowed(self.user)
+        self.fields["kind"].choices = [
+            choice for choice in self.fields["kind"].choices if choice[0] in kinds
+        ]
 
     def save(self, commit=True):
         from core.timer_kinds import set_kind

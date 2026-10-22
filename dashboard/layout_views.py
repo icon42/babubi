@@ -7,7 +7,7 @@ from django.views import View
 
 from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from core.models import Child, Timer
-from core.timer_kinds import set_kind
+from core.timer_kinds import allowed, set_kind
 
 from . import layout, versions
 from .models import DashboardLayout
@@ -73,7 +73,9 @@ class TimerKindUpdate(LoginRequiredMixin, View):
             "core.change_timer"
         ):
             raise PermissionDenied
-        set_kind(timer, request.POST.get("kind", ""))
+        # A kind the user may not add counts as none, like an unknown one.
+        kind = request.POST.get("kind", "")
+        set_kind(timer, kind if kind in allowed(request.user) else "")
         return HttpResponseRedirect(reverse("core:timer-detail", args=[timer.pk]))
 
 

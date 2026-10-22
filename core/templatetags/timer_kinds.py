@@ -2,7 +2,7 @@
 from django import template
 from django.urls import reverse
 
-from core.timer_kinds import KINDS, kind_of
+from core.timer_kinds import allowed, kind_of
 
 register = template.Library()
 
@@ -30,13 +30,10 @@ def timer_kinds(context, timer):
     """
     from dashboard.models import TimerProfile
 
-    perms = context["perms"]
     labels = dict(TimerProfile.KINDS)
     current = kind_of(timer)
     options = []
-    for kind in sorted(KINDS, key=lambda k: k != current):
-        if not perms["core"]["add_" + kind]:
-            continue
+    for kind in sorted(allowed(context["request"].user), key=lambda k: k != current):
         url = "{}?timer={}".format(reverse(ADD_URLS[kind]), timer.id)
         if timer.child:
             url += "&child={}".format(timer.child.slug)
@@ -44,9 +41,12 @@ def timer_kinds(context, timer):
     return options
 
 
-@register.simple_tag
-def timer_kind_choices():
-    """The kinds a timer can be started as: a list of (kind, label)."""
+@register.simple_tag(takes_context=True)
+def timer_kind_choices(context):
+    """
+    The kinds the user may start a timer as: a list of (kind, label).
+    """
     from dashboard.models import TimerProfile
 
-    return TimerProfile.KINDS
+    kinds = allowed(context["request"].user)
+    return [(kind, label) for kind, label in TimerProfile.KINDS if kind in kinds]
