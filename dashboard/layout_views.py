@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views import View
 
-from babubi.mixins import LoginRequiredMixin
+from babubi.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from core.models import Child, Timer
 from core.timer_kinds import set_kind
 
@@ -28,12 +28,13 @@ class ActiveChildDashboard(ChildDashboard):
         return response
 
 
-class DashboardLayoutEdit(LoginRequiredMixin, View):
+class DashboardLayoutEdit(PermissionRequiredMixin, View):
     """
     Applies one operation of the dashboard's edit mode to the user's layout
     and goes back to the child dashboard, still in edit mode.
     """
 
+    permission_required = ("core.view_child",)
     http_method_names = ["post"]
 
     def post(self, request, slug):

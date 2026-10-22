@@ -160,6 +160,14 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertEqual([a.key for a in dash["actions"]], ["sleep"])
         self.assertEqual(dash["hidden_actions"], [])
 
+    def test_editing_needs_the_permission_to_view_children(self):
+        get_user_model().objects.create_user(username="nobody", password="secret")
+        c = HttpClient()
+        c.login(username="nobody", password="secret")
+        response = c.post(self.edit_url, {"op": "reset"})
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(DashboardLayout.objects.filter(child=self.child).exists())
+
 
 class ReportCardTestCase(TestCase):
     def setUp(self):
