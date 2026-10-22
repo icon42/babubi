@@ -1,4 +1,7 @@
 {% load widget_tweaks %}
+{% if field.is_hidden %}
+{{ field }}
+{% else %}
 <div class="row mb-3">
     <label for="id_{{ field.name }}"
            class="col-sm-2 col-form-label{% if field|field_type == 'booleanfield' %} boolean-label{% endif %}">
@@ -8,3 +11,4 @@
         {% include "babubi/form_field_no_label.html" %}
     </div>
 </div>
+{% endif %}

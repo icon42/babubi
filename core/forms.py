@@ -102,6 +102,19 @@ class CoreModelForm(forms.ModelForm):
         kwargs = set_initial_values(kwargs, type(self))
         super(CoreModelForm, self).__init__(*args, **kwargs)
         self.add_timer_field()
+        self.hide_single_child()
+
+    def hide_single_child(self):
+        """
+        With one child there is nothing to choose: the child field, already
+        set, goes along hidden instead of as a lone pressed button.
+        """
+        field = self.fields.get("child")
+        if field is None or models.Child.count() != 1:
+            return
+        if self.initial.get("child") is None:
+            return
+        field.widget = forms.HiddenInput()
 
     def add_timer_field(self):
         """

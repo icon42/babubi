@@ -77,6 +77,25 @@ class InitialValuesTestCase(FormsTestCaseBase):
         page = self.c.get("/sleep/add/")
         self.assertEqual(page.context["form"].initial["child"], self.child)
 
+    def test_child_hidden_with_one_child(self):
+        page = self.c.get("/sleep/add/")
+        self.assertTrue(page.context["form"]["child"].is_hidden)
+        self.assertNotContains(page, "btn-group-toggle")
+        self.assertContains(
+            page, '<input type="hidden" name="child" value="{}"'.format(self.child.id)
+        )
+
+        sleep = models.Sleep.objects.create(
+            child=self.child,
+            start=timezone.localtime() - timezone.timedelta(hours=2),
+            end=timezone.localtime() - timezone.timedelta(hours=1),
+        )
+        page = self.c.get("/sleep/{}/".format(sleep.id))
+        self.assertTrue(page.context["form"]["child"].is_hidden)
+        self.assertContains(
+            page, '<input type="hidden" name="child" value="{}"'.format(self.child.id)
+        )
+
     def test_child_with_parameter(self):
         child_two = models.Child.objects.create(
             first_name="Child", last_name="Two", birth_date=timezone.localdate()
@@ -84,6 +103,8 @@ class InitialValuesTestCase(FormsTestCaseBase):
 
         page = self.c.get("/sleep/add/")
         self.assertTrue("child" not in page.context["form"].initial)
+        self.assertFalse(page.context["form"]["child"].is_hidden)
+        self.assertContains(page, "btn-group-toggle")
 
         page = self.c.get("/sleep/add/?child={}".format(self.child.slug))
         self.assertEqual(page.context["form"].initial["child"], self.child)
