@@ -12,7 +12,7 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 
 ![A child's dashboard on the desktop, in the dark theme](screenshot.png)
 
-![On a phone, in the light theme: the dashboard, the sleep list grouped by day and a running timer](screenshot_mobile.png)
+![On a phone, in the light theme: the dashboard, the diaper changes grouped by day and a running timer](screenshot_mobile.png)
 
 ## How Babubi differs from Baby Buddy
 
