@@ -12401,6 +12401,9 @@ textarea.form-control-lg {
   display: inline-flex;
   column-gap: 0.3em;
 }
+.day-span > span + span::before {
+  content: "– ";
+}
 
 .day-next {
   font-weight: 400;
@@ -12650,10 +12653,13 @@ textarea.form-control-lg {
   }
   .day-table > tbody > .day-item > .day-cell_time {
     flex: none;
-    width: 3.25rem;
+    width: var(--day-time-width, 3.25rem);
   }
   .day-span {
     flex-direction: column;
+  }
+  .day-span > span + span::before {
+    content: none;
   }
   .day-item-link::after {
     content: "";
