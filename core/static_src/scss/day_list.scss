@@ -115,6 +115,12 @@
 .day-span {
     display: inline-flex;
     column-gap: .3em;
+
+    // The dash between start and end is drawn here, so the narrow layout,
+    // which stacks the end under the start, can leave it out.
+    > span + span::before {
+        content: "– ";
+    }
 }
 
 .day-next {
@@ -380,14 +386,20 @@ $day-dots: (
     }
 
     // A fixed width keeps the cells after the time lined up from row to row;
-    // a span shows its end under its start.
+    // a span shows its end under its start. The width follows the locale's
+    // time format (core/templatetags/days.py): "9:47 p.m." needs more than
+    // "21:47".
     .day-table > tbody > .day-item > .day-cell_time {
         flex: none;
-        width: 3.25rem;
+        width: var(--day-time-width, 3.25rem);
     }
 
     .day-span {
         flex-direction: column;
+
+        > span + span::before {
+            content: none;
+        }
     }
 
     // The whole line opens the edit form.

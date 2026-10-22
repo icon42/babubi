@@ -67,6 +67,17 @@ def day_label(date):
     return label
 
 
+@register.simple_tag
+def day_time_width():
+    """
+    The width of the time column on narrow screens (day_list.scss): wider
+    when the locale writes times with a.m. and p.m. than with 24 hours.
+    """
+    time_format = formats.get_format("TIME_FORMAT")
+    # "12:52 p.m." in bold at the base size is about 6.4rem.
+    return "6.5rem" if any(char in time_format for char in "aAP") else "3.25rem"
+
+
 @register.filter
 def ends_next_day(instance):
     """
