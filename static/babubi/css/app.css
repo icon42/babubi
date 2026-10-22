@@ -12661,6 +12661,12 @@ textarea.form-control-lg {
   .day-span > span + span::before {
     content: none;
   }
+  .day-cell_child {
+    white-space: nowrap;
+  }
+  .day-child-surname {
+    display: none;
+  }
   .day-item-link::after {
     content: "";
     position: absolute;
