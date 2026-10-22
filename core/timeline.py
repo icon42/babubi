@@ -167,7 +167,7 @@ def _add_feedings(min_date, max_date, events, child=None):
         prev_start = instance.start
         edit_link = reverse("core:feeding-update", args=[instance.id])
         if instance.amount:
-            details.append(_("Amount") + ": " + str(instance.amount))
+            details.append(_("Amount") + ": " + floatformat(instance.amount, -2))
 
         base_object = {
             "time": timezone.localtime(instance.start),
