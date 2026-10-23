@@ -12,6 +12,8 @@ from django.utils.translation import to_locale, get_language, gettext_lazy as _
 from axes.helpers import get_lockout_message
 from axes.models import AccessAttempt
 
+from babubi import roles
+
 from core.models import Child
 
 register = template.Library()
@@ -89,8 +91,22 @@ def user_is_read_only(user):
 
 
 @register.simple_tag()
-def user_is_caregiver(user):
-    return user.groups.filter(name=settings.BABUBI["CAREGIVER_GROUP_NAME"]).exists()
+def user_access(user):
+    """
+    What a user may do, in a few words, for the user list: administrator,
+    everything, or how many kinds of entry they read and write.
+    """
+    if user.is_superuser:
+        return _("Administrator")
+    reads, writes, read_all, write_all = roles.effective(user)
+    if read_all and write_all:
+        return _("Everything")
+    if read_all and not writes:
+        return _("Read only")
+    return _("Reads %(read)s, writes %(write)s") % {
+        "read": _("all") if read_all else len(reads),
+        "write": _("all") if write_all else len(writes),
+    }
 
 
 @register.simple_tag()

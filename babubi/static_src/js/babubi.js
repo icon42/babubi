@@ -100,6 +100,68 @@ document.addEventListener("click", function (event) {
   });
 });
 
+/**
+ * The permission matrix of the user form (babubi/roles.py): an "All" ticks
+ * and greys out its column, the top "All" both columns, and the administrator
+ * box the whole matrix; writing a kind ticks reading it. Greyed boxes are
+ * enabled again on submit so their state is sent.
+ */
+Babubi.PermissionMatrix = (function () {
+  function init() {
+    var matrix = document.querySelector(".permission-matrix");
+    var admin = document.getElementById("id_is_superuser");
+    if (!matrix || !admin) return;
+    var both = matrix.querySelector('[data-matrix-all="both"]');
+    var all = {
+      read: matrix.querySelector('[data-matrix-all="read"]'),
+      write: matrix.querySelector('[data-matrix-all="write"]'),
+    };
+    var boxes = {
+      read: matrix.querySelectorAll('[data-matrix="read"]'),
+      write: matrix.querySelectorAll('[data-matrix="write"]'),
+    };
+
+    function force(input, on) {
+      input.disabled = on;
+      if (on) input.checked = true;
+    }
+
+    function sync() {
+      var locked = admin.checked;
+      force(both, locked);
+      if (!locked && both.checked) {
+        all.read.checked = all.write.checked = true;
+      }
+      ["read", "write"].forEach(function (column) {
+        force(all[column], locked || both.checked);
+        boxes[column].forEach(function (box) {
+          force(box, locked || all[column].checked);
+        });
+      });
+    }
+
+    matrix.addEventListener("change", function (event) {
+      var box = event.target;
+      if (box.dataset.matrix === "write" && box.checked) {
+        var row = box.closest("tr");
+        row.querySelector('[data-matrix="read"]').checked = true;
+      }
+      if (box === all.write && box.checked) all.read.checked = true;
+      sync();
+    });
+    admin.addEventListener("change", sync);
+    matrix.closest("form").addEventListener("submit", function () {
+      matrix.querySelectorAll("input").forEach(function (input) {
+        input.disabled = false;
+      });
+    });
+    both.checked = all.read.checked && all.write.checked;
+    sync();
+  }
+
+  return { init: init };
+})();
+
 Babubi.RememberAdvancedToggle = function (ptr) {
   localStorage.setItem("advancedForm", event.newState);
 };

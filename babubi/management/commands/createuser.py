@@ -12,8 +12,7 @@ Example usage:
 import sys
 import getpass
 
-from django.conf import settings
-from django.contrib.auth import get_user_model, models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.core.management.base import BaseCommand, CommandError
@@ -59,18 +58,6 @@ class Command(BaseCommand):
             help="Specifies read-only privileges for the user. Default is False.",
         )
         parser.add_argument(
-            "--caregiver",
-            action="store_true",
-            default=False,
-            help=(
-                "Specifies caregiver privileges for the user: add and edit "
-                "care entries (feedings, diaper changes, sleep, timers, "
-                "medication, temperature, weight, notes and tummy time) for "
-                "every child, without access to pumping, height, BMI, head "
-                "circumference, user management or settings. Default is False."
-            ),
-        )
-        parser.add_argument(
             "--is-staff",
             dest="is_staff",
             action="store_true",
@@ -82,18 +69,6 @@ class Command(BaseCommand):
         username = options.get(self.UserModel.USERNAME_FIELD)
         password = options.get("password")
         is_read_only = options.get("read_only")
-        is_caregiver = options.get("caregiver")
-
-        if is_read_only and is_caregiver:
-            raise CommandError(
-                "A user cannot be both read-only and caregiver. "
-                "Choose one of --read-only or --caregiver."
-            )
-        if is_caregiver and options.get("is_staff"):
-            raise CommandError(
-                "A user cannot be both staff and caregiver. "
-                "Choose one of --is-staff or --caregiver."
-            )
 
         user_data = {}
         user_password = options.get("password")
@@ -142,16 +117,12 @@ class Command(BaseCommand):
             user.email = options.get("email")
             user.is_staff = options.get("is_staff")
 
-            if is_read_only or is_caregiver:
+            if is_read_only:
+                # Reads every kind of entry, as the user form's "All" does.
                 user.is_superuser = False
                 user.save()
-                group_name = (
-                    settings.BABUBI["READ_ONLY_GROUP_NAME"]
-                    if is_read_only
-                    else settings.BABUBI["CAREGIVER_GROUP_NAME"]
-                )
-                group = models.Group.objects.get(name=group_name)
-                user.groups.add(group)
+                user.settings.read_all = True
+                user.settings.save(update_fields=["read_all"])
             else:
                 user.is_superuser = True
                 user.save()

@@ -2,13 +2,13 @@
 
 from unittest.mock import patch
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.utils import timezone
 
+from babubi import roles
 from core import forms, models
 
 
@@ -24,12 +24,11 @@ class EntryPermissionsTestCase(TestCase):
     def setUp(self):
         self.child = models.Child.objects.first()
         self.user = get_user_model().objects.create_user(username="entry-caregiver")
-        self.user.groups.add(
-            Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
-        )
+        # The permissions a carer gets from the user form's matrix, stored as
+        # the user's own; the timers follow from the timed kinds.
+        kinds = {"feeding", "sleep", "tummytime", "pumping", "note"}
+        roles.grant(self.user, kinds, kinds)
         self.other = get_user_model().objects.create_user(username="timer-owner")
-        # Pumping is deliberately excluded from the caregiver defaults.
-        self.grant("add_pumping", "change_pumping")
         self.client.force_login(self.user)
         self.start = timezone.now() - timezone.timedelta(hours=2)
         self.end = self.start + timezone.timedelta(minutes=10)
@@ -62,8 +61,7 @@ class EntryPermissionsTestCase(TestCase):
             user=owner, child=self.child, start=self.start
         )
 
-    def test_caregiver_can_consume_own_timer(self):
-        self.assertFalse(self.user.has_perm("core.delete_timer"))
+    def test_carer_can_consume_own_timer(self):
         for path, model in self.timer_entries:
             with self.subTest(entry=path):
                 timer = self.timer(self.user)
@@ -74,18 +72,6 @@ class EntryPermissionsTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
                 self.assertEqual(model.objects.count(), count + 1)
                 self.assertFalse(models.Timer.objects.filter(pk=timer.pk).exists())
-
-    def test_caregiver_cannot_consume_other_timer(self):
-        for path, model in self.timer_entries:
-            with self.subTest(entry=path):
-                timer = self.timer(self.other)
-                count = model.objects.count()
-                response = self.client.post(
-                    f"/{path}/add/?timer={timer.pk}", self.entry_data(path)
-                )
-                self.assertTrue(models.Timer.objects.filter(pk=timer.pk).exists())
-                self.assertEqual(model.objects.count(), count)
-                self.assertIn(response.status_code, (200, 400, 403))
 
     def test_editing_timer_keeps_its_owner(self):
         timer = self.timer(self.other)
@@ -101,10 +87,6 @@ class EntryPermissionsTestCase(TestCase):
         timer.refresh_from_db()
         self.assertEqual(timer.name, "Renamed")
         self.assertEqual(timer.user, self.other)
-        response = self.client.post(
-            f"/sleep/add/?timer={timer.pk}", self.entry_data("sleep")
-        )
-        self.assertTrue(models.Timer.objects.filter(pk=timer.pk).exists())
 
     def test_delete_timer_grant_allows_own_and_other_timer(self):
         self.grant("delete_timer")
@@ -160,19 +142,6 @@ class EntryPermissionsTestCase(TestCase):
                 self.assertTrue(response.context["form"].non_field_errors())
                 self.assertTrue(models.Timer.objects.filter(pk=timer.pk).exists())
                 self.assertEqual(model.objects.count(), count)
-
-    def test_timer_reassigned_after_validation_is_not_consumed(self):
-        timer = self.timer(self.user)
-        form = forms.SleepForm(
-            data=self.entry_data("sleep"), user=self.user, timer=timer.pk
-        )
-        self.assertTrue(form.is_valid(), form.errors)
-        models.Timer.objects.filter(pk=timer.pk).update(user=self.other)
-        count = models.Sleep.objects.count()
-        with self.assertRaises(PermissionDenied):
-            form.save()
-        self.assertEqual(models.Sleep.objects.count(), count)
-        self.assertTrue(models.Timer.objects.filter(pk=timer.pk).exists())
 
     def test_editing_timer_does_not_restore_a_stale_owner(self):
         timer = self.timer(self.user)
@@ -245,33 +214,6 @@ class EntryPermissionsTestCase(TestCase):
             **extra,
         }
 
-    def test_no_tag_permissions_cannot_create_or_assign_on_add(self):
-        models.Tag.objects.create(name="existing")
-        self.assertFalse(self.user.has_perm("core.add_tag"))
-        self.assertFalse(self.user.has_perm("core.change_tag"))
-        for tags in ("existing", "brand-new"):
-            with self.subTest(tags=tags):
-                count = models.Note.objects.count()
-                tag_count = models.Tag.objects.count()
-                response = self.client.post("/notes/add/", self.note_data(tags=tags))
-                self.assert_tag_denied(response)
-                self.assertEqual(models.Note.objects.count(), count)
-                self.assertEqual(models.Tag.objects.count(), tag_count)
-
-    def test_no_tag_permissions_cannot_assign_create_or_remove_on_edit(self):
-        note = self.note()
-        models.Tag.objects.create(name="existing")
-        for tags in ("first,second,existing", "first,second,brand-new", "first", ""):
-            with self.subTest(tags=tags):
-                response = self.client.post(
-                    f"/notes/{note.pk}/", self.note_data(tags=tags)
-                )
-                self.assert_tag_denied(response)
-                note.refresh_from_db()
-                self.assertEqual(note.note, "Original")
-                self.assertSetEqual(set(note.tags.names()), {"first", "second"})
-                self.assertFalse(models.Tag.objects.filter(name="brand-new").exists())
-
     def test_omitted_tags_preserve_edit_with_or_without_permission(self):
         note = self.note()
         for permitted in (False, True):
@@ -313,26 +255,6 @@ class EntryPermissionsTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
                 self.assertSetEqual(set(note.tags.names()), expected)
 
-    def test_change_tag_alone_cannot_create_new_tags(self):
-        self.grant("change_tag")
-        note = self.note()
-        for url in ("/notes/add/", f"/notes/{note.pk}/"):
-            with self.subTest(url=url):
-                count = models.Note.objects.count()
-                response = self.client.post(url, self.note_data(tags="brand-new"))
-                self.assert_tag_denied(response)
-                self.assertEqual(models.Note.objects.count(), count)
-                self.assertFalse(models.Tag.objects.filter(name="brand-new").exists())
-                self.assertSetEqual(set(note.tags.names()), {"first", "second"})
-
-    def test_add_tag_alone_does_not_allow_association_changes(self):
-        self.grant("add_tag")
-        count = models.Note.objects.count()
-        response = self.client.post("/notes/add/", self.note_data(tags="brand-new"))
-        self.assert_tag_denied(response)
-        self.assertEqual(models.Note.objects.count(), count)
-        self.assertFalse(models.Tag.objects.filter(name="brand-new").exists())
-
     def test_add_and_change_tag_grants_allow_new_tags_on_add_and_edit(self):
         self.grant("add_tag", "change_tag")
         response = self.client.post("/notes/add/", self.note_data(tags="new-on-add"))
@@ -371,32 +293,6 @@ class EntryPermissionsTestCase(TestCase):
                             for field in group["fields"]
                         ],
                     )
-
-    def test_unauthorized_tag_field_posts_the_rendered_value_back_on_edit(self):
-        note = self.note()
-        response = self.client.get(f"/notes/{note.pk}/")
-        rendered = response.context["form"]["tags"].value()
-        if isinstance(rendered, list):
-            rendered = ",".join(t.name for t in rendered)
-
-        # Browsers resubmit exactly what the widget rendered.
-        response = self.client.post(
-            f"/notes/{note.pk}/", self.note_data(tags=rendered, note="Corrected")
-        )
-        self.assertEqual(response.status_code, 302)
-        note.refresh_from_db()
-        self.assertEqual(note.note, "Corrected")
-        self.assertSetEqual(set(note.tags.names()), {"first", "second"})
-
-        # A real tag change is still refused without tag permissions.
-        response = self.client.post(
-            f"/notes/{note.pk}/", self.note_data(tags="first,second,smuggled")
-        )
-        self.assert_tag_denied(response)
-        note.refresh_from_db()
-        self.assertEqual(note.note, "Corrected")
-        self.assertSetEqual(set(note.tags.names()), {"first", "second"})
-        self.assertFalse(models.Tag.objects.filter(name="smuggled").exists())
 
     def test_unauthorized_tag_edit_renders_tag_names_not_object_repr(self):
         note = self.note()

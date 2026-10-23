@@ -1,5 +1,5 @@
 {% extends "babubi/page.html" %}
-{% load babubi i18n %}
+{% load babubi i18n widget_tweaks %}
 {% block title %}
     {% if object %}
         {{ object }}
@@ -34,5 +34,59 @@
     {% else %}
         <h1>{% trans "Create User" %}</h1>
     {% endif %}
-    {% include "babubi/form.html" %}
+    {% comment %}
+        The form's fields one by one, so the permission matrix (babubi/roles.py)
+        can go between the roles and the account state.
+    {% endcomment %}
+    <div class="container-fluid pb-5">
+        <form role="form" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                {% if field.name == "is_active" %}
+                    <fieldset class="permission-matrix">
+                        <legend class="col-form-label">{% trans "Permissions" %}</legend>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" data-matrix-all="both">
+                                            {% trans "All" %}
+                                        </label>
+                                    </th>
+                                    <th>{% trans "Read" %}</th>
+                                    <th>{% trans "Write" %}</th>
+                                </tr>
+                                <tr class="permission-matrix-all">
+                                    <th>{% trans "All kinds of entry" %}</th>
+                                    <td>{{ form.read_all|add_class:"form-check-input" }}</td>
+                                    <td>{{ form.write_all|add_class:"form-check-input" }}</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in form.matrix %}
+                                    <tr>
+                                        <th>
+                                            <i class="{{ row.icon }}" aria-hidden="true"></i> {{ row.label }}
+                                        </th>
+                                        <td>{{ row.read|add_class:"form-check-input" }}</td>
+                                        <td>{{ row.write|add_class:"form-check-input" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </fieldset>
+                {% endif %}
+                {% if "read_" not in field.name and "write_" not in field.name %}
+                    <div class="row">{% include "babubi/form_field.html" %}</div>
+                {% endif %}
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="submit-primary btn btn-primary btn-lg">{% trans "Submit" %}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script type="application/javascript">Babubi.PermissionMatrix.init();</script>
 {% endblock %}

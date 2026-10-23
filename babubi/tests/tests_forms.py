@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
 from django.core.management import call_command
 from django.test import Client as HttpClient, override_settings, TestCase
 from django.utils import timezone
@@ -36,8 +34,6 @@ class FormsTestCase(TestCase):
             "last_name": "Name",
             "email": "user@user.user",
             "is_staff": False,
-            "is_read_only": False,
-            "is_caregiver": False,
             "password1": "d47o8dD&#hu3ulu3",
             "password2": "d47o8dD&#hu3ulu3",
         }
@@ -110,239 +106,82 @@ class FormsTestCase(TestCase):
             get_user_model().objects.filter(username="username"), []
         )
 
-    def test_add_regular_user(self):
+    def add_user(self, **params):
+        """Post the add form as a staff user and return the new user."""
         self.user.is_staff = True
         self.user.save()
         self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-
-        page = self.c.post("/users/add/", params)
+        data = {**self.user_template, "is_active": True, **params}
+        page = self.c.post("/users/add/", data)
         self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-        self.assertIsInstance(user, get_user_model())
-        self.assertTrue(user.is_superuser)
+        return get_user_model().objects.get(username="username")
+
+    def test_add_regular_user_is_no_administrator(self):
+        # Leaving every box empty used to make a superuser.
+        user = self.add_user()
+        self.assertFalse(user.is_superuser)
         self.assertFalse(user.is_staff)
-        self.assertFalse(
-            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
-        )
+        self.assertFalse(user.has_perm("core.view_feeding"))
 
-    def test_add_staff_user(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        params["is_staff"] = True
-
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-        self.assertIsInstance(user, get_user_model())
+    def test_add_administrator_and_staff(self):
+        user = self.add_user(is_superuser=True, is_staff=True)
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
-        self.assertFalse(
-            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
-        )
+        self.assertTrue(user.has_perm("core.delete_bmi"))
 
     def test_add_read_only_user(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        params["is_read_only"] = True
-
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-        self.assertIsInstance(user, get_user_model())
+        user = self.add_user(read_all=True)
         self.assertFalse(user.is_superuser)
-        self.assertFalse(user.is_staff)
-        self.assertTrue(
-            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
-        )
+        self.assertTrue(user.settings.read_all)
+        self.assertTrue(user.has_perm("core.view_feeding"))
+        self.assertTrue(user.has_perm("core.view_child"))
+        self.assertFalse(user.has_perm("core.add_feeding"))
+        # The "All" is the only thing stored: no permission of its own.
+        self.assertFalse(user.user_permissions.exists())
 
-    def test_add_caregiver_user(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
+    def test_matrix_sets_the_permissions(self):
+        user = self.add_user(read_feeding=True, write_sleep=True, write_medication=True)
+        self.assertTrue(user.has_perm("core.view_feeding"))
+        self.assertFalse(user.has_perm("core.add_feeding"))
+        for action in ("view", "add", "change", "delete"):
+            self.assertTrue(user.has_perm(f"core.{action}_sleep"), action)
+        self.assertTrue(user.has_perm("core.delete_medication"))
+        self.assertFalse(user.has_perm("core.view_pumping"))
+        # Writing a timed kind brings the timers, writing anything the tags.
+        self.assertTrue(user.has_perm("core.add_timer"))
+        self.assertTrue(user.has_perm("core.change_tag"))
+        self.assertTrue(user.has_perm("core.change_child"))
 
-        params = self.user_template.copy()
-        params["is_caregiver"] = True
-        # Permission checks below go through `ModelBackend`, which reports no
-        # permissions at all for an inactive user.
-        params["is_active"] = True
-
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-        self.assertIsInstance(user, get_user_model())
-        self.assertFalse(user.is_superuser)
-        self.assertFalse(user.is_staff)
-        self.assertTrue(
-            user.groups.filter(name=settings.BABUBI["CAREGIVER_GROUP_NAME"]).exists()
-        )
-        self.assertTrue(user.has_perm("core.add_feeding"))
-        self.assertTrue(user.has_perm("core.add_diaperchange"))
-        self.assertTrue(user.has_perm("core.add_sleep"))
-        self.assertTrue(user.has_perm("core.add_medication"))
-        self.assertTrue(user.has_perm("core.add_temperature"))
-        self.assertTrue(user.has_perm("core.add_weight"))
-        self.assertTrue(user.has_perm("core.add_note"))
-        self.assertTrue(user.has_perm("core.add_tummytime"))
-        # Still out of reach for the default caregiver scope.
-        self.assertFalse(user.has_perm("core.add_pumping"))
-        self.assertFalse(user.has_perm("core.add_height"))
-        self.assertFalse(user.has_perm("core.delete_feeding"))
-        self.assertFalse(user.has_perm("core.delete_medication"))
-
-    def test_read_only_and_caregiver_are_exclusive(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        params["is_read_only"] = True
-        params["is_caregiver"] = True
-
-        page = self.c.post("/users/add/", params)
+    def test_edit_form_shows_and_changes_the_matrix(self):
+        user = self.add_user(write_sleep=True)
+        page = self.c.get(f"/users/{user.pk}/edit/")
         self.assertEqual(page.status_code, 200)
-        self.assertFalse(get_user_model().objects.filter(username="username").exists())
+        self.assertTrue(page.context["form"].initial["read_sleep"])
+        self.assertTrue(page.context["form"].initial["write_sleep"])
+        self.assertNotIn("read_feeding", page.context["form"].initial)
+        data = {**self.user_template, "is_active": True, "read_feeding": True}
+        del data["password1"], data["password2"]
+        self.assertEqual(self.c.post(f"/users/{user.pk}/edit/", data).status_code, 302)
+        user = get_user_model().objects.get(pk=user.pk)
+        self.assertTrue(user.has_perm("core.view_feeding"))
+        self.assertFalse(user.has_perm("core.view_sleep"))
 
-    def test_add_staff_caregiver_is_rejected(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
+    def test_write_all_covers_a_column_and_implies_reading(self):
+        user = self.add_user(write_all=True, write_feeding=True)
+        self.assertTrue(user.settings.write_all)
+        self.assertTrue(user.settings.read_all)
+        self.assertTrue(user.has_perm("core.delete_pumping"))
+        self.assertTrue(user.has_perm("core.view_bmi"))
+        self.assertFalse(user.user_permissions.exists())
 
-        params = self.user_template.copy()
-        params.update(is_staff=True, is_caregiver=True)
-        page = self.c.post("/users/add/", params)
-
-        self.assertEqual(page.status_code, 200)
-        self.assertFormError(
-            page.context["form"],
-            "is_caregiver",
-            "A user cannot be both staff and caregiver.",
-        )
-        self.assertFalse(get_user_model().objects.filter(username="username").exists())
-
-    def test_edit_staff_user_to_caregiver_is_rejected(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        params["is_staff"] = True
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-
-        params["is_caregiver"] = True
-        page = self.c.post(f"/users/{user.pk}/edit/", params)
-        self.assertEqual(page.status_code, 200)
-        self.assertFormError(
-            page.context["form"],
-            "is_caregiver",
-            "A user cannot be both staff and caregiver.",
-        )
-        user.refresh_from_db()
-        self.assertTrue(user.is_staff)
+    def test_administrator_keeps_the_matrix_as_it_was(self):
+        user = self.add_user(write_sleep=True)
+        data = {**self.user_template, "is_active": True, "is_superuser": True}
+        del data["password1"], data["password2"]
+        self.assertEqual(self.c.post(f"/users/{user.pk}/edit/", data).status_code, 302)
+        user = get_user_model().objects.get(pk=user.pk)
         self.assertTrue(user.is_superuser)
-        self.assertFalse(user.groups.exists())
-
-    def test_add_read_only_staff_user(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        params.update(is_staff=True, is_read_only=True)
-        page = self.c.post("/users/add/", params)
-
-        self.assertEqual(page.status_code, 302)
-        user = get_user_model().objects.get(username="username")
-        self.assertTrue(user.is_staff)
-        self.assertFalse(user.is_superuser)
-        self.assertTrue(
-            user.groups.filter(name=settings.BABUBI["READ_ONLY_GROUP_NAME"]).exists()
-        )
-        self.assertFalse(
-            user.groups.filter(name=settings.BABUBI["CAREGIVER_GROUP_NAME"]).exists()
-        )
-
-    def test_edit_user_to_caregiver(self):
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        new_user = get_user_model().objects.get(username="username")
-
-        # Edit to caregiver
-        params["is_caregiver"] = True
-        page = self.c.post(f"/users/{new_user.id}/edit/", params)
-        self.assertEqual(page.status_code, 302)
-        new_user.refresh_from_db()
-        self.assertTrue(
-            new_user.groups.filter(
-                name=settings.BABUBI["CAREGIVER_GROUP_NAME"]
-            ).exists()
-        )
-
-        # Verify edit form has is_caregiver initially checked
-        page = self.c.get(f"/users/{new_user.id}/edit/")
-        self.assertEqual(page.status_code, 200)
-        self.assertTrue(page.context["form"].initial["is_caregiver"])
-
-    def test_caregiver_permissions_can_be_adjusted_per_user(self):
-        """
-        The caregiver group is a default, not a cage: a permission granted to
-        one caregiver on top of the group survives saving that user through the
-        Babubi form.
-
-        Django has no per-user deny, so the granularity is additive only: an
-        individual can be given more than the group, not less.
-        """
-        self.user.is_staff = True
-        self.user.save()
-        self.c.login(**self.credentials)
-
-        params = self.user_template.copy()
-        # `ModelBackend` reports no permissions at all for an inactive user.
-        params["is_active"] = True
-
-        page = self.c.post("/users/add/", params)
-        self.assertEqual(page.status_code, 302)
-        new_user = get_user_model().objects.get(username="username")
-
-        params["is_caregiver"] = True
-        page = self.c.post(f"/users/{new_user.id}/edit/", params)
-        self.assertEqual(page.status_code, 302)
-
-        def reload():
-            return get_user_model().objects.get(pk=new_user.pk)
-
-        # The default scope is in place, and the extra permission is not in it.
-        self.assertTrue(reload().has_perm("core.add_feeding"))
-        self.assertFalse(reload().has_perm("core.view_pumping"))
-
-        # Grant something the group does not include, and save the user again
-        # through the same form. The grant has to survive that save.
-        new_user.user_permissions.add(Permission.objects.get(codename="view_pumping"))
-        page = self.c.post(f"/users/{new_user.id}/edit/", params)
-        self.assertEqual(page.status_code, 302)
-
-        refreshed = reload()
-        self.assertTrue(
-            refreshed.groups.filter(
-                name=settings.BABUBI["CAREGIVER_GROUP_NAME"]
-            ).exists()
-        )
-        self.assertTrue(refreshed.has_perm("core.view_pumping"))
-        self.assertTrue(refreshed.has_perm("core.add_feeding"))
+        self.assertTrue(user.user_permissions.filter(codename="add_sleep").exists())
 
     def test_user_settings(self):
         self.c.login(**self.credentials)

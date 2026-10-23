@@ -159,6 +159,8 @@ WSGI_APPLICATION = "babubi.wsgi.application"
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesBackend",
     "django.contrib.auth.backends.ModelBackend",
+    # The "All" flags and the derived permissions of the user form's matrix.
+    "babubi.permissions.RoleBackend",
     # Only reachable through the /oidc/ views, which LOGIN_METHODS gates.
     "social_core.backends.open_id_connect.OpenIdConnectAuth",
 ]
@@ -466,7 +468,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 BABUBI = {
     "ALLOW_UPLOADS": bool(strtobool(os.environ.get("ALLOW_UPLOADS") or "True")),
     "READ_ONLY_GROUP_NAME": "read_only",
-    "CAREGIVER_GROUP_NAME": "caregiver",
 }
 
 # Home assistant specific configuration

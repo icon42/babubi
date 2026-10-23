@@ -155,8 +155,9 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertContains(page, 'id="dashboard-sleep_last"')
         self.assertNotContains(page, 'id="dashboard-feeding_last"')
         dash = page.context["dash"]
-        self.assertEqual([a.key for a in dash["actions"]], ["sleep"])
-        self.assertEqual(dash["hidden_actions"], [])
+        # Writing sleep, a timed kind, brings the timers along (babubi/roles.py).
+        self.assertEqual([a.key for a in dash["actions"]], ["sleep", "timer"])
+        self.assertEqual([a.key for a in dash["hidden_actions"]], ["timer:sleep"])
 
     def test_editing_needs_the_permission_to_view_children(self):
         get_user_model().objects.create_user(username="nobody", password="secret")

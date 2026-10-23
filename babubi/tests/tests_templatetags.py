@@ -31,16 +31,19 @@ class TemplateTagsTestCase(TestCase):
         user.groups.add(group)
         self.assertTrue(babubi.user_is_read_only(user))
 
-    def test_user_is_caregiver(self):
-        user = get_user_model().objects.create_user(
-            username="caregiver",
-            password="caregiver",
-            is_superuser=False,
-            is_staff=False,
-        )
-        self.assertFalse(babubi.user_is_caregiver(user))
+    def test_user_access(self):
+        from babubi import roles
 
-        group = Group.objects.get(name=settings.BABUBI["CAREGIVER_GROUP_NAME"])
-        user.groups.add(group)
-        self.assertTrue(babubi.user_is_caregiver(user))
-        self.assertFalse(babubi.user_is_read_only(user))
+        user = get_user_model().objects.create_user(username="carer", password="s")
+        self.assertEqual(babubi.user_access(user), "Reads 0, writes 0")
+        roles.grant(user, {"sleep", "feeding"}, {"sleep"})
+        user = get_user_model().objects.get(pk=user.pk)
+        self.assertEqual(babubi.user_access(user), "Reads 2, writes 1")
+        user.settings.read_all = True
+        user.settings.save()
+        self.assertEqual(babubi.user_access(user), "Reads all, writes 1")
+        user.settings.write_all = True
+        user.settings.save()
+        self.assertEqual(babubi.user_access(user), "Everything")
+        user.is_superuser = True
+        self.assertEqual(babubi.user_access(user), "Administrator")

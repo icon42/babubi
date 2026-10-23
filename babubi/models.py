@@ -163,6 +163,11 @@ class Settings(models.Model):
         ),
         verbose_name=_("Access expires"),
     )
+    # The "All" of the user form's permission matrix (babubi/roles.py): kept
+    # as flags rather than as permissions, so a kind of entry added later is
+    # covered as well.
+    read_all = models.BooleanField(default=False, verbose_name=_("Reads everything"))
+    write_all = models.BooleanField(default=False, verbose_name=_("Writes everything"))
 
     def __str__(self):
         return str(format_lazy(_("{user}'s Settings"), user=self.user))

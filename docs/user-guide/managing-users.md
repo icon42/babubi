@@ -18,77 +18,48 @@
   <source src="../../assets/videos/user_password.mp4" type="video/mp4">
 </video>
 
-## Caregiver Users
+## Permissions
 
-A caregiver is a user intended for a babysitter or other temporary carer. The
-role is a Django group, so it grants a set of model permissions and nothing
-more.
+A user is either an **Administrator**, who can do everything, users and site
+settings included, or an ordinary user whose access is set in the
+**Permissions** table of the user form: one row per kind of entry (the
+activities and the measurements), a **Read** column and a **Write** column.
 
-With the default group permissions, a caregiver can:
+- Read lets the user see that kind everywhere: its list, the dashboard cards,
+  the timeline, the reports and the API.
+- Write lets the user add, edit and delete entries of that kind, through the
+  web interface and the API alike. Writing a kind implies reading it.
+- The **All** box at the top of a column covers every kind, and the one in the
+  corner covers both columns. An "All" is stored as such, not as the list of
+  today's kinds, so a kind of entry added in a later version is covered too.
+  While an "All" is ticked the boxes of its column are greyed out.
 
-- view children, timers, feedings, diaper changes, sleep entries, medication,
-  temperature, weight, notes and tummy time;
-- add and edit feedings, diaper changes, sleep entries, timers, medication,
-  temperature, weight, notes and tummy time, through both the web interface and
-  the API;
-- open the child dashboard, the timeline and the reports for those entry types.
+A few things follow from the table and are not shown in it:
 
-With those defaults, a caregiver cannot:
+- anyone who reads something can see the children and the tags;
+- anyone who writes something can edit the children and create and assign
+  tags;
+- anyone who writes a timed kind (feeding, pumping, sleep or tummy time) can
+  start, edit and finish timers, including timers that other users started.
 
-- delete any entry, including a timer;
-- see or record pumping, height, BMI or head circumference, in lists, on the
-  dashboard, in the timeline or in reports;
-- manage children, tags, users, change site settings or reach the database
-  admin area.
+The **Staff** box is separate: it opens user management and the site
+settings, whatever the table says. Staff users who are not administrators
+still need permissions of their own to see or record entries.
 
-The group is a starting point, not a fixed role. A caregiver is an ordinary
-Django user, so the permissions can be extended per user afterwards — grant the
-ones the group does not include, such as pumping or the growth measurements —
-from the database admin area at `/admin/`, where Django's built-in permission
-picker lives. The granularity is **additive only**: Django has no per-user deny,
-so an individual can be given more than the group, not less. Take a permission
-away from one caregiver and it either stays granted through the group or has to
-be removed for everybody.
+Permissions are Django's model permissions, so anything granted through the
+database admin area at `/admin/`, including groups, counts as well. The user
+form shows the user's effective permissions and, when saved, stores them as
+the user's own.
 
-Group permission changes apply to all existing members, not just newly created
-users. Each migration run adds any missing default permissions back to the
-group and retains manually added permissions. Removing a default from the group
-is therefore not a lasting restriction: the next `migrate` restores it.
-Per-user permissions are the way to extend one caregiver's access without
-changing everybody else's defaults.
+!!! warning "Permissions are not limited to one child"
 
-Converting a timer into a feeding, sleep or tummy-time entry deletes the timer.
-A caregiver can do this for the timers they started. Converting another user's
-timer requires `core.delete_timer`, which also permits deleting any timer.
-Editing a timer does not change who it belongs to, and changing the user of an
-existing timer through the API also requires `core.delete_timer`.
-
-Tags already attached to an entry remain visible and are preserved when a
-caregiver edits the entry without changing its tags. Changing tag assignments
-requires `core.change_tag`; creating new tag names additionally requires
-`core.add_tag`. These permissions are not included in the caregiver group.
-
-!!! warning "The role is not limited to one child"
-
-    A caregiver has access to every child on the instance, and may edit entries
-    that other users created. There is no per-child grant, and Babubi does
-    not record which user created an entry, so a caregiver's entries cannot be
-    told apart from anyone else's afterwards.
+    A user with access to a kind of entry has it for every child on the
+    instance. There is no per-child grant, and Babubi does not record which
+    user created an entry.
 
 To withdraw access, clear the **Active** checkbox on the user, or delete the
 user. Subsequent web and API requests are denied, including requests using an
-existing API key. Do not simply clear the **Caregiver** checkbox in Babubi's
-user form: saving with neither restricted role selected makes the account a
-standard (superuser) user. Removing group membership directly in Django's admin
-does not itself change the superuser flag, but any other permissions remain.
-
-Read only and caregiver are mutually exclusive: a caregiver creates entries,
-which is exactly what the read-only role forbids. Caregiver and **Staff** are
-also mutually exclusive in the user form and the `createuser` command, because
-staff access opens administrative pages. When converting an existing account,
-review its other groups and individual permissions as well. Changing a role
-does not remove those additional grants, so switching an extended caregiver to
-read only does not necessarily remove all write access.
+existing API key.
 
 ## Access Expiry
 
@@ -102,12 +73,9 @@ restores access. Users cannot change their own expiry time.
 
 A user's type can be:
 
-- Caregiver (can view the child dashboard and add/edit feedings, diaper
-  changes, sleep entries, timers, medication, temperature, weight, notes and
-  tummy time for every child on the instance. Intended for a babysitter or
-  other temporary carer; the default timer and tag restrictions above apply)
-- Read only (can access all data but not make new entries)
-- Standard (default, can access and make/edit any type of entry)
+- Standard (default, an administrator who can access and make/edit any type of
+  entry; permissions can be narrowed afterwards in the user form)
+- Read only (can read every kind of entry but not make new entries)
 - Staff (can access user management, site settings and the Database Admin area;
   available actions still depend on the account's permissions)
 
@@ -133,14 +101,6 @@ You will then be prompted to enter and confirm a password.
 
 ```shell
 python manage.py createuser --username <username> --password <password> --read-only
-```
-
-- To create a caregiver who can log feedings, diaper changes, sleep, timers,
-  medication, temperature, weight, notes and tummy time, pass `--caregiver`.
-  It cannot be combined with `--read-only` or `--is-staff`:
-
-```shell
-python manage.py createuser --username <username> --password <password> --caregiver
 ```
 
 - If you want to create a user with the highest level of permission, you can append the `--is-staff` argument:

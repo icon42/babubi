@@ -159,3 +159,42 @@
         color: var(--bs-secondary-color);
     }
 }
+
+// The permission matrix of the user form (babubi/user_form.html).
+.permission-matrix {
+    margin-bottom: 1rem;
+
+    legend {
+        float: none;
+        width: auto;
+        font-size: inherit;
+    }
+
+    table {
+        max-width: 32rem;
+    }
+
+    th {
+        font-weight: 500;
+    }
+
+    thead th:not(:first-child),
+    td {
+        width: 5.5rem;
+        text-align: center;
+    }
+
+    .form-check-input {
+        float: none;
+        margin: 0;
+    }
+
+    .permission-matrix-all th {
+        font-weight: 600;
+    }
+
+    input:disabled + *,
+    input:disabled {
+        opacity: .5;
+    }
+}
