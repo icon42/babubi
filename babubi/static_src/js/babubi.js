@@ -75,6 +75,31 @@ document.addEventListener("click", function (event) {
   input.focus();
 });
 
+/**
+ * Recent entries to repeat, above a form (core/presets.py): a click fills
+ * every field of the entry at once, without submitting the form.
+ */
+document.addEventListener("click", function (event) {
+  var button = event.target.closest("[data-preset]");
+  if (!button || !button.form) return;
+  var values = JSON.parse(button.dataset.preset);
+  Object.keys(values).forEach(function (name) {
+    var field = button.form.elements[name];
+    if (!field) return;
+    if (field.type === "checkbox") {
+      field.checked = Boolean(values[name]);
+    } else {
+      // A RadioNodeList checks the radio whose value is set on it.
+      field.value = values[name];
+    }
+    var inputs = field.length === undefined ? [field] : Array.from(field);
+    inputs.forEach(function (input) {
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  });
+});
+
 Babubi.RememberAdvancedToggle = function (ptr) {
   localStorage.setItem("advancedForm", event.newState);
 };

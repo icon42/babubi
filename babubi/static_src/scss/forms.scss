@@ -118,3 +118,43 @@
     --bs-btn-hover-border-color: var(--bs-border-color);
     border-radius: 50rem;
 }
+
+// Recent entries to repeat, above a form (babubi/form_presets.html): a
+// framed fieldset whose title sits on the frame, as a legend does by
+// default; Bootstrap's reboot floats legends, so it is put back.
+.form-presets {
+    margin: 1.25rem 0;
+    padding: .6rem 1rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.form-presets-title {
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0 .4rem;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--bs-secondary-color);
+}
+
+.form-presets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+// The buttons are the quick picks' (.field-suggestion), with an icon.
+.form-preset {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+
+    [class^="icon-"] {
+        color: var(--bs-secondary-color);
+    }
+}

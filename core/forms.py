@@ -12,6 +12,7 @@ from taggit.forms import TagField, TagWidgetMixin
 from babubi.widgets import DateInput, DateTimeInput, TimeInput
 from core import models
 from core.models import Timer
+from core.presets import PresetsMixin
 from core.suggestions import SHORT, SuggestionsMixin, plain
 from core.widgets import TagsEditor, ChildRadioSelect, PillRadioSelect
 
@@ -292,8 +293,17 @@ class BMIForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         }
 
 
-class BottleFeedingForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+class BottleFeedingForm(
+    PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableModelForm
+):
     suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+    # Bottles given the same way at least twice.
+    presets = {
+        "fields": ["type", "amount"],
+        "dated_by": "start",
+        "minimum": 2,
+        "filter": {"method": "bottle"},
+    }
 
     fieldsets = [
         {"fields": ["child", "type", "start", "amount"], "layout": "required"},
@@ -407,8 +417,14 @@ class DiaperChangeForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         }
 
 
-class FeedingForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+class FeedingForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableModelForm):
     suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
+    # Feedings given the same way at least twice.
+    presets = {
+        "fields": ["type", "method", "amount"],
+        "dated_by": "start",
+        "minimum": 2,
+    }
 
     fieldsets = [
         {"fields": ["child", "start", "end", "type", "method"], "layout": "required"},
@@ -471,16 +487,24 @@ class HeightForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         }
 
 
-class MedicationForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
+def interval_hours(interval):
+    """A dose interval, stored as a duration, as the hours the form takes."""
+    return interval.total_seconds() / 3600
+
+
+class MedicationForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableModelForm):
     suggestions = {
         "name": "name",
         "notes": ("notes", SHORT),
         "dosage": "dosage",
-        # Stored as a duration, entered in hours.
-        "next_dose_interval": (
-            "next_dose_interval",
-            {"to_form": lambda interval: interval.total_seconds() / 3600},
-        ),
+        "next_dose_interval": ("next_dose_interval", {"to_form": interval_hours}),
+    }
+    # A treatment: a medication given with an interval to the next dose.
+    presets = {
+        "fields": ["name", "dosage", "dosage_unit", "next_dose_interval"],
+        "dated_by": "time",
+        "filter": {"next_dose_interval__isnull": False},
+        "to_form": {"next_dose_interval": interval_hours},
     }
 
     next_dose_interval = forms.DecimalField(
@@ -529,11 +553,24 @@ class MedicationForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         super().__init__(*args, **kwargs)
         # Convert existing timedelta to hours for display
         if self.instance and self.instance.next_dose_interval:
-            total_seconds = self.instance.next_dose_interval.total_seconds()
-            self.initial["next_dose_interval"] = plain(total_seconds / 3600)
+            self.initial["next_dose_interval"] = plain(
+                interval_hours(self.instance.next_dose_interval)
+            )
         # A whole dose reads 1, not 1.0.
         if self.instance and self.instance.dosage is not None:
             self.initial["dosage"] = plain(self.instance.dosage)
+
+    def preset_label(self, row):
+        """E.g. "Dalsy · 5 ml · every 8 h"."""
+        dose = " ".join(
+            str(part)
+            for part in (plain(row["dosage"]), row["dosage_unit"])
+            if part not in (None, "")
+        )
+        every = _("every %(hours)s h") % {
+            "hours": plain(interval_hours(row["next_dose_interval"]))
+        }
+        return " · ".join(part for part in (row["name"], dose, every) if part)
 
     def clean_next_dose_interval(self):
         hours = self.cleaned_data.get("next_dose_interval")

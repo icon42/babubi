@@ -4,6 +4,9 @@
 <div class="container-fluid pb-5">
     <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {% if form.preset_buttons %}
+            {% include "babubi/form_presets.html" %}
+        {% endif %}
         {% if form.fieldsets %}
             {% for fieldset in form.hydrated_fielsets %}
                 {% with "forms/layouts/"|add:fieldset.layout|add:".html" as template %}

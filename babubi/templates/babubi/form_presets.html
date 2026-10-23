@@ -1,0 +1,17 @@
+{% load i18n %}
+{% comment %}
+    Recent entries to repeat (core/presets.py): clicking one fills every
+    field of the entry at once, without submitting the form.
+{% endcomment %}
+<fieldset class="form-presets">
+    <legend class="form-presets-title">{% trans "Same as before" %}</legend>
+    <div class="form-presets-list">
+        {% for preset in form.preset_buttons %}
+            <button type="button"
+                    class="btn btn-sm field-suggestion form-preset"
+                    data-preset="{{ preset.values }}">
+                <i class="icon-refresh" aria-hidden="true"></i>{{ preset.label }}
+            </button>
+        {% endfor %}
+    </div>
+</fieldset>

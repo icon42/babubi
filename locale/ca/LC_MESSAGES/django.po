@@ -2903,6 +2903,13 @@ msgstr "%(kind)s des de les %(time)s"
 msgid "Finish as"
 msgstr "Finalitza com a"
 
+msgid "Same as before"
+msgstr "Com altres vegades"
+
+#, python-format
+msgid "every %(hours)s h"
+msgstr "cada %(hours)s h"
+
 msgid "Start a timer"
 msgstr "Inicia un temporitzador"
 
