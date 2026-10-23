@@ -12,7 +12,7 @@ msgstr ""
 
 #: api/authentication.py:15 babubi/middleware.py:260
 msgid "Your access has expired."
-msgstr ""
+msgstr "El acceso ha caducado."
 
 #: babubi/admin.py:12 babubi/admin.py:13
 #: babubi/templates/babubi/nav-dropdown.html:353
@@ -33,15 +33,15 @@ msgstr "Dashboard"
 
 #: babubi/forms.py:16 babubi/templates/babubi/user_list.html:20
 msgid "Read only"
-msgstr ""
+msgstr "Solo lectura"
 
 #: babubi/forms.py:17
 msgid "Restricts user to viewing data only."
-msgstr ""
+msgstr "Limita al usuario a consultar los datos."
 
 #: babubi/forms.py:21 babubi/templates/babubi/user_list.html:21
 msgid "Caregiver"
-msgstr ""
+msgstr "Cuidador"
 
 #: babubi/forms.py:23
 msgid ""
@@ -50,23 +50,30 @@ msgid ""
 "child. Cannot delete entries or reach pumping, height, BMI, head "
 "circumference, user management or settings."
 msgstr ""
+"Permite añadir y editar registros de cuidados (tomas, cambios de pañal, "
+"sueño, temporizadores, medicación, temperatura, peso, notas y tiempo boca "
+"abajo) de todos los niños. No puede eliminar registros ni acceder a "
+"extracciones, altura, IMC, perímetro craneal, gestión de usuarios ni "
+"configuración."
 
 #: babubi/forms.py:31 babubi/models.py:164
 msgid "Access expires"
-msgstr ""
+msgstr "El acceso caduca"
 
 #: babubi/forms.py:33 babubi/models.py:161
 msgid ""
 "Optional. After this time the user can no longer sign in or use the API."
 msgstr ""
+"Opcional. Pasado ese momento, el usuario ya no puede iniciar sesión ni usar "
+"la API."
 
 #: babubi/forms.py:74
 msgid "A user cannot be both read only and caregiver."
-msgstr ""
+msgstr "Un usuario no puede ser a la vez de solo lectura y cuidador."
 
 #: babubi/forms.py:79
 msgid "A user cannot be both staff and caregiver."
-msgstr ""
+msgstr "Un usuario no puede ser a la vez personal y cuidador."
 
 #: babubi/models.py:22
 msgid "Refresh rate"
@@ -87,11 +94,11 @@ msgstr "deshabilitado"
 #: babubi/models.py:33 babubi/models.py:38 babubi/models.py:43
 #: babubi/models.py:48 babubi/models.py:53 babubi/models.py:58
 #: babubi/models.py:63 babubi/models.py:68
-#, fuzzy, python-format
+#, python-format
 msgid "%(minutes)d minute"
 msgid_plural "%(minutes)d minutes"
-msgstr[0] "%(minutes)s minuto"
-msgstr[1] "%(minutes)s minutos"
+msgstr[0] "%(minutes)d minuto"
+msgstr[1] "%(minutes)d minutos"
 
 #: babubi/models.py:74
 msgid "Hide Empty Dashboard Cards"
@@ -110,18 +117,18 @@ msgid "show all data"
 msgstr "mostrar todos los datos"
 
 #: babubi/models.py:88 babubi/models.py:92 babubi/models.py:96
-#, fuzzy, python-format
+#, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] "hace %(days_ago)s días"
-msgstr[1] "hace %(days_ago)s días"
+msgstr[0] "%(days)d día"
+msgstr[1] "%(days)d días"
 
 #: babubi/models.py:100 babubi/models.py:104
 #, python-format
 msgid "%(weeks)d week"
 msgid_plural "%(weeks)d weeks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(weeks)d semana"
+msgstr[1] "%(weeks)d semanas"
 
 #: babubi/models.py:112
 msgid "Language"
@@ -133,34 +140,33 @@ msgstr "Zona horaria"
 
 #: babubi/models.py:128
 msgid "Automatic"
-msgstr ""
+msgstr "Automático"
 
 #: babubi/models.py:129
-#, fuzzy
 msgid "Light"
-msgstr "Altura"
+msgstr "Claro"
 
 #: babubi/models.py:130
 msgid "Dark"
-msgstr ""
+msgstr "Oscuro"
 
 #: babubi/models.py:143
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: babubi/models.py:147 babubi/models.py:148 babubi/models.py:149
 #: babubi/models.py:150 babubi/models.py:151
-#, fuzzy, python-format
+#, python-format
 msgid "%(count)d Per Page"
-msgstr "%(count)s siesta"
+msgstr "%(count)d por página"
 
 #: babubi/models.py:152
 msgid "Show All"
-msgstr ""
+msgstr "Mostrar todo"
 
 #: babubi/models.py:155
 msgid "Items Per Page"
-msgstr ""
+msgstr "Elementos por página"
 
 #: babubi/models.py:168
 #, python-brace-format
@@ -169,20 +175,21 @@ msgstr "Configuración de {user}"
 
 #: babubi/oidc.py:95
 msgid "This provider account is already linked to another user."
-msgstr ""
+msgstr "Esta cuenta del proveedor ya está vinculada a otro usuario."
 
 #: babubi/oidc.py:97
 msgid "This account is not allowed to log in."
-msgstr ""
+msgstr "Esta cuenta no tiene permitido iniciar sesión."
 
 #: babubi/oidc.py:98
 msgid "Login with the identity provider failed. Try again later."
 msgstr ""
+"El inicio de sesión con el proveedor de identidad ha fallado. Inténtalo de "
+"nuevo más tarde."
 
 #: babubi/settings/base.py:251
-#, fuzzy
 msgid "Brazilian Portuguese"
-msgstr "Portugués"
+msgstr "Portugués de Brasil"
 
 #: babubi/settings/base.py:252
 msgid "Catalan"
@@ -190,11 +197,11 @@ msgstr "Catalán"
 
 #: babubi/settings/base.py:253
 msgid "Croatian"
-msgstr ""
+msgstr "Croata"
 
 #: babubi/settings/base.py:254
 msgid "Czech"
-msgstr ""
+msgstr "Checo"
 
 #: babubi/settings/base.py:255
 msgid "Chinese (simplified)"
@@ -202,13 +209,11 @@ msgstr "Chino (simplificado)"
 
 #: babubi/settings/base.py:256
 msgid "Chinese (traditional)"
-msgstr ""
+msgstr "Chino (tradicional)"
 
 #: babubi/settings/base.py:257
-#, fuzzy
-#| msgid "Chinese (simplified)"
 msgid "Chinese (Taiwan)"
-msgstr "Chino (simplificado)"
+msgstr "Chino (Taiwán)"
 
 #: babubi/settings/base.py:258
 msgid "Danish"
@@ -240,11 +245,11 @@ msgstr "Alemán"
 
 #: babubi/settings/base.py:265
 msgid "Hebrew"
-msgstr ""
+msgstr "Hebreo"
 
 #: babubi/settings/base.py:266
 msgid "Hungarian"
-msgstr ""
+msgstr "Húngaro"
 
 #: babubi/settings/base.py:267
 msgid "Italian"
@@ -252,15 +257,15 @@ msgstr "Italiano"
 
 #: babubi/settings/base.py:268
 msgid "Korean"
-msgstr ""
+msgstr "Coreano"
 
 #: babubi/settings/base.py:269
 msgid "Japanese"
-msgstr ""
+msgstr "Japonés"
 
 #: babubi/settings/base.py:270
 msgid "Norwegian Bokmål"
-msgstr ""
+msgstr "Noruego bokmål"
 
 #: babubi/settings/base.py:271
 msgid "Polish"
@@ -272,11 +277,11 @@ msgstr "Portugués"
 
 #: babubi/settings/base.py:273
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: babubi/settings/base.py:274
 msgid "Serbian"
-msgstr ""
+msgstr "Serbio"
 
 #: babubi/settings/base.py:275
 msgid "Spanish"
@@ -292,44 +297,54 @@ msgstr "Turco"
 
 #: babubi/settings/base.py:278
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ucraniano"
 
 #: babubi/site_settings.py:25
 msgid "Default minimum nap start time"
-msgstr ""
+msgstr "Hora mínima de inicio de siesta por defecto"
 
 #: babubi/site_settings.py:27
 msgid ""
 "The minimum default time that a sleep entry is consider a nap. If set the "
 "nap property will be preselected if the start time is within the bounds."
 msgstr ""
+"Hora mínima por defecto a partir de la cual un sueño se considera siesta. Si "
+"se define, la opción de siesta vendrá preseleccionada cuando la hora de "
+"inicio esté dentro del intervalo."
 
 #: babubi/site_settings.py:33
 msgid "Default maximum nap start time"
-msgstr ""
+msgstr "Hora máxima de inicio de siesta por defecto"
 
 #: babubi/site_settings.py:35
 msgid ""
 "The maximum default time that a sleep entry is consider a nap. If set the "
 "nap property will be preselected if the start time is within the bounds."
 msgstr ""
+"Hora máxima por defecto hasta la cual un sueño se considera siesta. Si se "
+"define, la opción de siesta vendrá preseleccionada cuando la hora de inicio "
+"esté dentro del intervalo."
 
 #: babubi/site_settings.py:49
 msgid "Time diff between feedings based on end"
-msgstr ""
+msgstr "Tiempo entre tomas contado desde el final"
 
 #: babubi/site_settings.py:51
 msgid ""
 "Use feeding end instead of start time for displaying time between feedings"
 msgstr ""
+"Usar la hora de fin de la toma en lugar de la de inicio para mostrar el "
+"tiempo entre tomas"
 
 #: babubi/site_settings.py:62
 msgid "Time diff between sleeps based on end"
-msgstr ""
+msgstr "Tiempo entre sueños contado desde el final"
 
 #: babubi/site_settings.py:64
 msgid "Use sleep end instead of start time for displaying time between sleeps"
 msgstr ""
+"Usar la hora de fin del sueño en lugar de la de inicio para mostrar el "
+"tiempo entre sueños"
 
 #: babubi/templates/admin/base_site.html:4
 #: babubi/templates/admin/base_site.html:8
@@ -402,23 +417,19 @@ msgstr "Eliminar"
 
 #: babubi/templates/babubi/form_presets.html:7
 msgid "Same as before"
-msgstr ""
+msgstr "Como otras veces"
 
 #: babubi/templates/babubi/messages.html:19
 #: babubi/templates/babubi/messages.html:24
 #: babubi/templates/babubi/user_settings_form.html:18
 #: babubi/templates/babubi/user_settings_form.html:23
-#, fuzzy
 msgid "Error"
 msgstr "Error"
 
 #: babubi/templates/babubi/messages.html:25
 #: babubi/templates/babubi/user_settings_form.html:23
-#, fuzzy
 msgid "Some fields have errors. See below for details."
-msgstr ""
-"<strong>Error:</strong> Algunos campos contienen errores. Mira más abajo "
-"para más detalles."
+msgstr "Algunos campos contienen errores. Mira más abajo para más detalles."
 
 #: babubi/templates/babubi/nav-dropdown.html:46 core/models.py:296
 #: core/models.py:300 dashboard/layout.py:200
@@ -434,9 +445,8 @@ msgstr "Toma"
 
 #: babubi/templates/babubi/nav-dropdown.html:56
 #: babubi/templates/babubi/nav-dropdown.html:178
-#, fuzzy
 msgid "Bottle Feeding"
-msgstr "Total de tomas"
+msgstr "Biberón"
 
 #: babubi/templates/babubi/nav-dropdown.html:62
 #: babubi/templates/babubi/nav-dropdown.html:184
@@ -446,10 +456,8 @@ msgstr "Total de tomas"
 #: core/templates/core/medication_list.html:4
 #: core/templates/core/medication_list.html:7
 #: core/templates/core/medication_list.html:10 dashboard/layout.py:210
-#, fuzzy
-#| msgid "Add Feeding"
 msgid "Medication"
-msgstr "Añadir Toma"
+msgstr "Medicación"
 
 #: babubi/templates/babubi/nav-dropdown.html:68
 #: babubi/templates/babubi/nav-dropdown.html:197 core/forms.py:686
@@ -497,10 +505,8 @@ msgstr "Tiempo boca abajo"
 
 #: babubi/templates/babubi/nav-dropdown.html:117
 #: babubi/templates/babubi/nav-dropdown.html:119
-#, fuzzy
-#| msgid "Children"
 msgid "Other children"
-msgstr "Niños"
+msgstr "Otros niños"
 
 #: babubi/templates/babubi/nav-dropdown.html:148
 msgid "Activities"
@@ -690,7 +696,7 @@ msgstr "Niños"
 
 #: babubi/templates/babubi/nav-dropdown.html:366
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #: babubi/templates/babubi/nav-dropdown.html:369
 #: core/templates/core/day_list.html:30
@@ -744,9 +750,8 @@ msgid "Chat / Support"
 msgstr "Chat / Soporte"
 
 #: babubi/templates/babubi/paginator.html:11
-#, fuzzy
 msgid "First"
-msgstr "Nombre"
+msgstr "Primera"
 
 #: babubi/templates/babubi/paginator.html:18
 #: core/templates/core/diaperchange_list.html:16
@@ -780,13 +785,12 @@ msgid "Next"
 msgstr "Siguiente"
 
 #: babubi/templates/babubi/paginator.html:43
-#, fuzzy
 msgid "Last"
-msgstr "Apellidos"
+msgstr "Última"
 
 #: babubi/templates/babubi/user_add_device.html:13
 msgid "Authentication Methods"
-msgstr ""
+msgstr "Métodos de autenticación"
 
 #: babubi/templates/babubi/user_add_device.html:16
 #: babubi/templates/babubi/user_settings_form.html:112
@@ -800,7 +804,7 @@ msgstr "Regenerar"
 
 #: babubi/templates/babubi/user_add_device.html:28
 msgid "Login QR code"
-msgstr ""
+msgstr "Código QR de inicio de sesión"
 
 #: babubi/templates/babubi/user_confirm_delete.html:4
 msgid "Delete User"
@@ -828,13 +832,13 @@ msgstr "Cancelar"
 
 #: babubi/templates/babubi/user_confirm_unlock.html:4
 msgid "Unlock User"
-msgstr ""
+msgstr "Desbloquear usuario"
 
 #: babubi/templates/babubi/user_confirm_unlock.html:11
 #: babubi/templates/babubi/user_confirm_unlock.html:17
 #: babubi/templates/babubi/user_form.html:28
 msgid "Unlock"
-msgstr ""
+msgstr "Desbloquear"
 
 #: babubi/templates/babubi/user_form.html:7
 #: babubi/templates/babubi/user_form.html:18
@@ -864,7 +868,7 @@ msgstr "Actualizar"
 
 #: babubi/templates/babubi/user_form.html:26
 msgid "User locked."
-msgstr ""
+msgstr "Usuario bloqueado."
 
 #: babubi/templates/babubi/user_list.html:17
 #: core/templates/core/child_list.html:26
@@ -890,7 +894,7 @@ msgstr "Activo"
 
 #: babubi/templates/babubi/user_list.html:24
 msgid "Locked"
-msgstr ""
+msgstr "Bloqueado"
 
 #: babubi/templates/babubi/user_list.html:25
 #: core/templates/core/child_list.html:29
@@ -921,30 +925,28 @@ msgstr "Perfil del Usuario"
 
 #: babubi/templates/babubi/user_settings_form.html:85
 msgid "Single sign-on"
-msgstr ""
+msgstr "Inicio de sesión único"
 
 #: babubi/templates/babubi/user_settings_form.html:87
-#, fuzzy
-#| msgid "Amount"
 msgid "Account"
-msgstr "Cantidad"
+msgstr "Cuenta"
 
 #: babubi/templates/babubi/user_settings_form.html:90
 msgid "Linked"
-msgstr ""
+msgstr "Vinculada"
 
 #: babubi/templates/babubi/user_settings_form.html:94
 msgid "Unlink"
-msgstr ""
+msgstr "Desvincular"
 
 #: babubi/templates/babubi/user_settings_form.html:99
 #, python-format
 msgid "Link with %(provider)s"
-msgstr ""
+msgstr "Vincular con %(provider)s"
 
 #: babubi/templates/babubi/user_settings_form.html:101
 msgid "Link with single sign-on"
-msgstr ""
+msgstr "Vincular con el inicio de sesión único"
 
 #: babubi/templates/babubi/user_settings_form.html:110
 msgid "API"
@@ -960,16 +962,12 @@ msgid "Welcome to Babubi!"
 msgstr "¡Bienvenido a Babubi!"
 
 #: babubi/templates/babubi/welcome.html:14
-#, fuzzy
-#| msgid ""
-#| "Learn about and predict baby's needs without (<em>as much</em>) guess "
-#| "work by using Babubi to track &mdash;"
 msgid ""
 "Learn about and predict baby's needs without (<em>as much</em>) guess work "
 "by using Babubi to track —"
 msgstr ""
-"Aprende a predecir las necesidades de tu bebé sin tener que adivinar "
-"haciendo track con Babubi &mdash;"
+"Aprende a conocer y anticipar las necesidades del bebé sin tener que "
+"adivinar (<em>tanto</em>) registrando con Babubi:"
 
 #: babubi/templates/babubi/welcome.html:27 core/models.py:297
 #: core/templates/core/diaperchange_confirm_delete.html:8
@@ -1006,7 +1004,7 @@ msgstr "Añadir Niño"
 #: babubi/templates/dbsettings/site_settings.html:4
 #: babubi/templates/dbsettings/site_settings.html:11
 msgid "Site Settings"
-msgstr ""
+msgstr "Configuración del sitio"
 
 #: babubi/templates/error/400.html:4 babubi/templates/error/400.html:7
 msgid "Bad Request"
@@ -1029,23 +1027,22 @@ msgid "How to Fix"
 msgstr "Cómo arreglarlo"
 
 #: babubi/templates/error/403_csrf_bad_origin.html:13
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Add %(value)s to the %(variable)s environment variable. If multiple origins "
 "are required separate with commas."
 msgstr ""
-"Añade <samp>%(origin)s</samp> a la variable de entorno "
-"<code>CSRF_TRUSTED_ORIGINS</code>. Si se requieren orígenes múltiples, "
-"sepáralos por comas."
+"Añade %(value)s a la variable de entorno %(variable)s. Si se requieren "
+"varios orígenes, sepáralos con comas."
 
 #: babubi/templates/error/404.html:4 babubi/templates/error/404.html:7
 msgid "Page Not Found"
 msgstr "Página no encontrada"
 
 #: babubi/templates/error/404.html:9
-#, fuzzy, python-format
+#, python-format
 msgid "The path %(path)s does not exist."
-msgstr "La ruta <code>%(request_path)s</code> no existe."
+msgstr "La ruta %(path)s no existe."
 
 #: babubi/templates/error/500.html:4 babubi/templates/error/500.html:7
 msgid "Server Error"
@@ -1057,16 +1054,16 @@ msgstr "Volver a Babubi"
 
 #: babubi/templates/error/lockout.html:4
 msgid "Too Many Login Attempts"
-msgstr ""
+msgstr "Demasiados intentos de inicio de sesión"
 
 #: babubi/templates/registration/login.html:22
 #, python-format
 msgid "Log in with %(provider)s"
-msgstr ""
+msgstr "Iniciar sesión con %(provider)s"
 
 #: babubi/templates/registration/login.html:24
 msgid "Log in with single sign-on"
-msgstr ""
+msgstr "Iniciar sesión con el inicio de sesión único"
 
 #: babubi/templates/registration/login.html:46
 msgid "Login"
@@ -1094,15 +1091,15 @@ msgstr "Resetear Contraseña"
 
 #: babubi/templates/registration/password_reset_confirm.html:12
 msgid "Oh no!"
-msgstr ""
+msgstr "¡Vaya!"
 
 #: babubi/templates/registration/password_reset_confirm.html:12
 msgid "The two passwords did not match."
-msgstr ""
+msgstr "Las dos contraseñas no coinciden."
 
 #: babubi/templates/registration/password_reset_confirm.html:12
 msgid "Please try again."
-msgstr ""
+msgstr "Inténtalo de nuevo."
 
 #: babubi/templates/registration/password_reset_confirm.html:17
 msgid "Enter your new password in each field below."
@@ -1139,18 +1136,20 @@ msgid ""
 "You're receiving this email because you requested a password reset for your "
 "user account at %(site_name)s."
 msgstr ""
+"Recibes este correo porque has solicitado restablecer la contraseña de tu "
+"cuenta de usuario en %(site_name)s."
 
 #: babubi/templates/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "Ve a la siguiente página y elige una contraseña nueva:"
 
 #: babubi/templates/registration/password_reset_email.html:8
 msgid "Your username, in case you’ve forgotten:"
-msgstr ""
+msgstr "Tu nombre de usuario, por si lo has olvidado:"
 
 #: babubi/templates/registration/password_reset_email.html:9
 msgid "Thanks for using Babubi!"
-msgstr ""
+msgstr "¡Gracias por usar Babubi!"
 
 #: babubi/templates/registration/password_reset_form.html:4
 msgid "Forgot Password"
@@ -1165,14 +1164,14 @@ msgstr ""
 "la dirección es válida, recibirás instrucciones para respetar tu contraseña."
 
 #: babubi/templatetags/babubi.py:99
-#, fuzzy, python-format
+#, python-format
 msgid "Are you sure you want to delete %(name)s?"
-msgstr "¿Está seguro de que desea eliminar %(number)s temporizador inactivo?"
+msgstr "¿Seguro que quieres eliminar %(name)s?"
 
 #: babubi/templatetags/babubi.py:109
-#, fuzzy, python-format
+#, python-format
 msgid "Are you sure you want to unlock %(name)s?"
-msgstr "¿Está seguro de que desea eliminar %(number)s temporizador inactivo?"
+msgstr "¿Seguro que quieres desbloquear %(name)s?"
 
 #: babubi/views.py:68
 msgid "Forbidden"
@@ -1194,7 +1193,7 @@ msgstr "¡Se ha actualizado el usuario %(username)s!"
 
 #: babubi/views.py:189
 msgid "User unlocked."
-msgstr ""
+msgstr "Usuario desbloqueado."
 
 #: babubi/views.py:213
 #, python-brace-format
@@ -1214,80 +1213,65 @@ msgid "Settings saved!"
 msgstr "¡Configuraciones guardadas!"
 
 #: core/day_groups.py:40
-#, fuzzy, python-format
+#, python-format
 msgid "%(count)d change"
 msgid_plural "%(count)d changes"
-msgstr[0] "%(count)s siesta"
-msgstr[1] "%(count)s siesta"
+msgstr[0] "%(count)d cambio"
+msgstr[1] "%(count)d cambios"
 
 #: core/day_groups.py:53
-#, fuzzy, python-format
-#| msgid "%(counter)s feeding"
-#| msgid_plural "%(counter)s feedings"
+#, python-format
 msgid "%(count)d feeding"
 msgid_plural "%(count)d feedings"
-msgstr[0] "%(counter)s entradas de alimentación"
-msgstr[1] "%(counter)s entradas de alimentación"
+msgstr[0] "%(count)d toma"
+msgstr[1] "%(count)d tomas"
 
 #: core/day_groups.py:69
-#, fuzzy, python-format
-#| msgid "%(counter)s feeding"
-#| msgid_plural "%(counter)s feedings"
+#, python-format
 msgid "%(count)d pumping"
 msgid_plural "%(count)d pumpings"
-msgstr[0] "%(counter)s entradas de alimentación"
-msgstr[1] "%(counter)s entradas de alimentación"
+msgstr[0] "%(count)d extracción"
+msgstr[1] "%(count)d extracciones"
 
 #: core/day_groups.py:82
-#, fuzzy, python-format
-#| msgid "%(count)s nap"
-#| msgid_plural "%(count)s naps"
+#, python-format
 msgid "%(count)d nap"
 msgid_plural "%(count)d naps"
-msgstr[0] "%(count)s siesta"
-msgstr[1] "%(count)s siesta"
+msgstr[0] "%(count)d siesta"
+msgstr[1] "%(count)d siestas"
 
 #: core/day_groups.py:91
-#, fuzzy, python-format
-#| msgid "%(count)s nap"
-#| msgid_plural "%(count)s naps"
+#, python-format
 msgid "%(count)d session"
 msgid_plural "%(count)d sessions"
-msgstr[0] "%(count)s siesta"
-msgstr[1] "%(count)s siesta"
+msgstr[0] "%(count)d sesión"
+msgstr[1] "%(count)d sesiones"
 
 #: core/day_groups.py:104
-#, fuzzy, python-format
-#| msgid "%(counter)s sleep"
-#| msgid_plural "%(counter)s sleeps"
+#, python-format
 msgid "%(count)d dose"
 msgid_plural "%(count)d doses"
-msgstr[0] "%(counter)s entradas de sueño"
-msgstr[1] "%(counter)s entradas de sueño"
+msgstr[0] "%(count)d dosis"
+msgstr[1] "%(count)d dosis"
 
 #: core/day_groups.py:115
-#, fuzzy, python-format
-#| msgid "%(counter)s feeding"
-#| msgid_plural "%(counter)s feedings"
+#, python-format
 msgid "%(count)d reading"
 msgid_plural "%(count)d readings"
-msgstr[0] "%(counter)s entradas de alimentación"
-msgstr[1] "%(counter)s entradas de alimentación"
+msgstr[0] "%(count)d lectura"
+msgstr[1] "%(count)d lecturas"
 
 #: core/day_groups.py:120
-#, fuzzy, python-format
-#| msgid "Temperature"
+#, python-format
 msgid "max. %(temperature)s"
-msgstr "Temperatura"
+msgstr "máx. %(temperature)s"
 
 #: core/day_groups.py:129
-#, fuzzy, python-format
-#| msgid "%(count)s nap"
-#| msgid_plural "%(count)s naps"
+#, python-format
 msgid "%(count)d note"
 msgid_plural "%(count)d notes"
-msgstr[0] "%(count)s siesta"
-msgstr[1] "%(count)s siesta"
+msgstr[0] "%(count)d nota"
+msgstr[1] "%(count)d notas"
 
 #: core/fields.py:13
 #, python-format
@@ -1295,12 +1279,16 @@ msgid ""
 "Nap start max. value %(max)s must be greater than nap start min. value "
 "%(min)s."
 msgstr ""
+"El valor máximo de inicio de siesta %(max)s debe ser mayor que el valor "
+"mínimo %(min)s."
 
 #: core/fields.py:27
 #, python-format
 msgid ""
 "Nap start min. value %(min)s must be less than nap start max. value %(max)s."
 msgstr ""
+"El valor mínimo de inicio de siesta %(min)s debe ser menor que el valor "
+"máximo %(max)s."
 
 #: core/filters.py:11 core/models.py:122 core/models.py:151
 msgid "Tag"
@@ -1314,17 +1302,16 @@ msgid "Timer"
 msgstr "Temporizador"
 
 #: core/forms.py:184
-#, fuzzy
 msgid "This timer does not exist."
-msgstr "La ruta <code>%(request_path)s</code> no existe."
+msgstr "Este temporizador no existe."
 
 #: core/forms.py:187 core/forms.py:208
 msgid "You do not have permission to consume timers."
-msgstr ""
+msgstr "No tienes permiso para consumir temporizadores."
 
 #: core/forms.py:204
 msgid "This timer no longer exists."
-msgstr ""
+msgstr "Este temporizador ya no existe."
 
 #: core/forms.py:253
 msgid ""
@@ -1337,25 +1324,26 @@ msgstr ""
 #: core/forms.py:340 core/forms.py:684 core/templates/core/timer_detail.html:45
 #: core/templates/core/timer_quick_kinds.html:22
 msgid "Not specified"
-msgstr ""
+msgstr "Sin especificar"
 
 #: core/forms.py:341 core/models.py:461 core/models.py:906
 #: dashboard/models.py:57
 msgid "Boy"
-msgstr ""
+msgstr "Niño"
 
 #: core/forms.py:342 core/models.py:460 core/models.py:905
 #: dashboard/models.py:57
 msgid "Girl"
-msgstr ""
+msgstr "Niña"
 
 #: core/forms.py:344 dashboard/models.py:63
 msgid "Sex"
-msgstr ""
+msgstr "Sexo"
 
 #: core/forms.py:345
 msgid "Picks the WHO growth standards; none when not specified."
 msgstr ""
+"Elige las curvas de crecimiento de la OMS; ninguna si no se especifica."
 
 #: core/forms.py:385
 msgid "Name does not match child name."
@@ -1363,18 +1351,16 @@ msgstr "El nombre no coincide con el nombre del niño."
 
 #: core/forms.py:511
 msgid "Time Until Next Dosage"
-msgstr ""
+msgstr "Tiempo hasta la siguiente dosis"
 
 #: core/forms.py:515
 msgid "Optional: Hours until next dose can be given"
-msgstr ""
+msgstr "Opcional: horas hasta que se pueda dar la siguiente dosis"
 
 #: core/forms.py:570
-#, fuzzy, python-format
-#| msgid "%(hours)s hour"
-#| msgid_plural "%(hours)s hours"
+#, python-format
 msgid "every %(hours)s h"
-msgstr "%(hours)s hora"
+msgstr "cada %(hours)s h"
 
 #: core/forms.py:690 core/models.py:344
 #: core/templates/core/feeding_list.html:21
@@ -1400,10 +1386,8 @@ msgid "Another entry intersects the specified time period."
 msgstr "Otra entrada coincide con el periodo de tiempo indicado."
 
 #: core/models.py:83
-#, fuzzy
-#| msgid "Pumping entry"
 msgid "Conflicting entry"
-msgstr "Entrada de extracción"
+msgstr "Entrada en conflicto"
 
 #: core/models.py:98
 msgid "Date/time can not be in the future."
@@ -1421,11 +1405,11 @@ msgstr "Últimas usadas"
 
 #: core/models.py:130
 msgid "You do not have permission to change tags."
-msgstr ""
+msgstr "No tienes permiso para cambiar etiquetas."
 
 #: core/models.py:133
 msgid "You do not have permission to create tags."
-msgstr ""
+msgstr "No tienes permiso para crear etiquetas."
 
 #: core/models.py:173 core/models.py:224 core/models.py:265 core/models.py:322
 #: core/models.py:392 core/models.py:424 core/models.py:476 core/models.py:505
@@ -1467,9 +1451,8 @@ msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
 #: core/models.py:204
-#, fuzzy
 msgid "Birth time"
-msgstr "Fecha de nacimiento"
+msgstr "Hora de nacimiento"
 
 #: core/models.py:211
 msgid "Slug"
@@ -1508,25 +1491,23 @@ msgstr "Marrón"
 
 #: core/models.py:277
 msgid "Gray"
-msgstr ""
+msgstr "Gris"
 
 #: core/models.py:278
 msgid "Green"
 msgstr "Verde"
 
 #: core/models.py:279
-#, fuzzy
-#| msgid "Change"
 msgid "Orange"
-msgstr "Cambio"
+msgstr "Naranja"
 
 #: core/models.py:280
 msgid "Red"
-msgstr ""
+msgstr "Rojo"
 
 #: core/models.py:281
 msgid "White"
-msgstr ""
+msgstr "Blanco"
 
 #: core/models.py:282
 msgid "Yellow"
@@ -1602,7 +1583,7 @@ msgstr "Método"
 
 #: core/models.py:483 core/templates/core/note_list.html:13
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: core/models.py:564 core/templates/core/sleep_list.html:37
 msgid "Nap"
@@ -1610,7 +1591,7 @@ msgstr "Siesta"
 
 #: core/models.py:572
 msgid "Nap settings"
-msgstr ""
+msgstr "Configuración de siestas"
 
 #: core/models.py:645 core/templates/core/tag_list.html:24
 #: core/templates/core/timer_list.html:24
@@ -1627,10 +1608,9 @@ msgid "Timers"
 msgstr "Temporizadores"
 
 #: core/models.py:676
-#, fuzzy, python-format
-#| msgid "%(since)s ago (%(time)s)"
+#, python-format
 msgid "%(kind)s since %(time)s"
-msgstr "hace %(since)s (%(time)s)"
+msgstr "%(kind)s desde las %(time)s"
 
 #: core/models.py:745 core/templates/core/tummytime_list.html:17
 msgid "Milestone"
@@ -1638,60 +1618,56 @@ msgstr "Hito"
 
 #: core/models.py:818 core/templates/core/medication_list.html:13
 msgid "Medication Name"
-msgstr ""
+msgstr "Nombre del medicamento"
 
 #: core/models.py:819
 msgid "Name of the medication administered"
-msgstr ""
+msgstr "Nombre del medicamento administrado"
 
 #: core/models.py:825 core/templates/core/medication_list.html:14
 #: core/timeline.py:257
 msgid "Dosage"
-msgstr ""
+msgstr "Dosis"
 
 #: core/models.py:826
 msgid "Amount of medication given"
-msgstr ""
+msgstr "Cantidad de medicamento administrada"
 
 #: core/models.py:831
 msgid "MG"
-msgstr ""
+msgstr "mg"
 
 #: core/models.py:832
 msgid "ML"
-msgstr ""
+msgstr "ml"
 
 #: core/models.py:833
 msgid "Tablets"
-msgstr ""
+msgstr "Comprimidos"
 
 #: core/models.py:834
 msgid "Drops"
-msgstr ""
+msgstr "Gotas"
 
 #: core/models.py:839
 msgid "Dosage Unit"
-msgstr ""
+msgstr "Unidad de la dosis"
 
 #: core/models.py:845
-#, fuzzy
-#| msgid "Timer actions"
 msgid "Time Taken"
-msgstr "Acciones de temporizador"
+msgstr "Hora de administración"
 
 #: core/models.py:851 core/templates/core/medication_list.html:15
 msgid "Next Dose Interval"
-msgstr ""
+msgstr "Intervalo hasta la siguiente dosis"
 
 #: core/models.py:852
 msgid "Time until next dose can be given"
-msgstr ""
+msgstr "Tiempo hasta que se pueda dar la siguiente dosis"
 
 #: core/models.py:862
-#, fuzzy
-#| msgid "Actions"
 msgid "Medications"
-msgstr "Acciones"
+msgstr "Medicaciones"
 
 #: core/templates/core/bmi_confirm_delete.html:4
 msgid "Delete a BMI Entry"
@@ -1747,11 +1723,11 @@ msgstr "No se ha encontrado ningún niño."
 
 #: core/templates/core/child_quick_switch.html:9
 msgid "Switch child"
-msgstr ""
+msgstr "Cambiar de niño"
 
 #: core/templates/core/child_quick_switch.html:21
 msgid "Switch to…"
-msgstr ""
+msgstr "Cambiar a…"
 
 #: core/templates/core/day_list.html:101 core/templates/core/day_list.html:103
 #: core/templates/core/tag_detail.html:32
@@ -1792,9 +1768,8 @@ msgstr "Actualizar una Toma"
 
 #: core/templates/core/feeding_form.html:7
 #: core/templates/core/feeding_form.html:28
-#, fuzzy
 msgid "Add a Bottle Feeding"
-msgstr "Añadir una Toma"
+msgstr "Añadir un biberón"
 
 #: core/templates/core/feeding_form.html:9
 #: core/templates/core/feeding_form.html:30
@@ -1802,9 +1777,8 @@ msgid "Add a Feeding"
 msgstr "Añadir una Toma"
 
 #: core/templates/core/feeding_list.html:16
-#, fuzzy
 msgid "Add Bottle Feeding"
-msgstr "Añadir una Toma"
+msgstr "Añadir biberón"
 
 #: core/templates/core/feeding_list.html:23
 msgid "Amt."
@@ -1843,35 +1817,26 @@ msgid "No height entries found."
 msgstr "No hay entradas de altura."
 
 #: core/templates/core/medication_confirm_delete.html:4
-#, fuzzy
-#| msgid "Delete a Sleep Entry"
 msgid "Delete a Medication Entry"
-msgstr "Eliminar Entrada de Sueño"
+msgstr "Eliminar una entrada de medicación"
 
 #: core/templates/core/medication_form.html:7
 #: core/templates/core/medication_form.html:17
 #: core/templates/core/medication_form.html:26
-#, fuzzy
-#| msgid "Add a Sleep Entry"
 msgid "Add a Medication Entry"
-msgstr "Añadir Entrada de Sueño"
+msgstr "Añadir una entrada de medicación"
 
 #: core/templates/core/medication_list.html:16
-#, fuzzy
-#| msgid "Next"
 msgid "Next dose"
-msgstr "Siguiente"
+msgstr "Siguiente dosis"
 
 #: core/templates/core/medication_list.html:28
-#, fuzzy
 msgid "No interval set"
-msgstr "Cantidad de Tomas"
+msgstr "Sin intervalo"
 
 #: core/templates/core/medication_list.html:38
-#, fuzzy
-#| msgid "No bmi entries found."
 msgid "No medication entries found."
-msgstr "No hay entradas de IMC."
+msgstr "No hay entradas de medicación."
 
 #: core/templates/core/note_confirm_delete.html:4
 msgid "Delete a Note"
@@ -1933,123 +1898,104 @@ msgstr "Fin"
 
 #: core/templates/core/sleep_list.html:21
 msgid "Awake before"
-msgstr ""
+msgstr "Despierto antes"
 
 #: core/templates/core/sleep_list.html:39
-#, fuzzy
 msgid "Night"
-msgstr "Altura"
+msgstr "Noche"
 
 #: core/templates/core/sleep_list.html:45
 msgid "No sleep entries found."
 msgstr "No se han encontrado entradas de sueño."
 
 #: core/templates/core/tag_confirm_delete.html:4
-#, fuzzy
 msgid "Delete a Tag"
-msgstr "Eliminar una Nota"
+msgstr "Eliminar una etiqueta"
 
 #: core/templates/core/tag_confirm_delete.html:22
 #, python-format
 msgid "There is 1 item tagged with this tag."
 msgid_plural "There are %(count)s items tagged with this tag."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hay 1 elemento con esta etiqueta."
+msgstr[1] "Hay %(count)s elementos con esta etiqueta."
 
 #: core/templates/core/tag_confirm_delete.html:29
 msgid ""
 "This action will remove the tag from all items it is currently applied to."
-msgstr ""
+msgstr "Esta acción quitará la etiqueta de todos los elementos que la tienen."
 
 #: core/templates/core/tag_confirm_delete.html:35
-#, fuzzy
 msgid "Delete Tag"
-msgstr "Eliminar"
+msgstr "Eliminar etiqueta"
 
 #: core/templates/core/tag_detail.html:5 core/templates/core/tag_form.html:5
-#, fuzzy
 msgid "Update a Tag"
-msgstr "Actualizar una Nota"
+msgstr "Actualizar una etiqueta"
 
 #: core/templates/core/tag_detail.html:7 core/templates/core/tag_form.html:7
 #: core/templates/core/tag_form.html:29
-#, fuzzy
 msgid "Add a Tag"
-msgstr "Añadir Cambio"
+msgstr "Añadir una etiqueta"
 
 #: core/templates/core/tag_detail.html:28
-#, fuzzy
 msgid "Tag actions"
-msgstr "Acciones de temporizador"
+msgstr "Acciones de etiqueta"
 
 #: core/templates/core/tag_detail.html:46
-#, fuzzy
 msgid "Tagged Measurements"
-msgstr "Mediciones"
+msgstr "Mediciones etiquetadas"
 
 #: core/templates/core/tag_detail.html:50
-#, fuzzy
 msgid "BMI Measurements"
-msgstr "Mediciones"
+msgstr "Mediciones de IMC"
 
 #: core/templates/core/tag_detail.html:55
-#, fuzzy
 msgid "Head Circumference Measurements"
-msgstr "Entrada de perímetro craneal"
+msgstr "Mediciones de perímetro craneal"
 
 #: core/templates/core/tag_detail.html:60
-#, fuzzy
 msgid "Height Measurements"
-msgstr "Mediciones"
+msgstr "Mediciones de altura"
 
 #: core/templates/core/tag_detail.html:65
-#, fuzzy
 msgid "Temperature Measurements"
-msgstr "Lectura de temperatura"
+msgstr "Mediciones de temperatura"
 
 #: core/templates/core/tag_detail.html:70
-#, fuzzy
 msgid "Weight Measurements"
-msgstr "Mediciones"
+msgstr "Mediciones de peso"
 
 #: core/templates/core/tag_detail.html:76
-#, fuzzy
 msgid "Tagged Activities"
-msgstr "Actividades"
+msgstr "Actividades etiquetadas"
 
 #: core/templates/core/tag_detail.html:90
-#, fuzzy
 msgid "Pumpings"
 msgstr "Extracciones"
 
 #: core/templates/core/tag_detail.html:95
-#, fuzzy
 msgid "Sleeps"
-msgstr "Sueño"
+msgstr "Sueños"
 
 #: core/templates/core/tag_detail.html:100
-#, fuzzy
 msgid "Tummy Times"
-msgstr "Tiempo boca abajo"
+msgstr "Tiempos boca abajo"
 
 #: core/templates/core/tag_list.html:14
-#, fuzzy
 msgid "Add Tag"
-msgstr "Añadir Cambio"
+msgstr "Añadir etiqueta"
 
 #: core/templates/core/tag_list.html:26
 msgid "Items Tagged"
-msgstr ""
+msgstr "Elementos etiquetados"
 
 #: core/templates/core/tag_list.html:27
-#, fuzzy
 msgid "Last Used"
-msgstr "Últimas usadas"
+msgstr "Último uso"
 
 #: core/templates/core/tag_list.html:62
-#, fuzzy
 msgid "No tags found."
-msgstr "No se han encontrado notas."
+msgstr "No se han encontrado etiquetas."
 
 #: core/templates/core/temperature_confirm_delete.html:4
 msgid "Delete a Temperature Reading"
@@ -2127,7 +2073,7 @@ msgstr "Ninguno"
 #: core/templates/core/timer_quick_kinds.html:6
 #, python-format
 msgid "Start a timer for %(name)s"
-msgstr ""
+msgstr "Iniciar un temporizador para %(name)s"
 
 #: core/templates/core/tummytime_confirm_delete.html:4
 msgid "Delete a Tummy Time Entry"
@@ -2200,7 +2146,7 @@ msgstr "Cerrar"
 
 #: core/templates/forms/layouts/advanced.html:7
 msgid "Advanced Fields"
-msgstr ""
+msgstr "Campos avanzados"
 
 #: core/templates/timeline/_timeline.html:41
 #, python-format
@@ -2226,27 +2172,23 @@ msgid "Today"
 msgstr "hoy"
 
 #: core/templatetags/days.py:23
-#, fuzzy, python-format
+#, python-format
 msgid "%(hours)d h %(minutes)d min"
-msgstr "%(minutes)s minuto"
+msgstr "%(hours)d h %(minutes)d min"
 
 #: core/templatetags/days.py:25
-#, fuzzy, python-format
-#| msgid "%(hours)s hour"
-#| msgid_plural "%(hours)s hours"
+#, python-format
 msgid "%(hours)d h"
-msgstr "%(hours)s hora"
+msgstr "%(hours)d h"
 
 #: core/templatetags/days.py:27
-#, fuzzy, python-format
+#, python-format
 msgid "%(minutes)d min"
-msgstr "%(minutes)s minuto"
+msgstr "%(minutes)d min"
 
 #: core/templatetags/days.py:66
-#, fuzzy
-#| msgid "yesterday"
 msgid "Yesterday"
-msgstr "ayer"
+msgstr "Ayer"
 
 #: core/templatetags/duration.py:106
 #: dashboard/templates/cards/breastfeeding.html:28
@@ -2268,24 +2210,20 @@ msgid "yesterday"
 msgstr "ayer"
 
 #: core/templatetags/timer_kinds.py:20
-#, fuzzy
-#| msgid "Update a Feeding"
 msgid "Finish and create a feeding"
-msgstr "Actualizar una Toma"
+msgstr "Terminar y crear la toma"
 
 #: core/templatetags/timer_kinds.py:21
 msgid "Finish and create a pumping"
-msgstr ""
+msgstr "Terminar y crear la extracción"
 
 #: core/templatetags/timer_kinds.py:22
 msgid "Finish and create a sleep"
-msgstr ""
+msgstr "Terminar y crear el sueño"
 
 #: core/templatetags/timer_kinds.py:23
-#, fuzzy
-#| msgid "%(child)s started tummy time!"
 msgid "Finish and create a tummy time"
-msgstr "¡%(child)s ha empezado tiempo boca abajo!"
+msgstr "Terminar y crear el tiempo boca abajo"
 
 #: core/timeline.py:83
 #, python-format
@@ -2318,9 +2256,9 @@ msgid "%(child)s finished feeding."
 msgstr "%(child)s ha finalizado una toma."
 
 #: core/timeline.py:206
-#, fuzzy, python-format
+#, python-format
 msgid "%(child)s had a feeding."
-msgstr "%(child)s ha empezado una toma."
+msgstr "%(child)s ha hecho una toma."
 
 #: core/timeline.py:228
 #, python-format
@@ -2328,21 +2266,19 @@ msgid "%(child)s had a %(type)s diaper change."
 msgstr "%(child)s tuvo un cambio de pañal %(type)s."
 
 #: core/timeline.py:271
-#, fuzzy, python-format
-#| msgid "%(child)s started feeding."
+#, python-format
 msgid "%(child)s took %(medication)s."
-msgstr "%(child)s ha empezado una toma."
+msgstr "%(child)s ha tomado %(medication)s."
 
 #: core/timeline.py:287
-#, fuzzy, python-format
-#| msgid "%(child)s started feeding."
+#, python-format
 msgid "%(child)s's %(medication)s dose wore off."
-msgstr "%(child)s ha empezado una toma."
+msgstr "La dosis de %(medication)s de %(child)s ha dejado de hacer efecto."
 
 #: core/timeline.py:332
 #, python-format
 msgid "%(child)s had a temperature measurement."
-msgstr ""
+msgstr "Se ha tomado la temperatura a %(child)s."
 
 #: core/utils.py:41
 #, python-format
@@ -2406,20 +2342,16 @@ msgid "%(model)s reading for %(child)s updated."
 msgstr "%(model)s lectura para %(child)s actualizada."
 
 #: dashboard/layout.py:92 dashboard/templates/cards/quick_actions.html:4
-#, fuzzy
-#| msgid "Actions"
 msgid "Quick Actions"
-msgstr "Acciones"
+msgstr "Acciones rápidas"
 
 #: dashboard/layout.py:97 dashboard/templates/cards/feeding_last.html:4
 msgid "Last Feeding"
 msgstr "Última Toma"
 
 #: dashboard/layout.py:98 dashboard/templates/cards/notes_recent.html:4
-#, fuzzy
-#| msgid "Recent Sleep"
 msgid "Recent Notes"
-msgstr "Sueño reciente"
+msgstr "Notas recientes"
 
 #: dashboard/layout.py:99 dashboard/templates/cards/diaperchange_last.html:4
 msgid "Last Diaper Change"
@@ -2430,19 +2362,16 @@ msgid "Last Pumping"
 msgstr "Últimas extracciones"
 
 #: dashboard/layout.py:101 dashboard/templates/cards/pumping_recent.html:4
-#, fuzzy
 msgid "Recent Pumpings"
-msgstr "Extracciones"
+msgstr "Extracciones recientes"
 
 #: dashboard/layout.py:102 dashboard/templates/cards/sleep_last.html:4
 msgid "Last Sleep"
 msgstr "Último sueño"
 
 #: dashboard/layout.py:103 dashboard/templates/cards/medication_last.html:4
-#, fuzzy
-#| msgid "Last Feeding"
 msgid "Last Medication"
-msgstr "Última Toma"
+msgstr "Última medicación"
 
 #: dashboard/layout.py:104 dashboard/templates/cards/feeding_last_method.html:4
 msgid "Last Feeding Method"
@@ -2450,7 +2379,7 @@ msgstr "Último Método de Toma"
 
 #: dashboard/layout.py:105 dashboard/templates/cards/feeding_recent.html:4
 msgid "Recent Feedings"
-msgstr ""
+msgstr "Tomas recientes"
 
 #: dashboard/layout.py:106 dashboard/templates/cards/statistics.html:6
 msgid "Statistics"
@@ -2469,15 +2398,12 @@ msgid "Today's Tummy Time"
 msgstr "Tiempo Boca Abajo Hoy"
 
 #: dashboard/layout.py:111 dashboard/templates/cards/breastfeeding.html:4
-#, fuzzy
 msgid "Breastfeeding"
-msgstr "Última Toma"
+msgstr "Lactancia"
 
 #: dashboard/layout.py:115 dashboard/templates/cards/percentiles.html:4
-#, fuzzy
-#| msgid "Recent Sleep"
 msgid "Percentiles"
-msgstr "Sueño reciente"
+msgstr "Percentiles"
 
 #: dashboard/layout.py:128 reports/templates/reports/report_list.html:17
 msgid "Body Mass Index (BMI)"
@@ -2497,7 +2423,7 @@ msgstr "Tipos de Cambio de Pañal"
 
 #: dashboard/layout.py:131 reports/templates/reports/report_list.html:25
 msgid "Diaper Intervals"
-msgstr ""
+msgstr "Intervalos entre cambios de pañal"
 
 #: dashboard/layout.py:132 reports/graphs/diaperchange_lifetimes.py:35
 #: reports/templates/reports/diaperchange_lifetimes.html:4
@@ -2520,32 +2446,28 @@ msgstr "Duración de Tomas (Media)"
 #: reports/templates/reports/feeding_intervals.html:9
 #: reports/templates/reports/report_list.html:35
 msgid "Feeding Intervals"
-msgstr ""
+msgstr "Intervalos entre tomas"
 
 #: dashboard/layout.py:136 reports/graphs/feeding_pattern.py:178
 #: reports/templates/reports/feeding_pattern.html:4
 #: reports/templates/reports/feeding_pattern.html:9
 #: reports/templates/reports/report_list.html:37
-#, fuzzy
 msgid "Feeding Pattern"
-msgstr "Patrón de Sueño"
+msgstr "Patrón de tomas"
 
 #: dashboard/layout.py:143
 #: reports/templates/reports/medication_frequency.html:4
 #: reports/templates/reports/medication_frequency.html:9
 #: reports/templates/reports/report_list.html:65
-#, fuzzy
-#| msgid "Feeding frequency"
 msgid "Medication Frequency"
-msgstr "Frecuencia de tomas"
+msgstr "Frecuencia de medicación"
 
 #: dashboard/layout.py:144
 #: reports/templates/reports/medication_intervals.html:4
 #: reports/templates/reports/medication_intervals.html:9
 #: reports/templates/reports/report_list.html:67
-#, fuzzy
 msgid "Medication Intervals"
-msgstr "Cantidad de Tomas"
+msgstr "Intervalos de medicación"
 
 #: dashboard/layout.py:145 reports/templates/reports/report_list.html:71
 msgid "Pumping Amounts"
@@ -2570,58 +2492,48 @@ msgid "Tummy Time Durations (Sum)"
 msgstr "Tiempo Boca Abajo (Suma)"
 
 #: dashboard/layout.py:167 reports/templates/reports/report_list.html:44
-#, fuzzy
-#| msgid "No head circumference entries found."
 msgid "WHO Head Circumference Percentiles for Boys in cm"
-msgstr "No hay entradas de perímetro craneal."
+msgstr "Percentiles de perímetro craneal de la OMS para niños, en cm"
 
 #: dashboard/layout.py:172 reports/templates/reports/report_list.html:48
-#, fuzzy
-#| msgid "No head circumference entries found."
 msgid "WHO Head Circumference Percentiles for Girls in cm"
-msgstr "No hay entradas de perímetro craneal."
+msgstr "Percentiles de perímetro craneal de la OMS para niñas, en cm"
 
 #: dashboard/layout.py:174 reports/templates/reports/report_list.html:56
 msgid "WHO Height Percentiles for Boys in cm"
-msgstr ""
+msgstr "Percentiles de altura de la OMS para niños, en cm"
 
 #: dashboard/layout.py:175 reports/templates/reports/report_list.html:60
 msgid "WHO Height Percentiles for Girls in cm"
-msgstr ""
+msgstr "Percentiles de altura de la OMS para niñas, en cm"
 
 #: dashboard/layout.py:176 reports/templates/reports/report_list.html:92
 msgid "WHO Weight Percentiles for Boys in kg"
-msgstr ""
+msgstr "Percentiles de peso de la OMS para niños, en kg"
 
 #: dashboard/layout.py:177 reports/templates/reports/report_list.html:96
 msgid "WHO Weight Percentiles for Girls in kg"
-msgstr ""
+msgstr "Percentiles de peso de la OMS para niñas, en kg"
 
 #: dashboard/models.py:23
 msgid "Columns"
-msgstr ""
+msgstr "Columnas"
 
 #: dashboard/models.py:24 dashboard/templates/dashboard/child.html:185
 msgid "Hidden cards"
-msgstr ""
+msgstr "Tarjetas ocultas"
 
 #: dashboard/models.py:25
-#, fuzzy
-#| msgid "Timer actions"
 msgid "Quick actions"
-msgstr "Acciones de temporizador"
+msgstr "Acciones rápidas"
 
 #: dashboard/models.py:27
-#, fuzzy
-#| msgid "Timer actions"
 msgid "Hidden quick actions"
-msgstr "Acciones de temporizador"
+msgstr "Acciones rápidas ocultas"
 
 #: dashboard/models.py:30
-#, fuzzy
-#| msgid "User Settings"
 msgid "Card settings"
-msgstr "Configuración del Usuario"
+msgstr "Configuración de la tarjeta"
 
 #: dashboard/templates/cards/breastfeeding.html:10
 #: dashboard/templates/cards/diaperchange_types.html:10
@@ -2630,17 +2542,15 @@ msgstr "Última semana"
 
 #: dashboard/templates/cards/breastfeeding.html:18
 msgid "left"
-msgstr ""
+msgstr "izquierdo"
 
 #: dashboard/templates/cards/breastfeeding.html:20
-#, fuzzy
 msgid "right"
-msgstr "Altura"
+msgstr "derecho"
 
 #: dashboard/templates/cards/breastfeeding.html:31
-#, fuzzy
 msgid "feedings in"
-msgstr "Tomas"
+msgstr "tomas en"
 
 #: dashboard/templates/cards/diaperchange_last.html:9
 #: dashboard/templates/cards/feeding_last.html:9
@@ -2649,9 +2559,9 @@ msgstr "Tomas"
 #: dashboard/templates/cards/sleep_last.html:9
 #: dashboard/templates/cards/tummytime_last.html:9
 #: dashboard/templatetags/dashboard_layout.py:202
-#, fuzzy, python-format
+#, python-format
 msgid "%(time_ago)s ago"
-msgstr "hace %(time)s"
+msgstr "hace %(time_ago)s"
 
 #: dashboard/templates/cards/diaperchange_types.html:20
 msgid "wet"
@@ -2662,9 +2572,8 @@ msgid "solid"
 msgstr "sólido"
 
 #: dashboard/templates/cards/diaperchange_types.html:43
-#, fuzzy
 msgid "changes"
-msgstr "Cambios"
+msgstr "cambios"
 
 #: dashboard/templates/cards/feeding_last_method.html:17
 msgid "most recent"
@@ -2686,80 +2595,68 @@ msgstr[1] "%(counter)s entradas de alimentación"
 
 #: dashboard/templates/cards/medication_last.html:27
 msgid "Next dose ready"
-msgstr ""
+msgstr "Siguiente dosis lista"
 
 #: dashboard/templates/cards/medication_last.html:30
 #, python-format
 msgid "Next dose at %(next_time)s"
-msgstr ""
+msgstr "Siguiente dosis a las %(next_time)s"
 
 #: dashboard/templates/cards/notes_recent.html:8
-#, fuzzy
-#| msgid "most recent"
 msgid "recent"
-msgstr "más reciente"
+msgstr "reciente"
 
 #: dashboard/templates/cards/notes_recent.html:23
-#, fuzzy
-#| msgid "Notes"
 msgid "No notes"
-msgstr "Notas"
+msgstr "Sin notas"
 
 #: dashboard/templates/cards/percentiles.html:15
-#, fuzzy
-#| msgid "Measurements"
 msgid "Measures"
-msgstr "Mediciones"
+msgstr "Medidas"
 
 #: dashboard/templates/cards/percentiles.html:28
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: dashboard/templates/cards/percentiles.html:32
 msgid ""
 "Set whether the child is a boy or a girl to compare with the WHO standards."
-msgstr ""
+msgstr "Indica si es niño o niña para compararlo con los estándares de la OMS."
 
 #: dashboard/templates/cards/percentiles.html:59
-#, fuzzy
-#| msgid "Measurements"
 msgid "No measurements"
-msgstr "Mediciones"
+msgstr "Sin mediciones"
 
 #: dashboard/templates/cards/pumping_recent.html:23
-#, fuzzy, python-format
-#| msgid "%(counter)s feeding"
-#| msgid_plural "%(counter)s feedings"
+#, python-format
 msgid "%(counter)s pumping"
 msgid_plural "%(counter)s pumpings"
-msgstr[0] "%(counter)s entradas de alimentación"
-msgstr[1] "%(counter)s entradas de alimentación"
+msgstr[0] "%(counter)s extracción"
+msgstr[1] "%(counter)s extracciones"
 
 #: dashboard/templates/cards/quick_actions.html:22
 #: dashboard/templates/dashboard/card_controls.html:22
 msgid "Move up"
-msgstr ""
+msgstr "Subir"
 
 #: dashboard/templates/cards/quick_actions.html:27
 #: dashboard/templates/dashboard/card_controls.html:27
 msgid "Move down"
-msgstr ""
+msgstr "Bajar"
 
 #: dashboard/templates/cards/quick_actions.html:29
 #: dashboard/templates/dashboard/card_controls.html:34
 msgid "Hide"
-msgstr ""
+msgstr "Ocultar"
 
 #: dashboard/templates/cards/quick_actions.html:45
 #: dashboard/templates/dashboard/child.html:199
 msgid "Show"
-msgstr ""
+msgstr "Mostrar"
 
 #: dashboard/templates/cards/quick_actions.html:73
-#, fuzzy
-#| msgid "Start time"
 msgid "Start a timer"
-msgstr "Tiempo inicio"
+msgstr "Iniciar un temporizador"
 
 #: dashboard/templates/cards/report.html:13
 #: reports/templates/reports/report_base.html:13
@@ -2792,8 +2689,8 @@ msgstr "No hay datos todavía"
 #, python-format
 msgid "%(count)s timer"
 msgid_plural "%(count)s timers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s temporizador"
+msgstr[1] "%(count)s temporizadores"
 
 #: dashboard/templates/cards/timer_list.html:25
 #, python-format
@@ -2815,16 +2712,15 @@ msgstr "Nunca"
 
 #: dashboard/templates/dashboard/card_controls.html:17
 msgid "Move left"
-msgstr ""
+msgstr "Mover a la izquierda"
 
 #: dashboard/templates/dashboard/card_controls.html:32
-#, fuzzy
 msgid "Move right"
-msgstr "Altura"
+msgstr "Mover a la derecha"
 
 #: dashboard/templates/dashboard/child.html:128
 msgid "Done"
-msgstr ""
+msgstr "Hecho"
 
 #: dashboard/templates/dashboard/child.html:136
 #: dashboard/templates/dashboard/child_button_group.html:18
@@ -2837,15 +2733,15 @@ msgstr "Reportes"
 
 #: dashboard/templates/dashboard/child.html:140
 msgid "Customize"
-msgstr ""
+msgstr "Personalizar"
 
 #: dashboard/templates/dashboard/child.html:175
 msgid "Add a graph card"
-msgstr ""
+msgstr "Añadir una tarjeta de gráfico"
 
 #: dashboard/templates/dashboard/child.html:203
 msgid "Remove"
-msgstr ""
+msgstr "Quitar"
 
 #: dashboard/templates/dashboard/child_button_group.html:4
 msgid "Child actions"
@@ -2924,11 +2820,11 @@ msgstr "Total"
 #: reports/templates/reports/diaperchange_intervals.html:4
 #: reports/templates/reports/diaperchange_intervals.html:9
 msgid "Diaper Change Intervals"
-msgstr ""
+msgstr "Intervalos entre cambios de pañal"
 
 #: reports/graphs/diaperchange_intervals.py:79
 msgid "Interval (hours)"
-msgstr ""
+msgstr "Intervalo (horas)"
 
 #: reports/graphs/diaperchange_lifetimes.py:36
 msgid "Time between changes (hours)"
@@ -2939,9 +2835,8 @@ msgid "Number of changes"
 msgstr "Número de cambios"
 
 #: reports/graphs/feeding_amounts.py:69
-#, fuzzy
 msgid "Total Feeding Amount by Type"
-msgstr "<b>Cantidad de tomas totales por tipo</b>"
+msgstr "Cantidad total de tomas por tipo"
 
 #: reports/graphs/feeding_amounts.py:72
 msgid "Feeding amount"
@@ -2972,16 +2867,15 @@ msgstr "Número de tomas"
 #: reports/graphs/feeding_intervals.py:32
 #: reports/graphs/medication_intervals.py:37
 msgid "Interval"
-msgstr ""
+msgstr "Intervalo"
 
 #: reports/graphs/feeding_intervals.py:41
-#, fuzzy
 msgid "Feeding intervals"
-msgstr "Cantidad de Tomas"
+msgstr "Intervalos entre tomas"
 
 #: reports/graphs/feeding_intervals.py:47
 msgid "Feeding interval (hours)"
-msgstr ""
+msgstr "Intervalo entre tomas (horas)"
 
 #: reports/graphs/feeding_pattern.py:195 reports/graphs/sleep_pattern.py:182
 msgid "Time of day"
@@ -2989,56 +2883,47 @@ msgstr "Hora del día"
 
 #: reports/graphs/height_change.py:53 reports/graphs/weight_change.py:51
 msgid "P3"
-msgstr ""
+msgstr "P3"
 
 #: reports/graphs/height_change.py:59 reports/graphs/weight_change.py:57
 msgid "P15"
-msgstr ""
+msgstr "P15"
 
 #: reports/graphs/height_change.py:65 reports/graphs/weight_change.py:63
 msgid "P50"
-msgstr ""
+msgstr "P50"
 
 #: reports/graphs/height_change.py:71 reports/graphs/weight_change.py:69
 msgid "P85"
-msgstr ""
+msgstr "P85"
 
 #: reports/graphs/height_change.py:77 reports/graphs/weight_change.py:75
 msgid "P97"
-msgstr ""
+msgstr "P97"
 
 #: reports/graphs/medication_frequency.py:30
-#, fuzzy
-#| msgid "Feeding frequency"
 msgid "Frequency"
-msgstr "Frecuencia de tomas"
+msgstr "Frecuencia"
 
 #: reports/graphs/medication_frequency.py:38
-#, fuzzy
-#| msgid "Feeding frequency"
 msgid "Medication frequency"
-msgstr "Frecuencia de tomas"
+msgstr "Frecuencia de medicación"
 
 #: reports/graphs/medication_frequency.py:44
-#, fuzzy
-#| msgid "Number of feedings"
 msgid "Number of medications"
-msgstr "Número de tomas"
+msgstr "Número de medicaciones"
 
 #: reports/graphs/medication_intervals.py:46
-#, fuzzy
 msgid "Medication intervals"
-msgstr "Cantidad de Tomas"
+msgstr "Intervalos de medicación"
 
 #: reports/graphs/medication_intervals.py:52
-#, fuzzy
 msgid "Medication interval (hours)"
-msgstr "Cantidad de Tomas"
+msgstr "Intervalo de medicación (horas)"
 
 #: reports/graphs/pumping_amounts.py:59
-#, fuzzy
 msgid "Total Pumping Amount"
-msgstr "<b>Cantidad total extraída</b>"
+msgstr "Cantidad total extraída"
 
 #: reports/graphs/pumping_amounts.py:62
 msgid "Pumping Amount"
