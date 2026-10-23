@@ -586,11 +586,11 @@ msgstr "Registre d'IMC"
 #: reports/templates/reports/head_circumference_change.html:9
 #: reports/templates/reports/report_list.html:41
 msgid "Head Circumference"
-msgstr "Perímetre cranial"
+msgstr "Perímetre cefàlic"
 
 #: babubi/templates/babubi/nav-dropdown.html:292
 msgid "Head Circumference entry"
-msgstr "Registre de perímetre cranial"
+msgstr "Registre de perímetre cefàlic"
 
 #: babubi/templates/babubi/nav-dropdown.html:299 core/growth/__init__.py:55
 #: core/models.py:426 core/models.py:438 core/models.py:439 core/models.py:442
@@ -1789,17 +1789,17 @@ msgstr "No s'ha trobat cap presa."
 
 #: core/templates/core/head_circumference_confirm_delete.html:4
 msgid "Delete a Head Circumference Entry"
-msgstr "Suprimeix un registre de perímetre cranial"
+msgstr "Suprimeix un registre de perímetre cefàlic"
 
 #: core/templates/core/head_circumference_form.html:7
 #: core/templates/core/head_circumference_form.html:17
 #: core/templates/core/head_circumference_form.html:26
 msgid "Add a Head Circumference Entry"
-msgstr "Afegeix un registre de perímetre cranial"
+msgstr "Afegeix un registre de perímetre cefàlic"
 
 #: core/templates/core/head_circumference_list.html:25
 msgid "No head circumference entries found."
-msgstr "No s'ha trobat cap registre de perímetre cranial."
+msgstr "No s'ha trobat cap registre de perímetre cefàlic."
 
 #: core/templates/core/height_confirm_delete.html:4
 msgid "Delete a Height Entry"
@@ -1950,7 +1950,7 @@ msgstr "Mesures d'IMC"
 
 #: core/templates/core/tag_detail.html:55
 msgid "Head Circumference Measurements"
-msgstr "Mesures de perímetre cranial"
+msgstr "Mesures de perímetre cefàlic"
 
 #: core/templates/core/tag_detail.html:60
 msgid "Height Measurements"
@@ -2492,11 +2492,11 @@ msgstr "Durada de panxa avall (suma)"
 
 #: dashboard/layout.py:167 reports/templates/reports/report_list.html:44
 msgid "WHO Head Circumference Percentiles for Boys in cm"
-msgstr "Percentils de perímetre cranial de l'OMS per a nens, en cm"
+msgstr "Percentils de perímetre cefàlic de l'OMS per a nens, en cm"
 
 #: dashboard/layout.py:172 reports/templates/reports/report_list.html:48
 msgid "WHO Head Circumference Percentiles for Girls in cm"
-msgstr "Percentils de perímetre cranial de l'OMS per a nenes, en cm"
+msgstr "Percentils de perímetre cefàlic de l'OMS per a nenes, en cm"
 
 #: dashboard/layout.py:174 reports/templates/reports/report_list.html:56
 msgid "WHO Height Percentiles for Boys in cm"
@@ -2772,7 +2772,7 @@ msgstr "Canvi d'alçada per setmana"
 
 #: dashboard/templatetags/cards.py:561
 msgid "Head circumference change per week"
-msgstr "Canvi de perímetre cranial per setmana"
+msgstr "Canvi de perímetre cefàlic per setmana"
 
 #: dashboard/templatetags/cards.py:571
 msgid "BMI change per week"
@@ -2974,7 +2974,7 @@ msgstr "Quantitats dels bolquers"
 #~ msgstr "Afegeix una presa"
 
 #~ msgid "Add Head Circumference"
-#~ msgstr "Afegeix un perímetre cranial"
+#~ msgstr "Afegeix un perímetre cefàlic"
 
 #~ msgid "Add Height"
 #~ msgstr "Afegeix una alçada"
