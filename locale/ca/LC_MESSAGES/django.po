@@ -12,7 +12,7 @@ msgstr ""
 
 #: api/authentication.py:15 babubi/middleware.py:260
 msgid "Your access has expired."
-msgstr ""
+msgstr "L'accés ha caducat."
 
 #: babubi/admin.py:12 babubi/admin.py:13
 #: babubi/templates/babubi/nav-dropdown.html:353
@@ -41,7 +41,7 @@ msgstr "Limita l'usuari a consultar les dades."
 
 #: babubi/forms.py:21 babubi/templates/babubi/user_list.html:21
 msgid "Caregiver"
-msgstr ""
+msgstr "Cuidador"
 
 #: babubi/forms.py:23
 msgid ""
@@ -50,23 +50,29 @@ msgid ""
 "child. Cannot delete entries or reach pumping, height, BMI, head "
 "circumference, user management or settings."
 msgstr ""
+"Permet afegir i editar registres de cura (preses, canvis de bolquer, son, "
+"temporitzadors, medicació, temperatura, pes, notes i panxa avall) de tots "
+"els nadons. No pot suprimir registres ni accedir a extraccions, alçada, IMC, "
+"perímetre cefàlic, gestió d'usuaris ni configuració."
 
 #: babubi/forms.py:31 babubi/models.py:164
 msgid "Access expires"
-msgstr ""
+msgstr "L'accés caduca"
 
 #: babubi/forms.py:33 babubi/models.py:161
 msgid ""
 "Optional. After this time the user can no longer sign in or use the API."
 msgstr ""
+"Opcional. Passat aquest moment, l'usuari ja no pot iniciar sessió ni fer "
+"servir l'API."
 
 #: babubi/forms.py:74
 msgid "A user cannot be both read only and caregiver."
-msgstr ""
+msgstr "Un usuari no pot ser alhora de només lectura i cuidador."
 
 #: babubi/forms.py:79
 msgid "A user cannot be both staff and caregiver."
-msgstr ""
+msgstr "Un usuari no pot ser alhora personal i cuidador."
 
 #: babubi/models.py:22
 msgid "Refresh rate"
@@ -133,21 +139,19 @@ msgstr "Zona horària"
 
 #: babubi/models.py:128
 msgid "Automatic"
-msgstr ""
+msgstr "Automàtic"
 
 #: babubi/models.py:129
-#, fuzzy
-#| msgid "right"
 msgid "Light"
-msgstr "dret"
+msgstr "Clar"
 
 #: babubi/models.py:130
 msgid "Dark"
-msgstr ""
+msgstr "Fosc"
 
 #: babubi/models.py:143
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: babubi/models.py:147 babubi/models.py:148 babubi/models.py:149
 #: babubi/models.py:150 babubi/models.py:151
@@ -1296,18 +1300,16 @@ msgid "Timer"
 msgstr "Temporitzador"
 
 #: core/forms.py:184
-#, fuzzy
-#| msgid "The path %(path)s does not exist."
 msgid "This timer does not exist."
-msgstr "El camí %(path)s no existeix."
+msgstr "Aquest temporitzador no existeix."
 
 #: core/forms.py:187 core/forms.py:208
 msgid "You do not have permission to consume timers."
-msgstr ""
+msgstr "No teniu permís per consumir temporitzadors."
 
 #: core/forms.py:204
 msgid "This timer no longer exists."
-msgstr ""
+msgstr "Aquest temporitzador ja no existeix."
 
 #: core/forms.py:253
 msgid ""
@@ -1403,11 +1405,11 @@ msgstr "Darrer ús"
 
 #: core/models.py:130
 msgid "You do not have permission to change tags."
-msgstr ""
+msgstr "No teniu permís per canviar etiquetes."
 
 #: core/models.py:133
 msgid "You do not have permission to create tags."
-msgstr ""
+msgstr "No teniu permís per crear etiquetes."
 
 #: core/models.py:173 core/models.py:224 core/models.py:265 core/models.py:322
 #: core/models.py:392 core/models.py:424 core/models.py:476 core/models.py:505
