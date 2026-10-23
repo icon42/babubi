@@ -12249,6 +12249,37 @@ textarea.form-control-lg {
   color: var(--bs-secondary-color);
 }
 
+.permission-matrix {
+  margin-bottom: 1rem;
+}
+.permission-matrix legend {
+  float: none;
+  width: auto;
+  font-size: inherit;
+}
+.permission-matrix table {
+  max-width: 32rem;
+}
+.permission-matrix th {
+  font-weight: 500;
+}
+.permission-matrix thead th:not(:first-child),
+.permission-matrix td {
+  width: 5.5rem;
+  text-align: center;
+}
+.permission-matrix .form-check-input {
+  float: none;
+  margin: 0;
+}
+.permission-matrix .permission-matrix-all th {
+  font-weight: 600;
+}
+.permission-matrix input:disabled + *,
+.permission-matrix input:disabled {
+  opacity: 0.5;
+}
+
 .breadcrumb {
   margin-bottom: 0;
 }
