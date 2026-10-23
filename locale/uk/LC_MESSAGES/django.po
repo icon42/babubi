@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Babubi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 10:17+0000\n"
+"POT-Creation-Date: 2026-10-23 11:12+0000\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,41 +32,32 @@ msgstr "Налаштування"
 msgid "Dashboard"
 msgstr "Огляд"
 
-#: babubi/forms.py:16 babubi/templates/babubi/user_list.html:20
-msgid "Read only"
-msgstr "Лише для читання"
-
-#: babubi/forms.py:17
-msgid "Restricts user to viewing data only."
-msgstr "Дозволити користувачам лише читання."
-
-#: babubi/forms.py:21 babubi/templates/babubi/user_list.html:21
-msgid "Caregiver"
-msgstr ""
-
-#: babubi/forms.py:23
-msgid ""
-"Allows adding and editing care entries (feedings, diaper changes, sleep, "
-"timers, medication, temperature, weight, notes and tummy time) for every "
-"child. Cannot delete entries or reach pumping, height, BMI, head "
-"circumference, user management or settings."
-msgstr ""
-
-#: babubi/forms.py:31 babubi/models.py:164
+#: babubi/forms.py:22 babubi/models.py:164
 msgid "Access expires"
 msgstr ""
 
-#: babubi/forms.py:33 babubi/models.py:161
+#: babubi/forms.py:24 babubi/models.py:161
 msgid ""
 "Optional. After this time the user can no longer sign in or use the API."
 msgstr ""
 
-#: babubi/forms.py:74
-msgid "A user cannot be both read only and caregiver."
+#: babubi/forms.py:29 babubi/forms.py:30
+#: babubi/templates/babubi/user_form.html:55
+msgid "All"
 msgstr ""
 
-#: babubi/forms.py:79
-msgid "A user cannot be both staff and caregiver."
+#: babubi/forms.py:44 babubi/templatetags/babubi.py:100
+msgid "Administrator"
+msgstr ""
+
+#: babubi/forms.py:47
+msgid ""
+"Everything, users and site settings included; the permissions below do not "
+"apply."
+msgstr ""
+
+#: babubi/forms.py:50
+msgid "May manage users and site settings."
 msgstr ""
 
 #: babubi/models.py:22
@@ -169,7 +160,15 @@ msgstr ""
 msgid "Items Per Page"
 msgstr ""
 
-#: babubi/models.py:168
+#: babubi/models.py:169
+msgid "Reads everything"
+msgstr ""
+
+#: babubi/models.py:170
+msgid "Writes everything"
+msgstr ""
+
+#: babubi/models.py:173
 #, python-brace-format
 msgid "{user}'s Settings"
 msgstr "Налаштування для {user}"
@@ -186,118 +185,118 @@ msgstr ""
 msgid "Login with the identity provider failed. Try again later."
 msgstr ""
 
-#: babubi/settings/base.py:251
+#: babubi/settings/base.py:253
 #, fuzzy
 msgid "Brazilian Portuguese"
 msgstr "Portuguese"
 
-#: babubi/settings/base.py:252
+#: babubi/settings/base.py:254
 msgid "Catalan"
 msgstr "Catalan"
 
-#: babubi/settings/base.py:253
+#: babubi/settings/base.py:255
 msgid "Croatian"
 msgstr ""
 
-#: babubi/settings/base.py:254
+#: babubi/settings/base.py:256
 msgid "Czech"
 msgstr "Czech"
 
-#: babubi/settings/base.py:255
+#: babubi/settings/base.py:257
 msgid "Chinese (simplified)"
 msgstr "Chinese (simplified)"
 
-#: babubi/settings/base.py:256
+#: babubi/settings/base.py:258
 msgid "Chinese (traditional)"
 msgstr ""
 
-#: babubi/settings/base.py:257
+#: babubi/settings/base.py:259
 #, fuzzy
 #| msgid "Chinese (simplified)"
 msgid "Chinese (Taiwan)"
 msgstr "Chinese (simplified)"
 
-#: babubi/settings/base.py:258
+#: babubi/settings/base.py:260
 msgid "Danish"
 msgstr "Danish"
 
-#: babubi/settings/base.py:259
+#: babubi/settings/base.py:261
 msgid "Dutch"
 msgstr "Dutch"
 
-#: babubi/settings/base.py:260
+#: babubi/settings/base.py:262
 msgid "English (US)"
 msgstr "English (US)"
 
-#: babubi/settings/base.py:261
+#: babubi/settings/base.py:263
 msgid "English (UK)"
 msgstr "English (UK)"
 
-#: babubi/settings/base.py:262
+#: babubi/settings/base.py:264
 msgid "French"
 msgstr "French"
 
-#: babubi/settings/base.py:263
+#: babubi/settings/base.py:265
 msgid "Finnish"
 msgstr "Finnish"
 
-#: babubi/settings/base.py:264
+#: babubi/settings/base.py:266
 msgid "German"
 msgstr "German"
 
-#: babubi/settings/base.py:265
+#: babubi/settings/base.py:267
 msgid "Hebrew"
 msgstr ""
 
-#: babubi/settings/base.py:266
+#: babubi/settings/base.py:268
 msgid "Hungarian"
 msgstr "Hungarian"
 
-#: babubi/settings/base.py:267
+#: babubi/settings/base.py:269
 msgid "Italian"
 msgstr "Italian"
 
-#: babubi/settings/base.py:268
+#: babubi/settings/base.py:270
 msgid "Korean"
 msgstr ""
 
-#: babubi/settings/base.py:269
+#: babubi/settings/base.py:271
 msgid "Japanese"
 msgstr ""
 
-#: babubi/settings/base.py:270
+#: babubi/settings/base.py:272
 msgid "Norwegian Bokmål"
 msgstr "Norwegian Bokmål"
 
-#: babubi/settings/base.py:271
+#: babubi/settings/base.py:273
 msgid "Polish"
 msgstr "Polish"
 
-#: babubi/settings/base.py:272
+#: babubi/settings/base.py:274
 msgid "Portuguese"
 msgstr "Portuguese"
 
-#: babubi/settings/base.py:273
+#: babubi/settings/base.py:275
 msgid "Russian"
 msgstr "Russian"
 
-#: babubi/settings/base.py:274
+#: babubi/settings/base.py:276
 msgid "Serbian"
 msgstr ""
 
-#: babubi/settings/base.py:275
+#: babubi/settings/base.py:277
 msgid "Spanish"
 msgstr "Spanish"
 
-#: babubi/settings/base.py:276
+#: babubi/settings/base.py:278
 msgid "Swedish"
 msgstr "Swedish"
 
-#: babubi/settings/base.py:277
+#: babubi/settings/base.py:279
 msgid "Turkish"
 msgstr "Turkish"
 
-#: babubi/settings/base.py:278
+#: babubi/settings/base.py:280
 msgid "Ukrainian"
 msgstr ""
 
@@ -369,6 +368,7 @@ msgid "Filters"
 msgstr "Фільтри"
 
 #: babubi/templates/babubi/form.html:23
+#: babubi/templates/babubi/user_form.html:86
 #: babubi/templates/babubi/user_settings_form.html:122
 msgid "Submit"
 msgstr "Відправити"
@@ -852,7 +852,7 @@ msgstr "Розблокувати"
 #: babubi/templates/babubi/user_form.html:7
 #: babubi/templates/babubi/user_form.html:18
 #: babubi/templates/babubi/user_form.html:35
-#: babubi/templates/babubi/user_list.html:71
+#: babubi/templates/babubi/user_list.html:67
 msgid "Create User"
 msgstr "Створити користувача"
 
@@ -879,6 +879,26 @@ msgstr "Оновити"
 msgid "User locked."
 msgstr "Користувач заблокований."
 
+#: babubi/templates/babubi/user_form.html:48
+#, fuzzy
+#| msgid "Permission Denied"
+msgid "Permissions"
+msgstr "У доступі відмовлення"
+
+#: babubi/templates/babubi/user_form.html:58
+#, fuzzy
+#| msgid "Read only"
+msgid "Read"
+msgstr "Лише для читання"
+
+#: babubi/templates/babubi/user_form.html:59
+msgid "Write"
+msgstr ""
+
+#: babubi/templates/babubi/user_form.html:62
+msgid "All kinds of entry"
+msgstr ""
+
 #: babubi/templates/babubi/user_list.html:17
 #: core/templates/core/child_list.html:26
 msgid "First Name"
@@ -893,19 +913,23 @@ msgstr "Фамілія"
 msgid "Email"
 msgstr "Email"
 
-#: babubi/templates/babubi/user_list.html:22
+#: babubi/templates/babubi/user_list.html:20
+msgid "Access"
+msgstr ""
+
+#: babubi/templates/babubi/user_list.html:21
 msgid "Staff"
 msgstr "Персонал"
 
-#: babubi/templates/babubi/user_list.html:23 core/models.py:650
+#: babubi/templates/babubi/user_list.html:22 core/models.py:650
 msgid "Active"
 msgstr "Активний"
 
-#: babubi/templates/babubi/user_list.html:24
+#: babubi/templates/babubi/user_list.html:23
 msgid "Locked"
 msgstr "Заблокований"
 
-#: babubi/templates/babubi/user_list.html:25
+#: babubi/templates/babubi/user_list.html:24
 #: core/templates/core/child_list.html:29
 #: core/templates/core/child_list.html:53 core/templates/core/day_list.html:53
 #: core/templates/core/tag_list.html:23 core/templates/core/tag_list.html:36
@@ -913,7 +937,7 @@ msgstr "Заблокований"
 msgid "Actions"
 msgstr "Дії"
 
-#: babubi/templates/babubi/user_list.html:62
+#: babubi/templates/babubi/user_list.html:58
 msgid "No users found."
 msgstr "Користувачів не знайдено."
 
@@ -1178,12 +1202,29 @@ msgstr ""
 "Введіть електронну адресу вашого облікового запису у форму нижче. Якщо "
 "адреса правильна, ви отримаєте інструкції щодо скидання пароля."
 
-#: babubi/templatetags/babubi.py:99
+#: babubi/templatetags/babubi.py:103
+msgid "Everything"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:105
+msgid "Read only"
+msgstr "Лише для читання"
+
+#: babubi/templatetags/babubi.py:106
+#, python-format
+msgid "Reads %(read)s, writes %(write)s"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:107 babubi/templatetags/babubi.py:108
+msgid "all"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:115
 #, fuzzy, python-format
 msgid "Are you sure you want to delete %(name)s?"
 msgstr "Ви дійсно хочете видалити %(number)s неактивний таймер?"
 
-#: babubi/templatetags/babubi.py:109
+#: babubi/templatetags/babubi.py:125
 #, fuzzy, python-format
 msgid "Are you sure you want to unlock %(name)s?"
 msgstr "Ви дійсно хочете видалити %(number)s неактивний таймер?"
@@ -3131,6 +3172,9 @@ msgstr "Загальна тривалість (хвилини)"
 #: reports/templates/reports/diaperchange_amounts.html:9
 msgid "Diaper Amounts"
 msgstr "Кількість підгузків"
+
+#~ msgid "Restricts user to viewing data only."
+#~ msgstr "Дозволити користувачам лише читання."
 
 #, python-brace-format
 #~ msgid "Timer #{id}"

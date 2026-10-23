@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Babubi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 10:17+0000\n"
+"POT-Creation-Date: 2026-10-23 11:26+0000\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,48 +31,35 @@ msgstr "Configuració"
 msgid "Dashboard"
 msgstr "Tauler"
 
-#: babubi/forms.py:16 babubi/templates/babubi/user_list.html:20
-msgid "Read only"
-msgstr "Només lectura"
-
-#: babubi/forms.py:17
-msgid "Restricts user to viewing data only."
-msgstr "Limita l'usuari a consultar les dades."
-
-#: babubi/forms.py:21 babubi/templates/babubi/user_list.html:21
-msgid "Caregiver"
-msgstr "Cuidador"
-
-#: babubi/forms.py:23
-msgid ""
-"Allows adding and editing care entries (feedings, diaper changes, sleep, "
-"timers, medication, temperature, weight, notes and tummy time) for every "
-"child. Cannot delete entries or reach pumping, height, BMI, head "
-"circumference, user management or settings."
-msgstr ""
-"Permet afegir i editar registres de cura (preses, canvis de bolquer, son, "
-"temporitzadors, medicació, temperatura, pes, notes i panxa avall) de tots "
-"els nadons. No pot suprimir registres ni accedir a extraccions, alçada, IMC, "
-"perímetre cefàlic, gestió d'usuaris ni configuració."
-
-#: babubi/forms.py:31 babubi/models.py:164
+#: babubi/forms.py:22 babubi/models.py:164
 msgid "Access expires"
 msgstr "L'accés caduca"
 
-#: babubi/forms.py:33 babubi/models.py:161
+#: babubi/forms.py:24 babubi/models.py:161
 msgid ""
 "Optional. After this time the user can no longer sign in or use the API."
 msgstr ""
 "Opcional. Passat aquest moment, l'usuari ja no pot iniciar sessió ni fer "
 "servir l'API."
 
-#: babubi/forms.py:74
-msgid "A user cannot be both read only and caregiver."
-msgstr "Un usuari no pot ser alhora de només lectura i cuidador."
+#: babubi/forms.py:29 babubi/forms.py:30
+#: babubi/templates/babubi/user_form.html:55
+msgid "All"
+msgstr ""
 
-#: babubi/forms.py:79
-msgid "A user cannot be both staff and caregiver."
-msgstr "Un usuari no pot ser alhora personal i cuidador."
+#: babubi/forms.py:44 babubi/templatetags/babubi.py:100
+msgid "Administrator"
+msgstr ""
+
+#: babubi/forms.py:47
+msgid ""
+"Everything, users and site settings included; the permissions below do not "
+"apply."
+msgstr ""
+
+#: babubi/forms.py:50
+msgid "May manage users and site settings."
+msgstr ""
 
 #: babubi/models.py:22
 msgid "Refresh rate"
@@ -167,7 +154,15 @@ msgstr "Mostra-ho tot"
 msgid "Items Per Page"
 msgstr "Elements per pàgina"
 
-#: babubi/models.py:168
+#: babubi/models.py:169
+msgid "Reads everything"
+msgstr ""
+
+#: babubi/models.py:170
+msgid "Writes everything"
+msgstr ""
+
+#: babubi/models.py:173
 #, python-brace-format
 msgid "{user}'s Settings"
 msgstr "Configuració de {user}"
@@ -186,115 +181,115 @@ msgstr ""
 "No s'ha pogut iniciar la sessió amb el proveïdor d'identitat. Torneu-ho a "
 "provar més tard."
 
-#: babubi/settings/base.py:251
+#: babubi/settings/base.py:253
 msgid "Brazilian Portuguese"
 msgstr "Portuguès del Brasil"
 
-#: babubi/settings/base.py:252
+#: babubi/settings/base.py:254
 msgid "Catalan"
 msgstr "Català"
 
-#: babubi/settings/base.py:253
+#: babubi/settings/base.py:255
 msgid "Croatian"
 msgstr "Croat"
 
-#: babubi/settings/base.py:254
+#: babubi/settings/base.py:256
 msgid "Czech"
 msgstr "Txec"
 
-#: babubi/settings/base.py:255
+#: babubi/settings/base.py:257
 msgid "Chinese (simplified)"
 msgstr "Xinès (simplificat)"
 
-#: babubi/settings/base.py:256
+#: babubi/settings/base.py:258
 msgid "Chinese (traditional)"
 msgstr "Xinès (tradicional)"
 
-#: babubi/settings/base.py:257
+#: babubi/settings/base.py:259
 msgid "Chinese (Taiwan)"
 msgstr "Xinès (Taiwan)"
 
-#: babubi/settings/base.py:258
+#: babubi/settings/base.py:260
 msgid "Danish"
 msgstr "Danès"
 
-#: babubi/settings/base.py:259
+#: babubi/settings/base.py:261
 msgid "Dutch"
 msgstr "Neerlandès"
 
-#: babubi/settings/base.py:260
+#: babubi/settings/base.py:262
 msgid "English (US)"
 msgstr "Anglès (EUA)"
 
-#: babubi/settings/base.py:261
+#: babubi/settings/base.py:263
 msgid "English (UK)"
 msgstr "Anglès (Regne Unit)"
 
-#: babubi/settings/base.py:262
+#: babubi/settings/base.py:264
 msgid "French"
 msgstr "Francès"
 
-#: babubi/settings/base.py:263
+#: babubi/settings/base.py:265
 msgid "Finnish"
 msgstr "Finlandès"
 
-#: babubi/settings/base.py:264
+#: babubi/settings/base.py:266
 msgid "German"
 msgstr "Alemany"
 
-#: babubi/settings/base.py:265
+#: babubi/settings/base.py:267
 msgid "Hebrew"
 msgstr "Hebreu"
 
-#: babubi/settings/base.py:266
+#: babubi/settings/base.py:268
 msgid "Hungarian"
 msgstr "Hongarès"
 
-#: babubi/settings/base.py:267
+#: babubi/settings/base.py:269
 msgid "Italian"
 msgstr "Italià"
 
-#: babubi/settings/base.py:268
+#: babubi/settings/base.py:270
 msgid "Korean"
 msgstr "Coreà"
 
-#: babubi/settings/base.py:269
+#: babubi/settings/base.py:271
 msgid "Japanese"
 msgstr "Japonès"
 
-#: babubi/settings/base.py:270
+#: babubi/settings/base.py:272
 msgid "Norwegian Bokmål"
 msgstr "Noruec (bokmål)"
 
-#: babubi/settings/base.py:271
+#: babubi/settings/base.py:273
 msgid "Polish"
 msgstr "Polonès"
 
-#: babubi/settings/base.py:272
+#: babubi/settings/base.py:274
 msgid "Portuguese"
 msgstr "Portuguès"
 
-#: babubi/settings/base.py:273
+#: babubi/settings/base.py:275
 msgid "Russian"
 msgstr "Rus"
 
-#: babubi/settings/base.py:274
+#: babubi/settings/base.py:276
 msgid "Serbian"
 msgstr "Serbi"
 
-#: babubi/settings/base.py:275
+#: babubi/settings/base.py:277
 msgid "Spanish"
 msgstr "Espanyol"
 
-#: babubi/settings/base.py:276
+#: babubi/settings/base.py:278
 msgid "Swedish"
 msgstr "Suec"
 
-#: babubi/settings/base.py:277
+#: babubi/settings/base.py:279
 msgid "Turkish"
 msgstr "Turc"
 
-#: babubi/settings/base.py:278
+#: babubi/settings/base.py:280
 msgid "Ukrainian"
 msgstr "Ucraïnès"
 
@@ -369,6 +364,7 @@ msgid "Filters"
 msgstr "Filtres"
 
 #: babubi/templates/babubi/form.html:23
+#: babubi/templates/babubi/user_form.html:86
 #: babubi/templates/babubi/user_settings_form.html:122
 msgid "Submit"
 msgstr "Desa"
@@ -841,7 +837,7 @@ msgstr "Desbloqueja"
 #: babubi/templates/babubi/user_form.html:7
 #: babubi/templates/babubi/user_form.html:18
 #: babubi/templates/babubi/user_form.html:35
-#: babubi/templates/babubi/user_list.html:71
+#: babubi/templates/babubi/user_list.html:67
 msgid "Create User"
 msgstr "Crea un usuari"
 
@@ -868,6 +864,26 @@ msgstr "Actualitza"
 msgid "User locked."
 msgstr "L'usuari està bloquejat."
 
+#: babubi/templates/babubi/user_form.html:48
+#, fuzzy
+#| msgid "Permission Denied"
+msgid "Permissions"
+msgstr "Permís denegat"
+
+#: babubi/templates/babubi/user_form.html:58
+#, fuzzy
+#| msgid "Read only"
+msgid "Read"
+msgstr "Només lectura"
+
+#: babubi/templates/babubi/user_form.html:59
+msgid "Write"
+msgstr ""
+
+#: babubi/templates/babubi/user_form.html:62
+msgid "All kinds of entry"
+msgstr ""
+
 #: babubi/templates/babubi/user_list.html:17
 #: core/templates/core/child_list.html:26
 msgid "First Name"
@@ -882,19 +898,25 @@ msgstr "Cognoms"
 msgid "Email"
 msgstr "Correu electrònic"
 
-#: babubi/templates/babubi/user_list.html:22
+#: babubi/templates/babubi/user_list.html:20
+#, fuzzy
+#| msgid "Access expires"
+msgid "Access"
+msgstr "L'accés caduca"
+
+#: babubi/templates/babubi/user_list.html:21
 msgid "Staff"
 msgstr "Personal"
 
-#: babubi/templates/babubi/user_list.html:23 core/models.py:650
+#: babubi/templates/babubi/user_list.html:22 core/models.py:650
 msgid "Active"
 msgstr "Actiu"
 
-#: babubi/templates/babubi/user_list.html:24
+#: babubi/templates/babubi/user_list.html:23
 msgid "Locked"
 msgstr "Bloquejat"
 
-#: babubi/templates/babubi/user_list.html:25
+#: babubi/templates/babubi/user_list.html:24
 #: core/templates/core/child_list.html:29
 #: core/templates/core/child_list.html:53 core/templates/core/day_list.html:53
 #: core/templates/core/tag_list.html:23 core/templates/core/tag_list.html:36
@@ -902,7 +924,7 @@ msgstr "Bloquejat"
 msgid "Actions"
 msgstr "Accions"
 
-#: babubi/templates/babubi/user_list.html:62
+#: babubi/templates/babubi/user_list.html:58
 msgid "No users found."
 msgstr "No s'ha trobat cap usuari."
 
@@ -1161,12 +1183,29 @@ msgstr ""
 "Introduïu l'adreça electrònica del compte al formulari següent. Si l'adreça "
 "és vàlida, rebreu instruccions per restablir la contrasenya."
 
-#: babubi/templatetags/babubi.py:99
+#: babubi/templatetags/babubi.py:103
+msgid "Everything"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:105
+msgid "Read only"
+msgstr "Només lectura"
+
+#: babubi/templatetags/babubi.py:106
+#, python-format
+msgid "Reads %(read)s, writes %(write)s"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:107 babubi/templatetags/babubi.py:108
+msgid "all"
+msgstr ""
+
+#: babubi/templatetags/babubi.py:115
 #, python-format
 msgid "Are you sure you want to delete %(name)s?"
 msgstr "Segur que voleu suprimir %(name)s?"
 
-#: babubi/templatetags/babubi.py:109
+#: babubi/templatetags/babubi.py:125
 #, python-format
 msgid "Are you sure you want to unlock %(name)s?"
 msgstr "Segur que voleu desbloquejar %(name)s?"
@@ -2961,6 +3000,29 @@ msgstr "Durada total (minuts)"
 #: reports/templates/reports/diaperchange_amounts.html:9
 msgid "Diaper Amounts"
 msgstr "Quantitats dels bolquers"
+
+#~ msgid "Restricts user to viewing data only."
+#~ msgstr "Limita l'usuari a consultar les dades."
+
+#~ msgid "Caregiver"
+#~ msgstr "Cuidador"
+
+#~ msgid ""
+#~ "Allows adding and editing care entries (feedings, diaper changes, sleep, "
+#~ "timers, medication, temperature, weight, notes and tummy time) for every "
+#~ "child. Cannot delete entries or reach pumping, height, BMI, head "
+#~ "circumference, user management or settings."
+#~ msgstr ""
+#~ "Permet afegir i editar registres de cura (preses, canvis de bolquer, son, "
+#~ "temporitzadors, medicació, temperatura, pes, notes i panxa avall) de tots "
+#~ "els nadons. No pot suprimir registres ni accedir a extraccions, alçada, "
+#~ "IMC, perímetre cefàlic, gestió d'usuaris ni configuració."
+
+#~ msgid "A user cannot be both read only and caregiver."
+#~ msgstr "Un usuari no pot ser alhora de només lectura i cuidador."
+
+#~ msgid "A user cannot be both staff and caregiver."
+#~ msgstr "Un usuari no pot ser alhora personal i cuidador."
 
 #, python-brace-format
 #~ msgid "Timer #{id}"
