@@ -65,12 +65,13 @@
 }
 
 @include media-breakpoint-up(md) {
-    // Restore regular inline button on larger screens.
+    // Restore regular inline button on larger screens, with room at the
+    // sides of the text.
     .submit-primary {
         display: inline-block;
         border-radius: $btn-border-radius;
         width: auto;
-        padding: 0.25rem 0.5rem;
+        padding: 0.375rem 1.25rem;
         position: relative;
     }
 
@@ -78,7 +79,7 @@
         display: inline-block;
         width: auto;
         margin: 0 0 0 .5rem;
-        padding: 0.25rem 0.5rem;
+        padding: 0.375rem 1.25rem;
     }
 }
 
