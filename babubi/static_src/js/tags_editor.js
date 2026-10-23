@@ -293,6 +293,30 @@
 
       this.updateInputList();
       this.taggingBase.addTagListUpdatedListener(() => this.updateInputList());
+      // Reachable from the page (the recent entries to repeat, babubi.js).
+      this.widget.tagsEditor = this;
+    }
+
+    /**
+     * Replace the current tags with these ({name, color} each): known tags
+     * move from the suggestions, unknown ones are created.
+     */
+    setTags(tags) {
+      for (const tag of [...this.currentTags.querySelectorAll(".tag")]) {
+        tag.click();
+      }
+      for (const wanted of tags) {
+        const known = this.newTags.querySelector(
+          `.tag[data-value="${CSS.escape(wanted.name)}"]`,
+        );
+        if (known) {
+          known.click();
+        } else {
+          this.insertNewTag(
+            this.taggingBase.createNewTag(wanted.name, wanted.color, "-"),
+          );
+        }
+      }
     }
 
     /**

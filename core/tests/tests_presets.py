@@ -61,6 +61,8 @@ class PresetsTestCase(TestCase):
                 "dosage": 5,
                 "dosage_unit": "ml",
                 "next_dose_interval": 8,
+                "notes": "",
+                "tags": [],
             },
         )
 
@@ -76,7 +78,13 @@ class PresetsTestCase(TestCase):
         # A missing amount clears the field.
         self.assertEqual(
             json.loads(buttons[0]["values"]),
-            {"type": "breast milk", "method": "left breast", "amount": ""},
+            {
+                "type": "breast milk",
+                "method": "left breast",
+                "amount": "",
+                "notes": "",
+                "tags": [],
+            },
         )
         self.assertEqual(
             [button["label"] for button in self.buttons(BottleFeedingForm)],
@@ -102,6 +110,27 @@ class PresetsTestCase(TestCase):
         adder = get_user_model().objects.create_user(username="adder", password="s")
         adder.user_permissions.add(Permission.objects.get(codename="add_medication"))
         self.assertEqual(MedicationForm(user=adder).preset_buttons, [])
+
+    def test_notes_and_tags_carried_when_the_occurrences_usually_agree(self):
+        # Two out of three times with the same note and tag: the usual wins.
+        for notes, tag in (
+            ("After meals", "evening"),
+            ("Once", "fever"),
+            ("After meals", "evening"),
+        ):
+            entry = self.give("Dalsy", dosage=5, dosage_unit="ml", notes=notes)
+            entry.tags.add(tag)
+        # A split, one against one, is no habit.
+        self.give("Vitamin D", hours=24, notes="With breakfast")
+        self.give("Vitamin D", hours=24, notes="Forgot yesterday")
+        values = {
+            button["label"].split(" ·")[0]: json.loads(button["values"])
+            for button in self.buttons(MedicationForm)
+        }
+        self.assertEqual(values["Dalsy"]["notes"], "After meals")
+        self.assertEqual([t["name"] for t in values["Dalsy"]["tags"]], ["evening"])
+        self.assertEqual(values["Vitamin D"]["notes"], "")
+        self.assertEqual(values["Vitamin D"]["tags"], [])
 
     def test_the_form_page_offers_them(self):
         self.give("Dalsy", dosage=5, dosage_unit="ml")

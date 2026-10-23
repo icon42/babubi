@@ -83,9 +83,21 @@ document.addEventListener("click", function (event) {
   var button = event.target.closest("[data-preset]");
   if (!button || !button.form) return;
   var values = JSON.parse(button.dataset.preset);
+  // A field inside a closed "advanced" group is shown when it gets a value.
+  function reveal(element, value) {
+    var details = element.closest("details");
+    if (details && value) details.open = true;
+  }
   Object.keys(values).forEach(function (name) {
     var field = button.form.elements[name];
     if (!field) return;
+    if (Array.isArray(values[name])) {
+      // Tags: the editor (tags_editor.js) keeps its own list of badges.
+      var editor = field.closest(".babubi-tags-editor");
+      if (editor && editor.tagsEditor) editor.tagsEditor.setTags(values[name]);
+      reveal(field, values[name].length);
+      return;
+    }
     if (field.type === "checkbox") {
       field.checked = Boolean(values[name]);
     } else {
@@ -97,6 +109,7 @@ document.addEventListener("click", function (event) {
       input.dispatchEvent(new Event("input", { bubbles: true }));
       input.dispatchEvent(new Event("change", { bubbles: true }));
     });
+    reveal(inputs[0], values[name]);
   });
 });
 
