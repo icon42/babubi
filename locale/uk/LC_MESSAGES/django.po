@@ -550,6 +550,7 @@ msgid "Changes"
 msgstr "Зміни"
 
 #: babubi/templates/babubi/nav-dropdown.html:253
+msgctxt "diaper change"
 msgid "Change"
 msgstr "Змінити"
 

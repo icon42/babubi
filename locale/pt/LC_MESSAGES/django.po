@@ -542,6 +542,7 @@ msgid "Changes"
 msgstr "Mudanças de fralda"
 
 #: babubi/templates/babubi/nav-dropdown.html:253
+msgctxt "diaper change"
 msgid "Change"
 msgstr "Editar"
 

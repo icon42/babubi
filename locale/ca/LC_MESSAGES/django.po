@@ -546,6 +546,7 @@ msgid "Changes"
 msgstr "Canvis de bolquer"
 
 #: babubi/templates/babubi/nav-dropdown.html:253
+msgctxt "diaper change"
 msgid "Change"
 msgstr "Canvi de bolquer"
 

@@ -157,7 +157,7 @@
                             {% if perms.core.add_diaperchange %}
                                 <a class="dropdown-item ps-5{% if request.path == '/changes/add/' %} active{% endif %}"
                                    href="{% url 'core:diaperchange-add' %}"><i class="icon-add" aria-hidden="true"></i>
-                                    {% trans "Change" %}
+                                    {% translate "Change" context "diaper change" %}
                                 </a>
                             {% endif %}
                             {% if perms.core.view_feeding %}

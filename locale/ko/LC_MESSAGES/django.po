@@ -539,6 +539,7 @@ msgid "Changes"
 msgstr "기저귀 교체 목록"
 
 #: babubi/templates/babubi/nav-dropdown.html:253
+msgctxt "diaper change"
 msgid "Change"
 msgstr "기저귀 교체 추가"
 
