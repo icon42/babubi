@@ -15,8 +15,9 @@ from core import models
 from core.templatetags.days import short_duration
 
 
-def _count(singular, plural, count):
-    return ngettext(singular, plural, count) % {"count": count}
+def _count(text, count):
+    """Fill the count into a translated "%(count)d things"."""
+    return text % {"count": count}
 
 
 def _total(items, attribute):
@@ -34,7 +35,12 @@ def _part(text, icon=None):
 
 def _diaperchange_summary(items):
     return [
-        _part(_count("%(count)d change", "%(count)d changes", len(items))),
+        _part(
+            _count(
+                ngettext("%(count)d change", "%(count)d changes", len(items)),
+                len(items),
+            )
+        ),
         _part(sum(item.wet for item in items), "icon-wet"),
         _part(sum(item.solid for item in items), "icon-solid"),
     ]
@@ -42,7 +48,12 @@ def _diaperchange_summary(items):
 
 def _feeding_summary(items):
     parts = [
-        _part(_count("%(count)d feeding", "%(count)d feedings", len(items))),
+        _part(
+            _count(
+                ngettext("%(count)d feeding", "%(count)d feedings", len(items)),
+                len(items),
+            )
+        ),
         _part(short_duration(_total_duration(items))),
     ]
     amount = _total(items, "amount")
@@ -53,7 +64,12 @@ def _feeding_summary(items):
 
 def _pumping_summary(items):
     return [
-        _part(_count("%(count)d pumping", "%(count)d pumpings", len(items))),
+        _part(
+            _count(
+                ngettext("%(count)d pumping", "%(count)d pumpings", len(items)),
+                len(items),
+            )
+        ),
         _part(formats.number_format(_total(items, "amount"))),
     ]
 
@@ -62,28 +78,44 @@ def _sleep_summary(items):
     naps = sum(item.nap for item in items)
     parts = [_part(short_duration(_total_duration(items)))]
     if naps:
-        parts.append(_part(_count("%(count)d nap", "%(count)d naps", naps)))
+        parts.append(
+            _part(_count(ngettext("%(count)d nap", "%(count)d naps", naps), naps))
+        )
     return parts
 
 
 def _tummytime_summary(items):
     return [
-        _part(_count("%(count)d session", "%(count)d sessions", len(items))),
+        _part(
+            _count(
+                ngettext("%(count)d session", "%(count)d sessions", len(items)),
+                len(items),
+            )
+        ),
         _part(short_duration(_total_duration(items))),
     ]
 
 
 def _medication_summary(items):
     names = Counter(item.name for item in items)
-    return [_part(_count("%(count)d dose", "%(count)d doses", len(items)))] + [
-        _part("{} ×{}".format(name, count)) for name, count in names.items()
-    ]
+    return [
+        _part(
+            _count(
+                ngettext("%(count)d dose", "%(count)d doses", len(items)), len(items)
+            )
+        )
+    ] + [_part("{} ×{}".format(name, count)) for name, count in names.items()]
 
 
 def _temperature_summary(items):
     highest = max(item.temperature for item in items)
     return [
-        _part(_count("%(count)d reading", "%(count)d readings", len(items))),
+        _part(
+            _count(
+                ngettext("%(count)d reading", "%(count)d readings", len(items)),
+                len(items),
+            )
+        ),
         _part(
             _("max. %(temperature)s") % {"temperature": formats.number_format(highest)}
         ),
@@ -91,7 +123,13 @@ def _temperature_summary(items):
 
 
 def _note_summary(items):
-    return [_part(_count("%(count)d note", "%(count)d notes", len(items)))]
+    return [
+        _part(
+            _count(
+                ngettext("%(count)d note", "%(count)d notes", len(items)), len(items)
+            )
+        )
+    ]
 
 
 def _since_previous_start(field):
