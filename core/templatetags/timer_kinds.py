@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from core.timer_kinds import allowed, kind_of
 
@@ -11,6 +12,15 @@ ADD_URLS = {
     "pumping": "core:pumping-add",
     "sleep": "core:sleep-add",
     "tummytime": "core:tummytime-add",
+}
+
+# The finish button of the timer page: whole sentences, so each language
+# can put the activity's article and gender right.
+FINISH_LABELS = {
+    "feeding": _("Finish and create a feeding"),
+    "pumping": _("Finish and create a pumping"),
+    "sleep": _("Finish and create a sleep"),
+    "tummytime": _("Finish and create a tummy time"),
 }
 
 
@@ -25,8 +35,9 @@ def timer_kinds(context, timer):
     """
     The kinds a timer can time, each with the form that finishes the timer as
     that activity; the timer's own kind, when set, comes first.
-    :returns: a list of dicts with the kind, its label and the finishing url,
-        for the kinds the user may add.
+    :returns: a list of dicts with the kind, its label, the sentence of the
+        button that finishes it and the finishing url, for the kinds the user
+        may add.
     """
     from dashboard.models import TimerProfile
 
@@ -37,7 +48,14 @@ def timer_kinds(context, timer):
         url = "{}?timer={}".format(reverse(ADD_URLS[kind]), timer.id)
         if timer.child:
             url += "&child={}".format(timer.child.slug)
-        options.append({"kind": kind, "label": labels[kind], "url": url})
+        options.append(
+            {
+                "kind": kind,
+                "label": labels[kind],
+                "finish": FINISH_LABELS[kind],
+                "url": url,
+            }
+        )
     return options
 
 

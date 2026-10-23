@@ -2900,8 +2900,17 @@ msgstr "Indica si és nen o nena per comparar-ho amb els estàndards de l'OMS."
 msgid "%(kind)s since %(time)s"
 msgstr "%(kind)s des de les %(time)s"
 
-msgid "Finish as"
-msgstr "Finalitza com a"
+msgid "Finish and create a feeding"
+msgstr "Acaba i crea la presa"
+
+msgid "Finish and create a pumping"
+msgstr "Acaba i crea l'extracció"
+
+msgid "Finish and create a sleep"
+msgstr "Acaba i crea el son"
+
+msgid "Finish and create a tummy time"
+msgstr "Acaba i crea la panxa avall"
 
 msgid "Same as before"
 msgstr "Com altres vegades"

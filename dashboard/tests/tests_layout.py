@@ -368,11 +368,13 @@ class TimerKindTestCase(TestCase):
         response = self.c.post(url + "kind/", {"kind": "sleep"})
         self.assertRedirects(response, url, fetch_redirect_response=False)
         self.assertEqual(kind_of(self.timer), "sleep")
+        # With a kind, one finish button names it; without, one per kind.
         page = self.c.get(url)
-        self.assertContains(page, "timer-other-kinds")
+        self.assertContains(page, "submit-primary btn btn-lg btn-activity", count=1)
+        self.assertContains(page, "Finish and create a sleep")
         self.c.post(url + "kind/", {"kind": "nonsense"})
         self.assertEqual(kind_of(Timer.objects.get(pk=self.timer.pk)), "")
-        self.assertNotContains(self.c.get(url), "timer-other-kinds")
+        self.assertContains(self.c.get(url), "btn-lg btn-activity activity-", count=4)
 
     def test_only_owner_or_change_permission(self):
         get_user_model().objects.create_user(username="other", password="secret")

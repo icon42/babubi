@@ -341,10 +341,15 @@
     }
 }
 
-.timer-other-kinds {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: .4rem;
+// The finish button: an activity button shaped like a form's submit
+// (forms.scss fixes .submit-primary to the bottom on a phone). Inline, the
+// icon's own side room would add to the button's, so it is taken back.
+.timer-finish [class^="icon-"] {
+    margin-right: .25rem;
+}
+
+@include media-breakpoint-up(md) {
+    .timer-finish [class^="icon-"] {
+        margin-left: -.3rem;
+    }
 }

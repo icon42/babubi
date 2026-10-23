@@ -45,27 +45,25 @@
                                 value="">{% trans "Not specified" %}</button>
                     </form>
                 {% endif %}
-                {# Finish as its own kind; the others stay at hand, smaller. #}
-                <div class="d-grid gap-4 mb-4">
+                {# Finishes as its own kind, with the look of a form's submit button: fixed at the bottom on a phone, inline above. Without a kind, one button per kind. #}
+                {% if current %}
                     {% for option in kinds %}
-                        {% if not current or option.kind == current %}
-                            <a class="btn btn-lg btn-activity activity-{{ option.kind }}"
+                        {% if option.kind == current %}
+                            <a class="submit-primary btn btn-lg btn-activity activity-{{ option.kind }} timer-finish mb-4"
                                href="{{ option.url }}"
-                               role="button"><i class="icon-{{ option.kind }}" aria-hidden="true"></i>
-                                {{ option.label }}
+                               role="button">
+                                <i class="icon-{{ option.kind }}" aria-hidden="true"></i> {{ option.finish }}
                             </a>
                         {% endif %}
                     {% endfor %}
-                </div>
-                {% if current and kinds|length > 1 %}
-                    <div class="timer-other-kinds mb-4">
-                        <span class="text-body-secondary small">{% trans "Finish as" %}</span>
+                {% else %}
+                    <div class="d-grid gap-3 mb-4">
                         {% for option in kinds %}
-                            {% if option.kind != current %}
-                                <a class="btn btn-sm dash-btn" href="{{ option.url }}">
-                                    <i class="icon-{{ option.kind }}" aria-hidden="true"></i> {{ option.label }}
-                                </a>
-                            {% endif %}
+                            <a class="btn btn-lg btn-activity activity-{{ option.kind }} timer-finish"
+                               href="{{ option.url }}"
+                               role="button">
+                                <i class="icon-{{ option.kind }}" aria-hidden="true"></i> {{ option.finish }}
+                            </a>
                         {% endfor %}
                     </div>
                 {% endif %}
