@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Babubi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 11:26+0000\n"
+"POT-Creation-Date: 2026-10-23 11:12+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,21 +45,23 @@ msgstr ""
 #: babubi/forms.py:29 babubi/forms.py:30
 #: babubi/templates/babubi/user_form.html:55
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: babubi/forms.py:44 babubi/templatetags/babubi.py:100
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #: babubi/forms.py:47
 msgid ""
 "Everything, users and site settings included; the permissions below do not "
 "apply."
 msgstr ""
+"Todo, usuarios y configuración del sitio incluidos; los permisos de abajo no "
+"se aplican."
 
 #: babubi/forms.py:50
 msgid "May manage users and site settings."
-msgstr ""
+msgstr "Puede gestionar los usuarios y la configuración del sitio."
 
 #: babubi/models.py:22
 msgid "Refresh rate"
@@ -156,11 +158,11 @@ msgstr "Elementos por página"
 
 #: babubi/models.py:169
 msgid "Reads everything"
-msgstr ""
+msgstr "Lo lee todo"
 
 #: babubi/models.py:170
 msgid "Writes everything"
-msgstr ""
+msgstr "Lo escribe todo"
 
 #: babubi/models.py:173
 #, python-brace-format
@@ -866,24 +868,20 @@ msgid "User locked."
 msgstr "Usuario bloqueado."
 
 #: babubi/templates/babubi/user_form.html:48
-#, fuzzy
-#| msgid "Permission Denied"
 msgid "Permissions"
-msgstr "Acceso denegado"
+msgstr "Permisos"
 
 #: babubi/templates/babubi/user_form.html:58
-#, fuzzy
-#| msgid "Read only"
 msgid "Read"
-msgstr "Solo lectura"
+msgstr "Lectura"
 
 #: babubi/templates/babubi/user_form.html:59
 msgid "Write"
-msgstr ""
+msgstr "Escritura"
 
 #: babubi/templates/babubi/user_form.html:62
 msgid "All kinds of entry"
-msgstr ""
+msgstr "Todos los tipos de entrada"
 
 #: babubi/templates/babubi/user_list.html:17
 #: core/templates/core/child_list.html:26
@@ -900,10 +898,8 @@ msgid "Email"
 msgstr "Email"
 
 #: babubi/templates/babubi/user_list.html:20
-#, fuzzy
-#| msgid "Access expires"
 msgid "Access"
-msgstr "El acceso caduca"
+msgstr "Acceso"
 
 #: babubi/templates/babubi/user_list.html:21
 msgid "Staff"
@@ -1186,7 +1182,7 @@ msgstr ""
 
 #: babubi/templatetags/babubi.py:103
 msgid "Everything"
-msgstr ""
+msgstr "Todo"
 
 #: babubi/templatetags/babubi.py:105
 msgid "Read only"
@@ -1195,11 +1191,11 @@ msgstr "Solo lectura"
 #: babubi/templatetags/babubi.py:106
 #, python-format
 msgid "Reads %(read)s, writes %(write)s"
-msgstr ""
+msgstr "Lee %(read)s, escribe %(write)s"
 
 #: babubi/templatetags/babubi.py:107 babubi/templatetags/babubi.py:108
 msgid "all"
-msgstr ""
+msgstr "todo"
 
 #: babubi/templatetags/babubi.py:115
 #, python-format
