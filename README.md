@@ -14,13 +14,18 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 
 ![On a phone, in the light theme: the dashboard, the diaper changes grouped by day and a running timer](screenshot_mobile.png)
 
+![The medication form with the recent treatments to repeat above it](docs/assets/images/form_presets.png)
+
+![The user form with the permission matrix, in the dark theme](docs/assets/images/user_permissions.png)
+
 ## How Babubi differs from Baby Buddy
 
 - **A dashboard per child, arranged by each caregiver**: three columns of cards to order, hide and bring back, a card of quick actions drawn like a phone's home screen, graph cards with any report, and a percentiles card with the exact WHO percentiles of the latest weight, height and head circumference.
 - **Child-first menu.** The menu starts with the child whose dashboard was opened last and leads back to it; the other children are one tap away.
-- **Timers that know what they time.** A timer is started as a feeding, pumping, sleep or tummy time timer, from the quick actions, the phone's stopwatch button or the Timers menu, and finishes as that activity in one tap.
+- **Timers that know what they time.** A timer is started as a feeding, pumping, sleep or tummy time timer, from the quick actions, the phone's stopwatch button or the Timers menu, and one button finishes it and opens that activity's form filled in.
 - **Lists grouped by day**, with a summary row per day, the time since the previous entry, and sleep drawn as bars with its nap or night badge.
-- **Frequent values under form fields**: the medication names, doses and intervals, the amounts and the short notes used before, filled in with a click.
+- **Frequent values under form fields**: the medication names, doses and intervals, the amounts and the short notes used before, filled in with a click. Above the medication and feeding forms, **"Same as before"** repeats a recent treatment or feeding, every field at once.
+- **Permissions per user**, in the user form: a matrix of what each user may read and write, per activity and measurement, with an "All" per column that also covers kinds added later. It sets Django's model permissions, so the web interface, the API and the MCP server all honour it.
 - **WHO head circumference charts** for boys and girls, next to the weight and height ones; a child's sex picks the right charts.
 - **A colour and an icon per activity**, light, dark and automatic themes, and a baby placeholder drawn from the logo.
 - **Own container image**, published at `ghcr.io/icon42/babubi` for amd64 and arm64 and rebuilt every week so its base gets security fixes. It runs as an unprivileged user.

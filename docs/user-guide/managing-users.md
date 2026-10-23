@@ -20,6 +20,8 @@
 
 ## Permissions
 
+![The user form with the permission matrix](../assets/images/user_permissions.png)
+
 A user is either an **Administrator**, who can do everything, users and site
 settings included, or an ordinary user whose access is set in the
 **Permissions** table of the user form: one row per kind of entry (the
