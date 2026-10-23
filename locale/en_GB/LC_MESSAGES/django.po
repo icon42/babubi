@@ -1183,12 +1183,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: core/day_groups.py:53
-#, fuzzy, python-format
-#| msgid "%(child)s had a %(type)s diaper change."
+#, python-format
 msgid "%(count)d feeding"
 msgid_plural "%(count)d feedings"
-msgstr[0] "%(child)s had a %(type)s nappy change."
-msgstr[1] "%(child)s had a %(type)s nappy change."
+msgstr[0] ""
+msgstr[1] ""
 
 #: core/day_groups.py:69
 #, python-format
@@ -1448,7 +1447,7 @@ msgstr ""
 
 #: core/models.py:277
 msgid "Gray"
-msgstr ""
+msgstr "Grey"
 
 #: core/models.py:278
 msgid "Green"
@@ -1615,10 +1614,8 @@ msgid "Time Taken"
 msgstr ""
 
 #: core/models.py:851 core/templates/core/medication_list.html:15
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "Next Dose Interval"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: core/models.py:852
 msgid "Time until next dose can be given"
@@ -1790,16 +1787,12 @@ msgid "Next dose"
 msgstr ""
 
 #: core/templates/core/medication_list.html:28
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "No interval set"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: core/templates/core/medication_list.html:38
-#, fuzzy
-#| msgid "No diaper changes found."
 msgid "No medication entries found."
-msgstr "No nappy changes found."
+msgstr ""
 
 #: core/templates/core/note_confirm_delete.html:4
 msgid "Delete a Note"
@@ -1872,10 +1865,8 @@ msgid "No sleep entries found."
 msgstr ""
 
 #: core/templates/core/tag_confirm_delete.html:4
-#, fuzzy
-#| msgid "Delete a Diaper Change"
 msgid "Delete a Tag"
-msgstr "Delete a Nappy Change"
+msgstr ""
 
 #: core/templates/core/tag_confirm_delete.html:22
 #, python-format
@@ -1894,17 +1885,13 @@ msgid "Delete Tag"
 msgstr ""
 
 #: core/templates/core/tag_detail.html:5 core/templates/core/tag_form.html:5
-#, fuzzy
-#| msgid "Update a Diaper Change"
 msgid "Update a Tag"
-msgstr "Update a Nappy Change"
+msgstr ""
 
 #: core/templates/core/tag_detail.html:7 core/templates/core/tag_form.html:7
 #: core/templates/core/tag_form.html:29
-#, fuzzy
-#| msgid "Add Diaper Change"
 msgid "Add a Tag"
-msgstr "Add Nappy Change"
+msgstr ""
 
 #: core/templates/core/tag_detail.html:28
 msgid "Tag actions"
@@ -1963,10 +1950,8 @@ msgid "Last Used"
 msgstr ""
 
 #: core/templates/core/tag_list.html:62
-#, fuzzy
-#| msgid "No diaper changes found."
 msgid "No tags found."
-msgstr "No nappy changes found."
+msgstr ""
 
 #: core/templates/core/temperature_confirm_delete.html:4
 msgid "Delete a Temperature Reading"
@@ -2227,10 +2212,9 @@ msgid "%(child)s finished feeding."
 msgstr ""
 
 #: core/timeline.py:206
-#, fuzzy, python-format
-#| msgid "%(child)s had a %(type)s diaper change."
+#, python-format
 msgid "%(child)s had a feeding."
-msgstr "%(child)s had a %(type)s nappy change."
+msgstr ""
 
 #: core/timeline.py:228
 #, python-format
@@ -2238,16 +2222,14 @@ msgid "%(child)s had a %(type)s diaper change."
 msgstr "%(child)s had a %(type)s nappy change."
 
 #: core/timeline.py:271
-#, fuzzy, python-format
-#| msgid "%(child)s had a %(type)s diaper change."
+#, python-format
 msgid "%(child)s took %(medication)s."
-msgstr "%(child)s had a %(type)s nappy change."
+msgstr ""
 
 #: core/timeline.py:287
-#, fuzzy, python-format
-#| msgid "%(child)s had a %(type)s diaper change."
+#, python-format
 msgid "%(child)s's %(medication)s dose wore off."
-msgstr "%(child)s had a %(type)s nappy change."
+msgstr ""
 
 #: core/timeline.py:332
 #, python-format
@@ -2433,19 +2415,15 @@ msgstr ""
 #: reports/templates/reports/medication_frequency.html:4
 #: reports/templates/reports/medication_frequency.html:9
 #: reports/templates/reports/report_list.html:65
-#, fuzzy
-#| msgid "Diaper change frequency"
 msgid "Medication Frequency"
-msgstr "Nappy change frequency"
+msgstr ""
 
 #: dashboard/layout.py:144
 #: reports/templates/reports/medication_intervals.html:4
 #: reports/templates/reports/medication_intervals.html:9
 #: reports/templates/reports/report_list.html:67
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "Medication Intervals"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: dashboard/layout.py:145 reports/templates/reports/report_list.html:71
 msgid "Pumping Amounts"
@@ -2711,7 +2689,7 @@ msgstr ""
 
 #: dashboard/templates/dashboard/child.html:140
 msgid "Customize"
-msgstr ""
+msgstr "Customise"
 
 #: dashboard/templates/dashboard/child.html:175
 msgid "Add a graph card"
@@ -2848,10 +2826,8 @@ msgid "Interval"
 msgstr ""
 
 #: reports/graphs/feeding_intervals.py:41
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "Feeding intervals"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: reports/graphs/feeding_intervals.py:47
 msgid "Feeding interval (hours)"
@@ -2886,26 +2862,20 @@ msgid "Frequency"
 msgstr ""
 
 #: reports/graphs/medication_frequency.py:38
-#, fuzzy
-#| msgid "Diaper change frequency"
 msgid "Medication frequency"
-msgstr "Nappy change frequency"
+msgstr ""
 
 #: reports/graphs/medication_frequency.py:44
 msgid "Number of medications"
 msgstr ""
 
 #: reports/graphs/medication_intervals.py:46
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "Medication intervals"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: reports/graphs/medication_intervals.py:52
-#, fuzzy
-#| msgid "Diaper Intervals"
 msgid "Medication interval (hours)"
-msgstr "Nappy Intervals"
+msgstr ""
 
 #: reports/graphs/pumping_amounts.py:59
 msgid "Total Pumping Amount"
