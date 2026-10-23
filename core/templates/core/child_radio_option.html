@@ -2,6 +2,6 @@
 {% include "django/forms/widgets/input.html" %}
 <label {% if widget.attrs.id %}for="{{ widget.attrs.id }}"{% endif %}
        class="btn btn-outline-light btn-no-hover">
-    {% include "core/child_thumbnail.html" with child=widget %}
+    {% include "core/child_thumbnail.html" with child=widget with_inverse=True %}
     {{ widget.label }}
 </label>

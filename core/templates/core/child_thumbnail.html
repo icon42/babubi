@@ -6,5 +6,12 @@
         <img src="{% static 'babubi/img/core/child-placeholder.png' %}"
              width="40"
              height="40"
-             class="img-fluid rounded-circle" />
+             class="img-fluid rounded-circle child-placeholder" />
+        {% if with_inverse %}
+            {# Shown instead on a chosen chip of the child selector (forms.scss). #}
+            <img src="{% static 'babubi/img/core/child-placeholder-inverse.png' %}"
+                 width="40"
+                 height="40"
+                 class="img-fluid rounded-circle child-placeholder_inverse" />
+        {% endif %}
     {% endif %}

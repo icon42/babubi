@@ -7,12 +7,47 @@
     display: block;
 }
 
-// Disable hover effect on buttons (used for checkbox buttons).
-.btn-no-hover {
-    &:hover {
-        color: inherit;
-        background-color: inherit;
-        border-color: inherit;
+// A choice drawn as buttons (the child selector and the pill selectors of
+// the forms), without outlines: a faint neutral chip when unchosen, filled
+// with the brand colour when chosen, the same on both themes. Hovering
+// changes nothing.
+.btn-check + .btn-outline-light {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-bg: rgba(var(--bs-emphasis-color-rgb), .06);
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: rgba(var(--bs-emphasis-color-rgb), .06);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+}
+
+// The stand-in picture swaps its colours on a chosen chip, so the baby still
+// shows on the brand colour (core/child_thumbnail.html renders both).
+.child-placeholder_inverse {
+    display: none;
+}
+
+.btn-check:checked + .btn-outline-light {
+    font-weight: 500;
+
+    .child-placeholder {
+        display: none;
+    }
+
+    .child-placeholder_inverse {
+        display: inline;
+    }
+}
+
+// The child selector: separate chips rather than a joined bar, like the pills.
+.btn-group-toggle {
+    gap: .5rem;
+
+    > .btn {
+        border-radius: var(--bs-btn-border-radius);
     }
 }
 
