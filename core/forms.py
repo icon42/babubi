@@ -297,11 +297,11 @@ class BottleFeedingForm(
     PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableModelForm
 ):
     suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
-    # Bottles given the same way at least twice.
+    # A bottle of each type, with its usual amount.
     presets = {
-        "fields": ["type", "amount"],
+        "key": ["type"],
+        "usual": ["amount"],
         "dated_by": "start",
-        "minimum": 2,
         "filter": {"method": "bottle"},
     }
 
@@ -419,11 +419,11 @@ class DiaperChangeForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
 
 class FeedingForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableModelForm):
     suggestions = {"amount": "amount", "notes": ("notes", SHORT)}
-    # Feedings given the same way at least twice.
+    # A feeding of each type and method, with its usual amount.
     presets = {
-        "fields": ["type", "method", "amount"],
+        "key": ["type", "method"],
+        "usual": ["amount"],
         "dated_by": "start",
-        "minimum": 2,
     }
 
     fieldsets = [
@@ -499,9 +499,11 @@ class MedicationForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableMode
         "dosage": "dosage",
         "next_dose_interval": ("next_dose_interval", {"to_form": interval_hours}),
     }
-    # A treatment: a medication given with an interval to the next dose.
+    # A treatment: a medication given with an interval to the next dose (a
+    # different interval is another treatment), with its usual dose.
     presets = {
-        "fields": ["name", "dosage", "dosage_unit", "next_dose_interval"],
+        "key": ["name", "next_dose_interval"],
+        "usual": ["dosage", "dosage_unit"],
         "dated_by": "time",
         "filter": {"next_dose_interval__isnull": False},
         "to_form": {"next_dose_interval": interval_hours},

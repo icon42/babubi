@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Recent entries to repeat, above a form (babubi/form_presets.html): the
-combinations of some fields entered before, most recent first, each a button
-that fills those fields at once without submitting the form (babubi.js).
+Entries to repeat, above a form (babubi/form_presets.html): the entries
+made before, told apart by a few key fields and the most frequent first, each
+a button that fills the form as that entry usually goes, without submitting
+it (babubi.js).
 
 A form opened for one child (from its dashboard, or with a single child)
 offers that child's entries; otherwise everyone's.
@@ -15,35 +16,40 @@ from django.db.models import Count, Max
 
 from core.suggestions import plain
 
-LIMIT = 5
+# At most this many entries, so the list never grows without end.
+LIMIT = 4
 
-# How many of the latest occurrences of an entry are looked at for the notes
-# and tags they usually have (carried()).
+# How many of the latest occurrences of an entry are looked at for the
+# values it usually has (typical()).
 OCCURRENCES = 10
 
 
-def recent(model, fields, dated_by, minimum=1, child=None, **filters):
+def frequent_entries(model, key, dated_by, child=None, **filters):
     """
-    The combinations of `fields` entered at least `minimum` times, most
-    recent first.
+    The entries told apart by their `key` fields, the most frequent first
+    and, at the same frequency, the most recent; one occurrence is enough.
     :param dated_by: the model field that dates an entry.
     :param child: a Child instance to limit the entries to, or None.
     :param filters: further lookups the entries must match.
-    :returns: a list of dicts with the fields' stored values.
+    :returns: a list of dicts with the key fields' stored values.
     """
     rows = model.objects.filter(**filters)
     if child is not None:
         rows = rows.filter(child=child)
     rows = (
-        rows.values(*fields)
+        rows.values(*key)
         .annotate(uses=Count("pk"), last=Max(dated_by))
-        .filter(uses__gte=minimum)
-        .order_by("-last")[:LIMIT]
+        .order_by("-uses", "-last")[:LIMIT]
     )
-    return [{field: row[field] for field in fields} for row in rows]
+    return [{field: row[field] for field in key} for row in rows]
 
 
-def usual(values):
+def commonest(values):
+    """The most frequent of `values`; ties go to the first (the most recent)."""
+    return Counter(values).most_common(1)[0][0]
+
+
+def majority(values):
     """
     The value most of `values` have (more than half), or None: a one-off
     difference does not count, a split does. Ties go to the first, so pass
@@ -53,13 +59,14 @@ def usual(values):
     return value if count * 2 > len(values) else None
 
 
-def carried(model, row, dated_by, child=None, **filters):
+def typical(model, row, usual, dated_by, child=None, **filters):
     """
-    The notes and tags the latest occurrences of an entry usually have, to
-    pre-fill the form with: "" or [] when they have none or disagree.
-    :param row: the entry's stored values by field, from recent().
-    :returns: a dict with "notes" and "tags" (a list of dicts with name and
-        color), for the fields the model has.
+    How the latest occurrences of an entry usually go, to pre-fill the form
+    with: the `usual` fields by their most frequent value, the notes and tags
+    only when most occurrences share them ("" or [] otherwise).
+    :param row: the entry's key values, from frequent_entries().
+    :param usual: the model fields filled with their most frequent value.
+    :returns: a dict by field; "tags" is a list of dicts with name and color.
     """
     occurrences = model.objects.filter(**filters, **row)
     if child is not None:
@@ -67,13 +74,15 @@ def carried(model, row, dated_by, child=None, **filters):
     occurrences = list(
         occurrences.order_by("-" + dated_by).prefetch_related("tags")[:OCCURRENCES]
     )
-    found = {}
+    found = {
+        field: commonest([getattr(o, field) for o in occurrences]) for field in usual
+    }
     fields = {f.name for f in model._meta.get_fields()}
     if "notes" in fields:
-        found["notes"] = usual([o.notes or "" for o in occurrences]) or ""
+        found["notes"] = majority([o.notes or "" for o in occurrences]) or ""
     if "tags" in fields:
         names = (
-            usual([tuple(sorted(t.name for t in o.tags.all())) for o in occurrences])
+            majority([tuple(sorted(t.name for t in o.tags.all())) for o in occurrences])
             or ()
         )
         tags = {t.name: t for o in occurrences for t in o.tags.all()}
@@ -83,11 +92,11 @@ def carried(model, row, dated_by, child=None, **filters):
 
 class PresetsMixin:
     """
-    A form that offers recent entries to repeat: `presets` holds the model
-    `fields` that make up an entry, the field that dates it (`dated_by`), how
-    many times a combination must have been entered (`minimum`, 1 by
-    default), a `filter` the entries must match and `to_form` converters from
-    a stored value to the form field's. An edit form offers none.
+    A form that offers entries to repeat: `presets` holds the model fields
+    that tell an entry apart (`key`), those filled with the value the entry
+    usually has (`usual`), the field that dates it (`dated_by`), a `filter`
+    the entries must match and `to_form` converters from a stored value to
+    the form field's. An edit form offers none.
     """
 
     presets = None
@@ -110,18 +119,16 @@ class PresetsMixin:
             "child": self.initial.get("child"),
             **self.presets.get("filter", {}),
         }
-        for row in recent(
-            self._meta.model,
-            self.presets["fields"],
-            minimum=self.presets.get("minimum", 1),
-            **scope,
-        ):
+        usual = self.presets.get("usual", ())
+        for key in frequent_entries(self._meta.model, self.presets["key"], **scope):
+            found = typical(self._meta.model, key, usual, **scope)
+            row = {**key, **{name: found.pop(name) for name in usual}}
             values = {}
             for name, value in row.items():
                 if value is not None:
                     value = plain(to_form.get(name, lambda v: v)(value))
                 values[self[name].html_name] = "" if value is None else value
-            for name, value in carried(self._meta.model, row, **scope).items():
+            for name, value in found.items():
                 if name in self.fields:
                     values[self[name].html_name] = value
             self.preset_buttons.append(

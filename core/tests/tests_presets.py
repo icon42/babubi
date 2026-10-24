@@ -20,22 +20,29 @@ class PresetsTestCase(TestCase):
         self.user = get_user_model().objects.create_user(
             username="parent", password="secret", is_superuser=True
         )
+        self.clock = timezone.now() - datetime.timedelta(days=30)
 
-    def give(self, name, hours=8, child=None, days_ago=0, **fields):
+    def tick(self):
+        """The next moment, so every entry is later than the one before."""
+        self.clock += datetime.timedelta(hours=1)
+        return self.clock
+
+    def give(self, name, hours=8, child=None, **fields):
         return models.Medication.objects.create(
             child=child or self.child,
             name=name,
-            time=timezone.now() - datetime.timedelta(days=days_ago),
+            time=self.tick(),
             next_dose_interval=datetime.timedelta(hours=hours) if hours else None,
             **fields,
         )
 
     def feed(self, type, method, amount=None, times=1):
         for _ in range(times):
+            start = self.tick()
             models.Feeding.objects.create(
                 child=self.child,
-                start=timezone.now(),
-                end=timezone.now(),
+                start=start,
+                end=start,
                 type=type,
                 method=method,
                 amount=amount,
@@ -44,40 +51,65 @@ class PresetsTestCase(TestCase):
     def buttons(self, form_class, **kwargs):
         return form_class(user=self.user, **kwargs).preset_buttons
 
-    def test_treatments_most_recent_first(self):
-        self.give("Vitamina D", hours=24, dosage=1, dosage_unit="drops", days_ago=3)
-        self.give("Dalsy", hours=8, dosage=5, dosage_unit="ml")
-        self.give("Dalsy", hours=8, dosage=5, dosage_unit="ml", days_ago=1)
+    def labels(self, form_class, **kwargs):
+        return [button["label"] for button in self.buttons(form_class, **kwargs)]
+
+    def values(self, form_class, **kwargs):
+        return {
+            button["label"]: json.loads(button["values"])
+            for button in self.buttons(form_class, **kwargs)
+        }
+
+    def test_a_treatment_is_the_medication_and_its_interval(self):
+        # The same name with two doses is one treatment, with the usual dose.
+        self.give("Dalsy", dosage=4, dosage_unit="ml")
+        self.give("Dalsy", dosage=5, dosage_unit="ml")
+        self.give("Dalsy", dosage=5, dosage_unit="ml")
+        # The same name with another interval is another treatment.
+        self.give("Dalsy", hours=6, dosage=5, dosage_unit="ml")
+        # Once is enough; without an interval it is no treatment.
+        self.give("Vitamin D", hours=24, dosage=1, dosage_unit="drops")
         self.give("Apiretal", hours=None, dosage=2.5, dosage_unit="ml")
-        buttons = self.buttons(MedicationForm)
         self.assertEqual(
-            [button["label"] for button in buttons],
-            ["Dalsy · 5 ml · every 8 h", "Vitamina D · 1 drops · every 24 h"],
+            self.labels(MedicationForm),
+            [
+                "Dalsy · 5 ml · every 8 h",
+                "Vitamin D · 1 drops · every 24 h",
+                "Dalsy · 5 ml · every 6 h",
+            ],
         )
         self.assertEqual(
-            json.loads(buttons[0]["values"]),
+            self.values(MedicationForm)["Dalsy · 5 ml · every 8 h"],
             {
                 "name": "Dalsy",
+                "next_dose_interval": 8,
                 "dosage": 5,
                 "dosage_unit": "ml",
-                "next_dose_interval": 8,
                 "notes": "",
                 "tags": [],
             },
         )
 
-    def test_feedings_given_the_same_way_twice(self):
+    def test_the_usual_dose_is_the_most_frequent_recent_one(self):
+        self.give("Dalsy", dosage=4)
+        self.give("Dalsy", dosage=4)
+        self.give("Dalsy", dosage=5)
+        self.assertEqual(self.labels(MedicationForm), ["Dalsy · 4 · every 8 h"])
+        # A tie goes to the most recent.
+        self.give("Dalsy", dosage=5)
+        self.assertEqual(self.labels(MedicationForm), ["Dalsy · 5 · every 8 h"])
+
+    def test_feedings_by_type_and_method_with_the_usual_amount(self):
         self.feed("formula", "bottle", 150, times=2)
-        self.feed("breast milk", "left breast", times=2)
         self.feed("formula", "bottle", 120)
-        buttons = self.buttons(FeedingForm)
+        self.feed("breast milk", "left breast")
         self.assertEqual(
-            [button["label"] for button in buttons],
-            ["Breast milk · Left breast", "Formula · Bottle · 150"],
+            self.labels(FeedingForm),
+            ["Formula · Bottle · 150", "Breast milk · Left breast"],
         )
-        # A missing amount clears the field.
+        # No amount at the breast: the field is cleared.
         self.assertEqual(
-            json.loads(buttons[0]["values"]),
+            self.values(FeedingForm)["Breast milk · Left breast"],
             {
                 "type": "breast milk",
                 "method": "left breast",
@@ -86,9 +118,26 @@ class PresetsTestCase(TestCase):
                 "tags": [],
             },
         )
+        self.assertEqual(self.labels(BottleFeedingForm), ["Formula · 150"])
+
+    def test_at_most_four_the_most_frequent_first(self):
+        self.feed("breast milk", "left breast", times=3)
+        self.feed("breast milk", "right breast", times=3)
+        self.feed("formula", "bottle", 150)
+        self.feed("solid food", "parent fed")
+        self.feed("fortified breast milk", "bottle", 100)
+        labels = self.labels(FeedingForm)
+        self.assertEqual(len(labels), 4)
+        # Three times each, the most recent first; then the one-offs, the
+        # most recent first, so the oldest one-off is left out.
         self.assertEqual(
-            [button["label"] for button in self.buttons(BottleFeedingForm)],
-            ["Formula · 150"],
+            labels,
+            [
+                "Breast milk · Right breast",
+                "Breast milk · Left breast",
+                "Fortified breast milk · Bottle · 100",
+                "Solid food · Parent fed",
+            ],
         )
 
     def test_only_the_child_of_the_form(self):
@@ -96,13 +145,12 @@ class PresetsTestCase(TestCase):
             first_name="Bo", last_name="X", birth_date=timezone.localdate()
         )
         self.give("Dalsy", child=other)
-        self.give("Vitamina D")
-        labels = [
-            button["label"]
-            for button in self.buttons(MedicationForm, child=self.child.slug)
-        ]
-        self.assertEqual(labels, ["Vitamina D · every 8 h"])
-        self.assertEqual(len(self.buttons(MedicationForm)), 2)
+        self.give("Vitamin D")
+        self.assertEqual(
+            self.labels(MedicationForm, child=self.child.slug),
+            ["Vitamin D · every 8 h"],
+        )
+        self.assertEqual(len(self.labels(MedicationForm)), 2)
 
     def test_not_when_editing_nor_without_the_permission_to_view(self):
         entry = self.give("Dalsy")
@@ -124,8 +172,8 @@ class PresetsTestCase(TestCase):
         self.give("Vitamin D", hours=24, notes="With breakfast")
         self.give("Vitamin D", hours=24, notes="Forgot yesterday")
         values = {
-            button["label"].split(" ·")[0]: json.loads(button["values"])
-            for button in self.buttons(MedicationForm)
+            label.split(" ·")[0]: value
+            for label, value in self.values(MedicationForm).items()
         }
         self.assertEqual(values["Dalsy"]["notes"], "After meals")
         self.assertEqual([t["name"] for t in values["Dalsy"]["tags"]], ["evening"])
