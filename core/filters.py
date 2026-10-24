@@ -46,6 +46,13 @@ class HeightFilter(TagFilter):
 
 
 class MedicationFilter(TagFilter):
+    # A part of the name, in any case, finds it; the exact lookup of the
+    # plain field list only found the whole name as typed.
+    name = django_filters.CharFilter(
+        lookup_expr="icontains",
+        label=models.Medication._meta.get_field("name").verbose_name,
+    )
+
     class Meta:
         model = models.Medication
         fields = ["child", "name", "dosage_unit"]
