@@ -13232,6 +13232,57 @@ textarea.form-control-lg {
   margin-bottom: 0;
 }
 
+.dash-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--bs-secondary-color);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.dash-ghost {
+  opacity: 0.4;
+}
+
+.dash-toggle[aria-expanded=true] {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 992px) {
+  .dash-columns_editing .dash-controls {
+    cursor: grab;
+  }
+}
+@media (max-width: 991.98px) {
+  .dash-columns_editing .dash-card {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .dash-columns_editing .dash-controls {
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+  .dash-columns_editing .dash-controls-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dash-columns_editing .dash-card:not(.dash-card_open) .card-dashboard {
+    display: none;
+  }
+  .dash-columns_editing .dash-card_open .dash-controls {
+    margin-bottom: 0.4rem;
+  }
+}
 .dash-extra {
   margin-top: 1rem;
   padding-top: 1rem;
