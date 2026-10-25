@@ -55,6 +55,28 @@
     }
 }
 
+// On tablets dashboard.js deals the cards into the first two columns, so
+// rows of unequal heights leave no holes; without it, two abreast as above.
+@include media-breakpoint-between(sm, lg) {
+    .dash-columns_dealt {
+        flex-wrap: nowrap;
+
+        .dash-column {
+            display: block;
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .dash-column:nth-child(3) {
+            display: none;
+        }
+
+        .dash-card {
+            width: auto;
+        }
+    }
+}
+
 // The main menu's dropdowns open on hover on wide screens with a pointer.
 @include media-breakpoint-up(md) {
     @media (hover: hover) {

@@ -9,10 +9,16 @@
  *   with no request at all.
  * Graph cards are left as drawn; a different arrangement of cards, e.g.
  * edited in another window, reloads the whole page.
+ * On tablets (sm up to lg) it also deals the cards into two columns, see
+ * deal().
  */
 Babubi.Dashboard = (function () {
   var dashboardElement = null;
   var words = null;
+  // Bootstrap's sm and lg breakpoints: two cards abreast in between.
+  var tablet = window.matchMedia(
+    "(min-width: 576px) and (max-width: 991.98px)",
+  );
 
   var Dashboard = {
     watch: function (element_id, refresh_rate) {
@@ -24,6 +30,9 @@ Babubi.Dashboard = (function () {
       var wordsElement = document.getElementById("dashboard-time-words");
       words = wordsElement ? JSON.parse(wordsElement.textContent) : null;
 
+      Dashboard.deal();
+      tablet.addEventListener("change", Dashboard.deal);
+
       Dashboard.tick();
       setInterval(Dashboard.tick, 30000);
 
@@ -33,6 +42,51 @@ Babubi.Dashboard = (function () {
           if (!document.hidden) Dashboard.check();
         }, refresh_rate);
       }
+    },
+
+    // Between sm and lg the cards would go two abreast in rows, and rows of
+    // unequal heights leave holes. So there the cards are dealt into the
+    // first two columns by their narrow-screen order (--dash-order), odd
+    // ones left and even ones right, as the wide screen deals its three
+    // (dash-columns_dealt); outside that range they go back where the
+    // server put them, which each card remembers as data-home.
+    deal: function () {
+      var columns = Array.from(
+        dashboardElement.querySelectorAll(".dash-column"),
+      );
+      var cards = Array.from(dashboardElement.querySelectorAll(".dash-card"));
+      cards.forEach(function (card) {
+        if (!card.dataset.home) {
+          var column = columns.indexOf(card.parentElement);
+          var row = Array.from(card.parentElement.children).indexOf(card);
+          card.dataset.home = column + ":" + row;
+        }
+      });
+      var home = function (card, part) {
+        return parseInt(card.dataset.home.split(":")[part], 10);
+      };
+      if (tablet.matches) {
+        cards
+          .sort(function (a, b) {
+            return Dashboard.position(a) - Dashboard.position(b);
+          })
+          .forEach(function (card, i) {
+            columns[i % 2].appendChild(card);
+          });
+      } else {
+        cards
+          .sort(function (a, b) {
+            return home(a, 1) - home(b, 1);
+          })
+          .forEach(function (card) {
+            columns[home(card, 0)].appendChild(card);
+          });
+      }
+      dashboardElement.classList.toggle("dash-columns_dealt", tablet.matches);
+    },
+
+    position: function (card) {
+      return parseInt(card.style.getPropertyValue("--dash-order"), 10) || 0;
     },
 
     today: function () {
@@ -106,11 +160,13 @@ Babubi.Dashboard = (function () {
         });
     },
 
+    // The cards on the page, whatever their order: deal() moves them about.
     cardIds: function (element) {
       return Array.from(element.querySelectorAll(".dash-card[id]"))
         .map(function (card) {
           return card.id;
         })
+        .sort()
         .join(" ");
     },
 
