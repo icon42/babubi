@@ -79,7 +79,13 @@ class FeedingFilter(StartEndFieldFilter, TagsFieldFilter):
 class MedicationFilter(TimeFieldFilter, TagsFieldFilter):
     class Meta(TimeFieldFilter.Meta):
         model = models.Medication
-        fields = sorted(TimeFieldFilter.Meta.fields + ["name", "dosage_unit"])
+        # The date filters are declared above; a dict of fields must only name
+        # model fields. ?name= is the whole name; ?name__icontains= a part of
+        # it, in any case.
+        fields = {
+            **{f: ["exact"] for f in ChildFieldFilter.Meta.fields + ["dosage_unit"]},
+            "name": ["exact", "icontains"],
+        }
 
 
 class NoteFilter(TimeFieldFilter, TagsFieldFilter):
@@ -105,7 +111,11 @@ class TemperatureFilter(TimeFieldFilter, TagsFieldFilter):
 class TimerFilter(StartEndFieldFilter):
     class Meta(StartEndFieldFilter.Meta):
         model = models.Timer
-        fields = sorted(StartEndFieldFilter.Meta.fields + ["name", "user"])
+        # As in MedicationFilter: a part of the name too.
+        fields = {
+            **{f: ["exact"] for f in ChildFieldFilter.Meta.fields + ["user"]},
+            "name": ["exact", "icontains"],
+        }
 
 
 class TummyTimeFilter(StartEndFieldFilter, TagsFieldFilter):

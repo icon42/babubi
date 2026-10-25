@@ -2272,6 +2272,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: tags
           required: false
           in: query
@@ -2390,6 +2396,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: tags
           required: false
           in: query
@@ -2460,6 +2472,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: tags
@@ -2545,6 +2563,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: tags
           required: false
           in: query
@@ -2626,6 +2650,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: tags
@@ -3862,6 +3892,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: ordering
           required: false
           in: query
@@ -3945,6 +3981,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: ordering
           required: false
           in: query
@@ -3980,6 +4022,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: ordering
@@ -4030,6 +4078,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: ordering
           required: false
           in: query
@@ -4076,6 +4130,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: ordering
@@ -4482,6 +4542,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: start
           required: false
           in: query
@@ -4607,6 +4673,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: start
           required: false
           in: query
@@ -4684,6 +4756,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: start
@@ -4776,6 +4854,12 @@ paths:
           description: name
           schema:
             type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
+          schema:
+            type: string
         - name: start
           required: false
           in: query
@@ -4864,6 +4948,12 @@ paths:
           required: false
           in: query
           description: name
+          schema:
+            type: string
+        - name: name__icontains
+          required: false
+          in: query
+          description: A part of the name, in any case
           schema:
             type: string
         - name: start

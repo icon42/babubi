@@ -523,6 +523,24 @@ class MedicationAPITestCase(TestBase.BabubiAPITestCaseBase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Test basic structure - we'll need fixture data for specific content
 
+    def test_get_with_name_filter(self):
+        for name in ("Oftalmolosa Cusi", "Oftalmolosa Cusi", "Dalsy"):
+            self.client.post(
+                self.endpoint,
+                {"child": 1, "name": name, "time": "2017-11-18T12:00:00-05:00"},
+                format="json",
+            )
+        # The whole name, as typed.
+        response = self.client.get(self.endpoint, {"name": "Oftalmolosa Cusi"})
+        self.assertEqual(response.data["count"], 2)
+        response = self.client.get(self.endpoint, {"name": "cusi"})
+        self.assertEqual(response.data["count"], 0)
+        # A part of it, in any case.
+        response = self.client.get(self.endpoint, {"name__icontains": "cusi"})
+        self.assertEqual(response.data["count"], 2)
+        response = self.client.get(self.endpoint, {"name__icontains": "DALSY"})
+        self.assertEqual(response.data["count"], 1)
+
     def test_post(self):
         data = {
             "child": 1,
@@ -688,6 +706,16 @@ class TagsAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:tag-list")
     model = models.Tag
 
+    def test_get_with_name_filter(self):
+        for name in ("Zzyx fever", "zzyx teeth"):
+            self.client.post(
+                self.endpoint, {"name": name, "color": "#123456"}, format="json"
+            )
+        response = self.client.get(self.endpoint, {"name": "zzyx"})
+        self.assertEqual(response.data["count"], 0)
+        response = self.client.get(self.endpoint, {"name__icontains": "zzyx"})
+        self.assertEqual(response.data["count"], 2)
+
     def test_get(self):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -807,6 +835,14 @@ class TemperatureAPITestCase(TestBase.BabubiAPITestCaseBase):
 class TimerAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:timer-list")
     model = models.Timer
+
+    def test_get_with_name_filter(self):
+        for name in ("Zzyx nap", "zzyx night"):
+            self.client.post(self.endpoint, {"name": name, "user": 1}, format="json")
+        response = self.client.get(self.endpoint, {"name": "zzyx"})
+        self.assertEqual(response.data["count"], 0)
+        response = self.client.get(self.endpoint, {"name__icontains": "zzyx"})
+        self.assertEqual(response.data["count"], 2)
 
     def test_get(self):
         response = self.client.get(self.endpoint)

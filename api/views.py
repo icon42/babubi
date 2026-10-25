@@ -121,7 +121,8 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
     lookup_field = "slug"
-    filterset_fields = ("last_used", "name")
+    # ?name= is the whole name; ?name__icontains= a part of it, in any case.
+    filterset_fields = {"last_used": ["exact"], "name": ["exact", "icontains"]}
     ordering_fields = ("last_used", "name", "slug")
     ordering = "name"
 
