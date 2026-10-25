@@ -2556,7 +2556,7 @@ msgstr "Columnas"
 
 #: dashboard/models.py:26
 msgid "Order on narrow screens"
-msgstr ""
+msgstr "Orden en pantallas estrechas"
 
 #: dashboard/models.py:27 dashboard/templates/dashboard/child.html:187
 msgid "Hidden cards"
@@ -2751,7 +2751,7 @@ msgstr "Nunca"
 
 #: dashboard/templates/dashboard/card_controls.html:16
 msgid "Drag to move"
-msgstr ""
+msgstr "Arrastra para mover"
 
 #: dashboard/templates/dashboard/child.html:128
 msgid "Done"

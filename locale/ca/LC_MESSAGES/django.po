@@ -2558,7 +2558,7 @@ msgstr "Columnes"
 
 #: dashboard/models.py:26
 msgid "Order on narrow screens"
-msgstr ""
+msgstr "Ordre en pantalles estretes"
 
 #: dashboard/models.py:27 dashboard/templates/dashboard/child.html:187
 msgid "Hidden cards"
@@ -2753,7 +2753,7 @@ msgstr "Mai"
 
 #: dashboard/templates/dashboard/card_controls.html:16
 msgid "Drag to move"
-msgstr ""
+msgstr "Arrossega per moure"
 
 #: dashboard/templates/dashboard/child.html:128
 msgid "Done"
