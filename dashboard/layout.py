@@ -28,6 +28,9 @@ class Card:
     report: "Report" = None
     # Whether a layout that has not placed it yet keeps it among the hidden.
     default_hidden: bool = False
+    # Whether the card has settings of its own in edit mode (a form in its
+    # body), which a collapsed card on a narrow screen must unfold to reach.
+    editable: bool = False
 
 
 @dataclass(frozen=True)
@@ -92,6 +95,7 @@ CARDS = [
         _("Quick Actions"),
         "card_quick_actions",
         "cards/quick_actions.html",
+        editable=True,
     ),
     _card("timer_list", _("Timers"), "timer"),
     _card("feeding_last", _("Last Feeding"), "feeding"),
@@ -116,6 +120,7 @@ CARDS = [
         "card_percentiles",
         "cards/percentiles.html",
         default_hidden=True,
+        editable=True,
     ),
 ]
 CARDS_BY_KEY = {card.key: card for card in CARDS}
@@ -420,9 +425,10 @@ def apply(layout, kind, key, op, keys=None):
     :param kind: "card" or "action".
     :param op: up, down, left, right (cards only), hide or show; for report
         cards also add (to the dashboard) and remove (from the hidden ones).
-        For cards also "order" with `keys`, the whole order on narrow
-        screens: the shown cards the user sees, which take that order among
-        themselves while the others keep their places.
+        For cards also the whole arrangement dragged on the page: "columns"
+        with `keys` the three columns, or "order" with `keys` the order on
+        narrow screens; both list the shown cards the user sees, which take
+        that order among themselves while the others keep their places.
     :returns: True if the operation was understood.
     """
     columns, hidden, actions, hidden_actions, order = arrangement(layout)
@@ -442,6 +448,19 @@ def apply(layout, kind, key, op, keys=None):
             return False
         order = _rearranged(order, new)
         arranged_narrow = True
+    elif kind == "card" and op == "columns":
+        if not isinstance(keys, list) or len(keys) != COLUMNS:
+            return False
+        new = [listed(column) for column in keys]
+        flat = [k for column in new if column is not None for k in column]
+        if None in new or listed(flat) is None:
+            return False
+        # The cards the user cannot see stay in their column, at their row.
+        for c, column in enumerate(columns):
+            for row, k in enumerate(column):
+                if k not in flat:
+                    new[c].insert(min(row, len(new[c])), k)
+        columns = new
     elif kind == "card" and card(key):
         where = next((c for c in columns if key in c), None)
         is_report = card(key).report is not None

@@ -50,7 +50,15 @@ def dashboard_layout(context, child):
     order = {key: i for i, key in enumerate(k for k in order if k in shown)}
     return {
         "columns": [
-            [{"card": card, "order": order[card.key]} for card in column]
+            [
+                {
+                    "card": card,
+                    "order": order[card.key],
+                    "first": order[card.key] == 0,
+                    "last": order[card.key] == len(order) - 1,
+                }
+                for card in column
+            ]
             for column in columns
         ],
         "hidden": hidden,

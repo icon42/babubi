@@ -1,7 +1,10 @@
 {% load i18n %}
 {% comment %}
     Edit-mode controls of one dashboard card: `card` is the registry entry,
-    `column` and `row` its place, `last_row` whether it is its column's last.
+    `first` and `last` whether it opens or closes the order on narrow screens.
+    On wide screens the whole bar drags the card between the columns; on
+    narrow ones only the handle drags it and the arrows move it, and an
+    editable card unfolds its settings with the toggle (dashboard_edit.js).
 {% endcomment %}
 <form method="post"
       action="{% url 'dashboard:dashboard-layout' object.slug %}"
@@ -9,28 +12,27 @@
     {% csrf_token %}
     <input type="hidden" name="kind" value="card">
     <input type="hidden" name="key" value="{{ card.key }}">
+    <span class="dash-handle d-lg-none"
+          title="{% trans "Drag to move" %}"
+          aria-hidden="true">≡</span>
     <span class="dash-controls-label">{{ card.label }}</span>
     <span class="dash-controls-buttons">
-        <button class="btn btn-sm dash-btn"
-                name="op"
-                value="left"
-                title="{% trans "Move left" %}"
-                {% if column == 1 %}disabled{% endif %}>←</button>
-        <button class="btn btn-sm dash-btn"
-                name="op"
-                value="up"
+        {% if card.editable %}
+            <button type="button"
+                    class="btn btn-sm dash-btn dash-toggle d-lg-none"
+                    title="{% trans "Settings" %}"
+                    aria-expanded="false">▾</button>
+        {% endif %}
+        <button type="button"
+                class="btn btn-sm dash-btn d-lg-none"
+                data-move="up"
                 title="{% trans "Move up" %}"
-                {% if row == 1 %}disabled{% endif %}>↑</button>
-        <button class="btn btn-sm dash-btn"
-                name="op"
-                value="down"
+                {% if first %}disabled{% endif %}>↑</button>
+        <button type="button"
+                class="btn btn-sm dash-btn d-lg-none"
+                data-move="down"
                 title="{% trans "Move down" %}"
-                {% if last_row %}disabled{% endif %}>↓</button>
-        <button class="btn btn-sm dash-btn"
-                name="op"
-                value="right"
-                title="{% trans "Move right" %}"
-                {% if column == 3 %}disabled{% endif %}>→</button>
+                {% if last %}disabled{% endif %}>↓</button>
         <button class="btn btn-sm dash-btn" name="op" value="hide">{% trans "Hide" %}</button>
     </span>
 </form>

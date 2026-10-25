@@ -146,16 +146,18 @@
              class="dash-columns{% if edit %} dash-columns_editing{% endif %}"
              data-version-url="{% url 'dashboard:dashboard-version' object.slug %}"
              data-version="{{ version }}"
-             data-day="{% now "Y-m-d" %}">
+             data-day="{% now "Y-m-d" %}"
+             {% if edit %}data-layout-url="{% url 'dashboard:dashboard-layout' object.slug %}"{% endif %}>
             {% for column in dash.columns %}
                 <div class="dash-column">
                     {% for item in column %}
                         <div class="dash-card"
                              id="dashboard-{{ item.card.key }}"
                              style="--dash-order: {{ item.order }}"
+                             {% if edit %}data-column="{{ forloop.parentloop.counter0 }}" data-row="{{ forloop.counter0 }}"{% endif %}
                              {% if item.card.report %}data-dash-static{% endif %}>
                             {% if edit %}
-                                {% include "dashboard/card_controls.html" with card=item.card column=forloop.parentloop.counter row=forloop.counter last_row=forloop.last %}
+                                {% include "dashboard/card_controls.html" with card=item.card first=item.first last=item.last %}
                             {% endif %}
                             {% dashboard_card item.card object %}
                         </div>
@@ -217,6 +219,7 @@
     {% dashboard_time_words as time_words %}
     {{ time_words|json_script:"dashboard-time-words" }}
     {% if request.GET.edit %}
+        <script type="application/javascript">Babubi.DashboardEdit.init('dashboard-child');</script>
     {% elif user.settings.dashboard_refresh_rate %}
         <script type="application/javascript">
             Babubi.Dashboard.watch('dashboard-child', {{ user.settings.dashboard_refresh_rate_milliseconds }});

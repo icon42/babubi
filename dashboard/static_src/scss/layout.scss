@@ -111,6 +111,69 @@
     }
 }
 
+// Dragging (dashboard_edit.js): the control bar drags a card on wide
+// screens; on narrow ones only the handle does, so the page still scrolls.
+.dash-handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--bs-secondary-color);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.dash-ghost {
+    opacity: .4;
+}
+
+.dash-toggle[aria-expanded="true"] {
+    transform: rotate(180deg);
+}
+
+@include media-breakpoint-up(lg) {
+    .dash-columns_editing .dash-controls {
+        cursor: grab;
+    }
+}
+
+// Below lg the cards being arranged are one list, one per row, each
+// collapsed to its control bar; an editable card unfolds to its settings.
+@include media-breakpoint-down(lg) {
+    .dash-columns_editing {
+        .dash-card {
+            width: 100%;
+            margin-bottom: .5rem;
+            padding: .25rem .5rem;
+        }
+
+        .dash-controls {
+            flex-wrap: nowrap;
+            margin-bottom: 0;
+        }
+
+        .dash-controls-label {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dash-card:not(.dash-card_open) .card-dashboard {
+            display: none;
+        }
+
+        .dash-card_open .dash-controls {
+            margin-bottom: .4rem;
+        }
+    }
+}
+
 // Below the columns in edit mode: the report picker and the hidden cards,
 // shown whole so they can be judged before bringing them back.
 .dash-extra {

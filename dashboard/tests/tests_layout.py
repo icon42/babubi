@@ -130,6 +130,43 @@ class ApplyTestCase(TestCase):
         layout.reset(self.layout)
         self.assertEqual(self.layout.order, [])
 
+    def test_columns_dragged(self):
+        columns = [list(c) for c in self.layout.columns]
+        moved = columns[0].pop(0)
+        columns[2].append(moved)
+        self.assertTrue(layout.apply(self.layout, "card", "", "columns", columns))
+        self.assertEqual(self.layout.columns, columns)
+        self.assertEqual(self.place(moved), (2, len(columns[2]) - 1))
+        # Three lists of shown cards, each once, or nothing.
+        self.assertFalse(layout.apply(self.layout, "card", "", "columns", columns[:2]))
+        self.assertFalse(
+            layout.apply(self.layout, "card", "", "columns", [[moved], [moved], []])
+        )
+        self.assertFalse(
+            layout.apply(self.layout, "card", "", "columns", [["nope"], [], []])
+        )
+        # A card the user cannot see stays in its column, at its row.
+        unseen = columns[1][1]
+        partial = [[k for k in c if k != unseen] for c in columns]
+        partial[0], partial[1] = partial[1], partial[0]
+        self.assertTrue(layout.apply(self.layout, "card", "", "columns", partial))
+        self.assertEqual(self.place(unseen), (1, 1))
+        self.assertEqual(self.layout.columns[0], partial[0][:1] + partial[0][1:])
+
+    def test_actions(self):
+        self.assertTrue(layout.apply(self.layout, "action", "note", "show"))
+        self.assertEqual(self.layout.actions[-1], "note")
+        self.assertTrue(layout.apply(self.layout, "action", "note", "up"))
+        self.assertEqual(self.layout.actions[-2], "note")
+        self.assertTrue(layout.apply(self.layout, "action", "note", "hide"))
+        self.assertIn("note", self.layout.hidden_actions)
+        self.assertFalse(layout.apply(self.layout, "action", "note", "left"))
+
+    def test_unknown_operations(self):
+        self.assertFalse(layout.apply(self.layout, "card", "nope", "up"))
+        self.assertFalse(layout.apply(self.layout, "spoon", "statistics", "up"))
+        self.assertFalse(layout.apply(self.layout, "card", "statistics", "show"))
+
 
 class DashboardLayoutViewTestCase(TestCase):
     @classmethod
@@ -155,6 +192,20 @@ class DashboardLayoutViewTestCase(TestCase):
 
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, 'class="dash-controls"')
+        self.assertContains(page, 'data-layout-url="' + self.edit_url + '"')
+        self.assertContains(page, "Babubi.DashboardEdit.init")
+        self.assertContains(page, 'class="dash-handle d-lg-none"')
+        self.assertContains(page, 'data-move="up"')
+        self.assertNotContains(page, 'value="left"')
+        # The toggle unfolds the cards with settings: quick actions and
+        # percentiles (hidden by default, so only the former here).
+        self.assertEqual(
+            page.content.decode().count('class="btn btn-sm dash-btn dash-toggle'), 1
+        )
+        self.assertContains(page, 'id="dashboard-quick_actions"')
+        quick = page.content.decode().split('id="dashboard-quick_actions"')[1]
+        self.assertIn("dash-toggle", quick.split("</form>")[0])
+
         response = self.c.post(
             self.edit_url, {"kind": "card", "key": "statistics", "op": "hide"}
         )
@@ -176,6 +227,48 @@ class DashboardLayoutViewTestCase(TestCase):
         response = self.c.post(self.edit_url, {"kind": "card", "key": "x", "op": "up"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.c.get(self.edit_url).status_code, 405)
+
+    def test_dragged_arrangements_answer_json(self):
+        import json
+
+        def drag(op, keys, accept="application/json"):
+            return self.c.post(
+                self.edit_url,
+                {"kind": "card", "op": op, "keys": json.dumps(keys)},
+                HTTP_ACCEPT=accept,
+            )
+
+        columns = layout.default_columns()
+        shown = [key for column in columns for key in column]
+        response = drag("order", list(reversed(shown)))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"ok": True})
+        saved = DashboardLayout.objects.get(user=self.user, child=self.child)
+        self.assertEqual(saved.order, list(reversed(shown)))
+        # The page positions the cards by it, the last of the default
+        # interleaving first.
+        page = self.c.get(self.url)
+        self.assertRegex(
+            page.content.decode(),
+            r'id="dashboard-{}"\s+style="--dash-order: 0"'.format(shown[-1]),
+        )
+        self.assertNotContains(page, "data-column=")
+
+        columns[0], columns[2] = columns[2], columns[0]
+        response = drag("columns", columns)
+        self.assertEqual(response.status_code, 200)
+        saved.refresh_from_db()
+        self.assertEqual(saved.columns, columns)
+        self.assertEqual(saved.order, list(reversed(shown)))
+
+        self.assertEqual(drag("order", ["nope"]).status_code, 400)
+        self.assertEqual(drag("columns", [[], []]).status_code, 400)
+        response = self.c.post(
+            self.edit_url, {"kind": "card", "op": "order", "keys": "{not json"}
+        )
+        self.assertEqual(response.status_code, 400)
+        # Without asking for JSON, the usual redirect.
+        self.assertEqual(drag("order", shown, accept="text/html").status_code, 302)
 
     def test_cards_and_actions_follow_permissions(self):
         user = get_user_model().objects.create_user(
