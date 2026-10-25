@@ -13386,25 +13386,33 @@ textarea.form-control-lg {
   line-height: 1;
   color: var(--activity);
 }
-.quick-action-icon_timer {
+.quick-action-icon_badged {
   position: relative;
 }
 .quick-action-icon .quick-action-badge {
   position: absolute;
-  right: -0.15em;
-  bottom: -0.1em;
-  padding: 0.06em;
+  right: -0.2em;
+  bottom: -0.12em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
   border-radius: 50%;
-  background: var(--card-surface, var(--bs-body-bg));
+  background: var(--activity);
+  color: #fff;
   font-size: 0.42em;
   line-height: 1;
+}
+.quick-action-icon .quick-action-badge::before {
+  vertical-align: 0;
 }
 .quick-action-icon_child img {
   width: 0.85em;
   height: 0.85em;
   object-fit: cover;
 }
-.quick-action-icon [class^=icon-] {
+.quick-action-icon [class^=icon-]:not(.quick-action-badge) {
   color: inherit;
 }
 
@@ -13423,6 +13431,24 @@ textarea.form-control-lg {
 
 .quick-actions-edit_hidden {
   color: var(--bs-secondary-color);
+}
+.quick-actions-edit_hidden .dash-controls-buttons {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.quick-actions-more {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--bs-border-color-translucent);
+}
+.quick-actions-more > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.quick-actions-more > ul {
+  margin-top: 0.5rem;
 }
 
 .dash-btn {
