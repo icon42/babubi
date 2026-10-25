@@ -299,7 +299,9 @@ def arrangement(layout):
     dropped, each key appears once, and keys the layout has never seen
     (cards and actions added since it was saved) take their default place.
     :param layout: a DashboardLayout, saved or not.
-    :returns: (columns, hidden, actions, hidden_actions), lists of keys.
+    :returns: (columns, hidden, actions, hidden_actions, order), lists of
+        keys; `order` is the cards' order on narrow screens, every shown card
+        once, interleaved from the columns where the layout has not set it.
     """
     seen = set()
 
@@ -320,6 +322,7 @@ def arrangement(layout):
                 hidden.append(fixed.key)
             else:
                 columns[DEFAULT_COLUMN[fixed.key]].append(fixed.key)
+    order = narrow_order(layout.order, columns)
 
     seen.clear()
     actions = known(layout.actions, action)
@@ -341,13 +344,13 @@ def arrangement(layout):
     ):
         if CHILD_PREFIX + slug not in seen:
             hidden_actions.append(CHILD_PREFIX + slug)
-    return columns, hidden, actions, hidden_actions
+    return columns, hidden, actions, hidden_actions, order
 
 
 def interleaved(columns):
     """
-    The cards in the order narrow screens show them: the first of each
-    column, then the second of each, and so on.
+    The cards in the order narrow screens show them unless arranged there:
+    the first of each column, then the second of each, and so on.
     :returns: a dict of key → position.
     """
     order = {}
@@ -359,11 +362,37 @@ def interleaved(columns):
     return order
 
 
+def narrow_order(order, columns):
+    """
+    The order of the shown cards on narrow screens: `order` as saved, less
+    the keys no longer shown, then the shown cards it does not place yet
+    (added since it was arranged) as the columns interleave them. An empty
+    `order`, never arranged, gives the interleaving itself.
+    """
+    ideal = interleaved(columns)
+    kept = []
+    for key in order:
+        if key in ideal and key not in kept:
+            kept.append(key)
+    kept += [key for key in sorted(ideal, key=ideal.get) if key not in kept]
+    return kept
+
+
 def _move_within(keys, key, step):
     i = keys.index(key)
     j = i + step
     if 0 <= j < len(keys):
         keys[i], keys[j] = keys[j], keys[i]
+
+
+def _rearranged(old, new):
+    """
+    `old` with the keys `new` lists moved into that order among themselves;
+    the others (cards the user editing cannot see) keep their slots.
+    :param new: a subset of `old`, each key once.
+    """
+    moved = iter(new)
+    return [next(moved) if key in new else key for key in old]
 
 
 def configure(layout, key, data):
@@ -385,28 +414,50 @@ def configure(layout, key, data):
     return True
 
 
-def apply(layout, kind, key, op):
+def apply(layout, kind, key, op, keys=None):
     """
     Applies one edit-mode operation to a layout, without saving it.
     :param kind: "card" or "action".
     :param op: up, down, left, right (cards only), hide or show; for report
         cards also add (to the dashboard) and remove (from the hidden ones).
+        For cards also "order" with `keys`, the whole order on narrow
+        screens: the shown cards the user sees, which take that order among
+        themselves while the others keep their places.
     :returns: True if the operation was understood.
     """
-    columns, hidden, actions, hidden_actions = arrangement(layout)
-    if kind == "card" and card(key):
+    columns, hidden, actions, hidden_actions, order = arrangement(layout)
+    # The narrow-screen order follows the columns until arranged on its own.
+    arranged_narrow = bool(layout.order)
+    shown = {k for column in columns for k in column}
+
+    def listed(submitted):
+        """The submitted keys if they are shown cards, each once, else None."""
+        if not isinstance(submitted, list) or len(set(submitted)) != len(submitted):
+            return None
+        return submitted if shown.issuperset(submitted) else None
+
+    if kind == "card" and op == "order":
+        new = listed(keys)
+        if new is None:
+            return False
+        order = _rearranged(order, new)
+        arranged_narrow = True
+    elif kind == "card" and card(key):
         where = next((c for c in columns if key in c), None)
         is_report = card(key).report is not None
         if op == "hide" and where is not None:
             where.remove(key)
             hidden.append(key)
+            order.remove(key)
         elif op == "show" and key in hidden:
             hidden.remove(key)
             columns[DEFAULT_COLUMN.get(key, 0)].append(key)
+            order.append(key)
         elif op == "add" and is_report and where is None:
             if key in hidden:
                 hidden.remove(key)
             columns[0].append(key)
+            order.append(key)
         elif op == "remove" and is_report and key in hidden:
             hidden.remove(key)
         elif op in ("up", "down") and where is not None:
@@ -438,11 +489,13 @@ def apply(layout, kind, key, op):
     layout.hidden = hidden
     layout.actions = actions
     layout.hidden_actions = hidden_actions
+    layout.order = order if arranged_narrow else []
     return True
 
 
 def reset(layout):
     layout.columns = default_columns()
     layout.hidden = default_hidden()
+    layout.order = []
     layout.actions = default_actions()
     layout.hidden_actions = [a.key for a in ACTIONS if not a.default]

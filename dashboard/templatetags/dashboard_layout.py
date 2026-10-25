@@ -20,7 +20,7 @@ def dashboard_layout(context, child):
     screens, plus the hidden cards and the quick actions.
     """
     user = context["request"].user
-    columns, hidden, actions, hidden_actions = layout.arrangement(
+    columns, hidden, actions, hidden_actions, order = layout.arrangement(
         DashboardLayout.of(user, child)
     )
 
@@ -45,8 +45,9 @@ def dashboard_layout(context, child):
 
     columns = [cards_of(column) for column in columns]
     hidden = cards_of(hidden)
-    order = layout.interleaved([[card.key for card in column] for column in columns])
     shown = {card.key for card in shown_cards(columns)}
+    # The narrow-screen positions, among the cards this user sees.
+    order = {key: i for i, key in enumerate(k for k in order if k in shown)}
     return {
         "columns": [
             [{"card": card, "order": order[card.key]} for card in column]

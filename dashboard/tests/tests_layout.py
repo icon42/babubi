@@ -12,8 +12,12 @@ from dashboard.models import DashboardLayout
 
 class ArrangementTestCase(TestCase):
     def test_new_layout_takes_the_defaults(self):
-        columns, hidden, actions, hidden_actions = layout.arrangement(DashboardLayout())
+        columns, hidden, actions, hidden_actions, order = layout.arrangement(
+            DashboardLayout()
+        )
         self.assertEqual(columns, layout.default_columns())
+        interleaved = layout.interleaved(columns)
+        self.assertEqual(order, sorted(interleaved, key=interleaved.get))
         self.assertEqual(columns[0][0], "quick_actions")
         self.assertEqual(hidden, layout.default_hidden())
         self.assertIn("percentiles", hidden)
@@ -28,7 +32,7 @@ class ArrangementTestCase(TestCase):
             actions=["note", "note", "gone"],
             hidden_actions=[],
         )
-        columns, hidden, actions, hidden_actions = layout.arrangement(saved)
+        columns, hidden, actions, hidden_actions, order = layout.arrangement(saved)
         self.assertEqual(len(columns), layout.COLUMNS)
         self.assertEqual(columns[0][0], "sleep_last")
         self.assertEqual(columns[1][0], "statistics")
@@ -44,6 +48,23 @@ class ArrangementTestCase(TestCase):
         self.assertEqual(
             sorted(order, key=order.get), ["a1", "b1", "c1", "a2", "c2", "a3"]
         )
+
+    def test_narrow_order(self):
+        columns = [["a1", "a2", "a3"], ["b1"], ["c1", "c2"]]
+        # Unknown and repeated keys go; the cards not placed yet follow, as
+        # the columns interleave them.
+        self.assertEqual(
+            layout.narrow_order(["c2", "gone", "a1", "c2", "b1"], columns),
+            ["c2", "a1", "b1", "c1", "a2", "a3"],
+        )
+        self.assertEqual(
+            layout.narrow_order(["a3", "a1"], columns),
+            ["a3", "a1", "b1", "c1", "a2", "c2"],
+        )
+        saved = DashboardLayout(order=["statistics", "quick_actions"])
+        columns, hidden, actions, hidden_actions, order = layout.arrangement(saved)
+        self.assertEqual(order[:2], ["statistics", "quick_actions"])
+        self.assertEqual(sorted(order), sorted(k for c in columns for k in c))
 
 
 class ApplyTestCase(TestCase):
@@ -76,20 +97,38 @@ class ApplyTestCase(TestCase):
             self.place("statistics")[0], layout.DEFAULT_COLUMN["statistics"]
         )
         self.assertNotIn("statistics", self.layout.hidden)
+        # Never arranged on narrow screens: the order keeps following the
+        # columns, so it is not saved.
+        self.assertEqual(self.layout.order, [])
 
-    def test_actions(self):
-        self.assertTrue(layout.apply(self.layout, "action", "note", "show"))
-        self.assertEqual(self.layout.actions[-1], "note")
-        self.assertTrue(layout.apply(self.layout, "action", "note", "up"))
-        self.assertEqual(self.layout.actions[-2], "note")
-        self.assertTrue(layout.apply(self.layout, "action", "note", "hide"))
-        self.assertIn("note", self.layout.hidden_actions)
-        self.assertFalse(layout.apply(self.layout, "action", "note", "left"))
-
-    def test_unknown_operations(self):
-        self.assertFalse(layout.apply(self.layout, "card", "nope", "up"))
-        self.assertFalse(layout.apply(self.layout, "spoon", "statistics", "up"))
-        self.assertFalse(layout.apply(self.layout, "card", "statistics", "show"))
+    def test_order_on_narrow_screens(self):
+        shown = [k for column in self.layout.columns for k in column]
+        new = list(reversed(shown))
+        self.assertTrue(layout.apply(self.layout, "card", "", "order", new))
+        self.assertEqual(self.layout.order, new)
+        # Columns untouched.
+        self.assertEqual(self.layout.columns, layout.default_columns())
+        # Only the shown cards, each once.
+        self.assertFalse(layout.apply(self.layout, "card", "", "order", ["nope"]))
+        self.assertFalse(
+            layout.apply(self.layout, "card", "", "order", [shown[0], shown[0]])
+        )
+        self.assertFalse(layout.apply(self.layout, "card", "", "order", "statistics"))
+        # A partial list (the cards one user sees) orders those among
+        # themselves; the rest keep their slots.
+        self.assertTrue(
+            layout.apply(self.layout, "card", "", "order", [new[-1], new[0]])
+        )
+        self.assertEqual(self.layout.order[0], new[-1])
+        self.assertEqual(self.layout.order[-1], new[0])
+        self.assertEqual(self.layout.order[1:-1], new[1:-1])
+        # Hiding and showing keep the arranged order current.
+        self.assertTrue(layout.apply(self.layout, "card", "statistics", "hide"))
+        self.assertNotIn("statistics", self.layout.order)
+        self.assertTrue(layout.apply(self.layout, "card", "statistics", "show"))
+        self.assertEqual(self.layout.order[-1], "statistics")
+        layout.reset(self.layout)
+        self.assertEqual(self.layout.order, [])
 
 
 class DashboardLayoutViewTestCase(TestCase):
@@ -116,7 +155,6 @@ class DashboardLayoutViewTestCase(TestCase):
 
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, 'class="dash-controls"')
-
         response = self.c.post(
             self.edit_url, {"kind": "card", "key": "statistics", "op": "hide"}
         )

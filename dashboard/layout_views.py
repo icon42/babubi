@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -31,7 +33,8 @@ class ActiveChildDashboard(ChildDashboard):
 class DashboardLayoutEdit(PermissionRequiredMixin, View):
     """
     Applies one operation of the dashboard's edit mode to the user's layout
-    and goes back to the child dashboard, still in edit mode.
+    and goes back to the child dashboard, still in edit mode; "keys" carries
+    a whole order as JSON.
     """
 
     permission_required = ("core.view_child",)
@@ -47,10 +50,19 @@ class DashboardLayoutEdit(PermissionRequiredMixin, View):
             key = request.POST.get("key", "")
             if not layout.configure(instance, key, request.POST):
                 return HttpResponseBadRequest()
-        elif not layout.apply(
-            instance, request.POST.get("kind", ""), request.POST.get("key", ""), op
-        ):
-            return HttpResponseBadRequest()
+        else:
+            try:
+                keys = json.loads(request.POST.get("keys", "null"))
+            except ValueError:
+                return HttpResponseBadRequest()
+            if not layout.apply(
+                instance,
+                request.POST.get("kind", ""),
+                request.POST.get("key", ""),
+                op,
+                keys,
+            ):
+                return HttpResponseBadRequest()
         instance.save()
         url = reverse("core:child", args=[child.slug])
         anchor = request.POST.get("key", "")

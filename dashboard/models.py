@@ -21,6 +21,9 @@ class DashboardLayout(models.Model):
     )
     # A list of columns, each a list of card keys, top to bottom.
     columns = models.JSONField(default=list, verbose_name=_("Columns"))
+    # The card keys in the order narrow screens show them, where the user
+    # arranged them there; empty, they interleave the columns.
+    order = models.JSONField(default=list, verbose_name=_("Order on narrow screens"))
     hidden = models.JSONField(default=list, verbose_name=_("Hidden cards"))
     actions = models.JSONField(default=list, verbose_name=_("Quick actions"))
     hidden_actions = models.JSONField(
