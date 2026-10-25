@@ -13422,6 +13422,11 @@ textarea.form-control-lg {
   gap: 0.5rem;
   padding: 0.3rem 0;
 }
+.quick-actions-edit .dash-handle {
+  width: 1.5rem;
+  height: auto;
+  margin-left: -0.25rem;
+}
 .quick-actions-edit li + li {
   border-top: 1px solid var(--bs-border-color-translucent);
 }
