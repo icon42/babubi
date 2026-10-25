@@ -354,6 +354,13 @@
         padding: .3rem 0;
     }
 
+    // The handle that drags a chosen action, narrower than a card's.
+    .dash-handle {
+        width: 1.5rem;
+        height: auto;
+        margin-left: -.25rem;
+    }
+
     li + li {
         border-top: 1px solid var(--bs-border-color-translucent);
     }

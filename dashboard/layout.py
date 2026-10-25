@@ -466,10 +466,11 @@ def apply(layout, kind, key, op, keys=None):
     :param kind: "card" or "action".
     :param op: up, down, left, right (cards only), hide or show; for report
         cards also add (to the dashboard) and remove (from the hidden ones).
-        For cards also the whole arrangement dragged on the page: "columns"
+        Also the whole arrangement dragged on the page: for cards "columns"
         with `keys` the three columns, or "order" with `keys` the order on
-        narrow screens; both list the shown cards the user sees, which take
-        that order among themselves while the others keep their places.
+        narrow screens; for actions "order" with `keys` the chosen actions.
+        Each lists what the user sees, which takes that order among itself
+        while the rest keeps its places.
     :returns: True if the operation was understood.
     """
     columns, hidden, actions, hidden_actions, order = arrangement(layout)
@@ -477,11 +478,11 @@ def apply(layout, kind, key, op, keys=None):
     arranged_narrow = bool(layout.order)
     shown = {k for column in columns for k in column}
 
-    def listed(submitted):
-        """The submitted keys if they are shown cards, each once, else None."""
+    def listed(submitted, among=shown):
+        """The submitted keys if they are among the shown, each once."""
         if not isinstance(submitted, list) or len(set(submitted)) != len(submitted):
             return None
-        return submitted if shown.issuperset(submitted) else None
+        return submitted if among.issuperset(submitted) else None
 
     if kind == "card" and op == "order":
         new = listed(keys)
@@ -532,6 +533,11 @@ def apply(layout, kind, key, op, keys=None):
             columns[target].insert(min(row, len(columns[target])), key)
         else:
             return False
+    elif kind == "action" and op == "order":
+        new = listed(keys, set(actions))
+        if new is None:
+            return False
+        actions = _rearranged(actions, new)
     elif kind == "action" and action(key):
         if op == "hide" and key in actions:
             actions.remove(key)

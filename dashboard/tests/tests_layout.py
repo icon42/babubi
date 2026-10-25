@@ -230,17 +230,18 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertEqual(layout.action("add:timer").url, "core:timer-add")
         self.assertEqual(layout.action("list:timer").url, "core:timer-list")
         self.assertIsNone(layout.action("list:sleep"))
-        # Arranging a quick action leaves the folded list open.
+        # Every operation comes back to the edit page; the script that posts
+        # them swaps in what changed (dashboard_edit.js).
         response = self.c.post(
             self.edit_url, {"kind": "action", "key": "sleep", "op": "show"}
         )
-        self.assertEqual(response.url, self.url + "?edit=1&more=1#dashboard-sleep")
-        self.assertContains(
-            self.c.get(self.url + "?edit=1&more=1"),
-            '<details class="quick-actions-more" open>',
-        )
-        self.assertNotContains(self.c.get(self.url + "?edit=1"), 'more" open>')
+        self.assertEqual(response.url, self.url + "?edit=1")
         self.assertContains(page, 'value="add:medication"')
+        # The chosen actions drag by a handle, each row named by its key.
+        self.assertContains(
+            page, 'class="quick-actions-edit quick-actions-edit_sortable'
+        )
+        self.assertContains(page, '<li data-key="diaperchange">')
 
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, 'class="dash-controls"')
@@ -262,9 +263,7 @@ class DashboardLayoutViewTestCase(TestCase):
             self.edit_url, {"kind": "card", "key": "statistics", "op": "hide"}
         )
         self.assertRedirects(
-            response,
-            self.url + "?edit=1#dashboard-statistics",
-            fetch_redirect_response=False,
+            response, self.url + "?edit=1", fetch_redirect_response=False
         )
         saved = DashboardLayout.objects.get(user=self.user, child=self.child)
         self.assertIn("statistics", saved.hidden)
@@ -275,21 +274,20 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.c.get(self.edit_url).status_code, 405)
 
-    def test_dragged_arrangements_answer_json(self):
+    def test_dragged_arrangements_are_saved(self):
         import json
 
-        def drag(op, keys, accept="application/json"):
+        def drag(op, keys, kind="card"):
             return self.c.post(
-                self.edit_url,
-                {"kind": "card", "op": op, "keys": json.dumps(keys)},
-                HTTP_ACCEPT=accept,
+                self.edit_url, {"kind": kind, "op": op, "keys": json.dumps(keys)}
             )
 
         columns = layout.default_columns()
         shown = [key for column in columns for key in column]
         response = drag("order", list(reversed(shown)))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"ok": True})
+        self.assertRedirects(
+            response, self.url + "?edit=1", fetch_redirect_response=False
+        )
         saved = DashboardLayout.objects.get(user=self.user, child=self.child)
         self.assertEqual(saved.order, list(reversed(shown)))
         # The page positions the cards by it, the last of the default
@@ -303,10 +301,17 @@ class DashboardLayoutViewTestCase(TestCase):
 
         columns[0], columns[2] = columns[2], columns[0]
         response = drag("columns", columns)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         saved.refresh_from_db()
         self.assertEqual(saved.columns, columns)
         self.assertEqual(saved.order, list(reversed(shown)))
+
+        # The quick actions dragged into an order, among the chosen ones.
+        actions = layout.default_actions()
+        self.assertEqual(drag("order", actions[::-1], kind="action").status_code, 302)
+        saved.refresh_from_db()
+        self.assertEqual(saved.actions, actions[::-1])
+        self.assertEqual(drag("order", ["add:sleep"], kind="action").status_code, 400)
 
         self.assertEqual(drag("order", ["nope"]).status_code, 400)
         self.assertEqual(drag("columns", [[], []]).status_code, 400)
@@ -314,8 +319,6 @@ class DashboardLayoutViewTestCase(TestCase):
             self.edit_url, {"kind": "card", "op": "order", "keys": "{not json"}
         )
         self.assertEqual(response.status_code, 400)
-        # Without asking for JSON, the usual redirect.
-        self.assertEqual(drag("order", shown, accept="text/html").status_code, 302)
 
     def test_cards_and_actions_follow_permissions(self):
         user = get_user_model().objects.create_user(

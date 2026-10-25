@@ -33,9 +33,10 @@ class ActiveChildDashboard(ChildDashboard):
 class DashboardLayoutEdit(PermissionRequiredMixin, View):
     """
     Applies one operation of the dashboard's edit mode to the user's layout
-    and goes back to the child dashboard, still in edit mode; an arrangement
-    dragged on the page (dashboard_edit.js) asks for JSON instead and gets
-    {"ok": true}, with "keys" carrying the dragged lists as JSON.
+    and goes back to the child dashboard, still in edit mode. The page posts
+    every operation by fetch and follows that redirect to the fresh page,
+    swapping in what changed (dashboard_edit.js); "keys" carries a dragged
+    arrangement as JSON.
     """
 
     permission_required = ("core.view_child",)
@@ -63,15 +64,8 @@ class DashboardLayoutEdit(PermissionRequiredMixin, View):
             ):
                 return HttpResponseBadRequest()
         instance.save()
-        if "application/json" in request.headers.get("Accept", ""):
-            return JsonResponse({"ok": True})
-        url = reverse("core:child", args=[child.slug])
-        anchor = request.POST.get("key", "")
-        # After arranging a quick action, the folded list of the others
-        # stays open (cards/quick_actions.html).
-        more = "&more=1" if request.POST.get("kind") == "action" else ""
         return HttpResponseRedirect(
-            "{}?edit=1{}{}".format(url, more, "#dashboard-" + anchor if anchor else "")
+            "{}?edit=1".format(reverse("core:child", args=[child.slug]))
         )
 
 

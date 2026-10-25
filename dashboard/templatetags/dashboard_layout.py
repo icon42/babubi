@@ -136,11 +136,6 @@ def card_quick_actions(context, child):
         "hidden_actions": arranged["hidden_actions"],
         "available": [groups[a.key] for a in layout.ACTIONS if a.key in groups],
         "children": children,
-        # The folded list stays open after arranging an action (the edit
-        # view redirects with "more").
-        "more": bool(context["request"].GET.get("more")),
-        "empty": not arranged["actions"] and not edit,
-        "hide_empty": True,
     }
 
 

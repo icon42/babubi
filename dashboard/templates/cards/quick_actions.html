@@ -5,9 +5,16 @@
 {% endblock %}
 {% block content %}
     {% if edit %}
-        <ul class="quick-actions-edit list-unstyled mb-0">
+        {% comment %}
+            The chosen actions, to arrange by dragging their handle or with
+            the arrows (dashboard_edit.js), and to hide.
+        {% endcomment %}
+        <ul class="quick-actions-edit quick-actions-edit_sortable list-unstyled mb-0">
             {% for item in actions %}
-                <li>
+                <li data-key="{{ item.action.key }}">
+                    <span class="dash-handle"
+                          title="{% trans "Drag to move" %}"
+                          aria-hidden="true">≡</span>
                     <i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
                     <span class="quick-actions-edit-label">{{ item.action.label }}{% if item.action.timer_kind %} · {% trans "Timer" %}{% elif item.action.add %} · {% trans "Add" %}{% endif %}</span>
                     <form method="post"
@@ -38,7 +45,7 @@
                 still offers (list, add form, timer), and one row of children.
                 A button's value is the action key; the form posts "show".
             {% endcomment %}
-            <details class="quick-actions-more" {% if more %}open{% endif %}>
+            <details class="quick-actions-more">
                 <summary>{% trans "More actions" %}</summary>
                 <ul class="quick-actions-edit list-unstyled mb-0">
                     {% for group in available %}
