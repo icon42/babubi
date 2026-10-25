@@ -32,6 +32,7 @@ const config = {
       "node_modules/@popperjs/core/dist/umd/popper.js",
       "node_modules/bootstrap/dist/js/bootstrap.js",
       "node_modules/masonry-layout/dist/masonry.pkgd.js",
+      "node_modules/sortablejs/Sortable.js",
     ],
     graph: [
       "node_modules/plotly.js/dist/plotly-cartesian.js",
