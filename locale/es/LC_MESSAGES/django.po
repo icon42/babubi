@@ -2693,11 +2693,11 @@ msgstr "Ocultar"
 
 #: dashboard/templates/cards/quick_actions.html:43
 msgid "More actions"
-msgstr ""
+msgstr "Más acciones"
 
 #: dashboard/templates/cards/quick_actions.html:64
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: dashboard/templates/cards/quick_actions.html:120
 msgid "Start a timer"

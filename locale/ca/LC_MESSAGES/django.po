@@ -2695,11 +2695,11 @@ msgstr "Amaga"
 
 #: dashboard/templates/cards/quick_actions.html:43
 msgid "More actions"
-msgstr ""
+msgstr "Més accions"
 
 #: dashboard/templates/cards/quick_actions.html:64
 msgid "List"
-msgstr ""
+msgstr "Llista"
 
 #: dashboard/templates/cards/quick_actions.html:120
 msgid "Start a timer"
