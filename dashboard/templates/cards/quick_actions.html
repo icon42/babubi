@@ -9,7 +9,7 @@
             {% for item in actions %}
                 <li>
                     <i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
-                    <span class="quick-actions-edit-label">{{ item.action.label }}{% if item.action.timer_kind %} · {% trans "Timer" %}{% endif %}</span>
+                    <span class="quick-actions-edit-label">{{ item.action.label }}{% if item.action.timer_kind %} · {% trans "Timer" %}{% elif item.action.add %} · {% trans "Add" %}{% endif %}</span>
                     <form method="post"
                           action="{% url 'dashboard:dashboard-layout' child.slug %}"
                           class="dash-controls-buttons">
@@ -30,23 +30,64 @@
                     </form>
                 </li>
             {% endfor %}
-            {% for action in hidden_actions %}
-                <li class="quick-actions-edit_hidden">
-                    <i class="icon-{{ action.activity }}" aria-hidden="true"></i>
-                    <span class="quick-actions-edit-label">{{ action.label }}{% if action.timer_kind %} · {% trans "Timer" %}{% endif %}</span>
-                    <form method="post"
-                          action="{% url 'dashboard:dashboard-layout' child.slug %}"
-                          class="dash-controls-buttons">
-                        {% csrf_token %}
-                        <input type="hidden" name="kind" value="action">
-                        <input type="hidden" name="key" value="{{ action.key }}">
-                        <button class="btn btn-sm dash-btn dash-btn_show"
-                                name="op"
-                                value="show">{% trans "Show" %}</button>
-                    </form>
-                </li>
-            {% endfor %}
         </ul>
+        {% if available or children %}
+            {% comment %}
+                The actions not on the card, folded away and grouped by
+                activity: one row per activity with a button per variant it
+                still offers (list, add form, timer), and one row of children.
+                A button's value is the action key; the form posts "show".
+            {% endcomment %}
+            <details class="quick-actions-more" {% if more %}open{% endif %}>
+                <summary>{% trans "More actions" %}</summary>
+                <ul class="quick-actions-edit list-unstyled mb-0">
+                    {% for group in available %}
+                        <li class="quick-actions-edit_hidden">
+                            <i class="icon-{{ group.action.activity }}" aria-hidden="true"></i>
+                            <span class="quick-actions-edit-label">{{ group.action.label }}</span>
+                            <form method="post"
+                                  action="{% url 'dashboard:dashboard-layout' child.slug %}"
+                                  class="dash-controls-buttons">
+                                {% csrf_token %}
+                                <input type="hidden" name="kind" value="action">
+                                <input type="hidden" name="op" value="show">
+                                {% for action in group.variants %}
+                                    <button class="btn btn-sm dash-btn dash-btn_show"
+                                            name="key"
+                                            value="{{ action.key }}">
+                                        {% if action.starts_timer %}
+                                            <i class="icon-timer" aria-hidden="true"></i> {% trans "Timer" %}
+                                        {% elif action.add %}
+                                            <i class="icon-add" aria-hidden="true"></i> {% trans "Add" %}
+                                        {% else %}
+                                            {% trans "List" %}
+                                        {% endif %}
+                                    </button>
+                                {% endfor %}
+                            </form>
+                        </li>
+                    {% endfor %}
+                    {% if children %}
+                        <li class="quick-actions-edit_hidden">
+                            <i class="icon-child" aria-hidden="true"></i>
+                            <span class="quick-actions-edit-label">{% trans "Children" %}</span>
+                            <form method="post"
+                                  action="{% url 'dashboard:dashboard-layout' child.slug %}"
+                                  class="dash-controls-buttons">
+                                {% csrf_token %}
+                                <input type="hidden" name="kind" value="action">
+                                <input type="hidden" name="op" value="show">
+                                {% for action in children %}
+                                    <button class="btn btn-sm dash-btn dash-btn_show"
+                                            name="key"
+                                            value="{{ action.key }}">{{ action.label }}</button>
+                                {% endfor %}
+                            </form>
+                        </li>
+                    {% endif %}
+                </ul>
+            </details>
+        {% endif %}
     {% else %}
         <div class="quick-actions">
             {% for item in actions %}
@@ -56,6 +97,11 @@
                         {% if item.action.child %}
                             <span class="quick-action-icon quick-action-icon_child">
                                 {% include "core/child_thumbnail.html" with child=item.action.child %}
+                            </span>
+                        {% elif item.action.add %}
+                            <span class="quick-action-icon quick-action-icon_badged"><i class="icon-{{ item.action.activity }}"
+   aria-hidden="true"></i>
+                                <i class="icon-add quick-action-badge" aria-hidden="true"></i>
                             </span>
                         {% else %}
                             <span class="quick-action-icon"><i class="icon-{{ item.action.activity }}"
@@ -71,7 +117,7 @@
                         <button class="quick-action activity-{{ item.action.activity }}"
                                 type="submit"
                                 {% if item.action.timer_kind %}title="{% trans "Start a timer" %}"{% endif %}>
-                            <span class="quick-action-icon{% if item.action.timer_kind %} quick-action-icon_timer{% endif %}"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
+                            <span class="quick-action-icon{% if item.action.timer_kind %} quick-action-icon_badged{% endif %}"><i class="icon-{{ item.action.activity }}" aria-hidden="true"></i>
                                 {% if item.action.timer_kind %}<i class="icon-timer quick-action-badge" aria-hidden="true"></i>{% endif %}
                             </span>
                             {{ item.action.label }}

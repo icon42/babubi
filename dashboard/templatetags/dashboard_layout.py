@@ -106,6 +106,21 @@ def card_quick_actions(context, child):
     """
     arranged = dashboard_layout(context, child)
     edit = bool(context["request"].GET.get("edit"))
+    # The hidden actions grouped by activity, in the registry's order, for
+    # the folded list of the edit mode; the children's shortcuts apart.
+    groups = {}
+    children = []
+    for action in arranged["hidden_actions"]:
+        if action.child:
+            children.append(action)
+            continue
+        base = action.timer_kind or action.key.split(":")[-1]
+        group = groups.setdefault(
+            base, {"action": layout.ACTIONS_BY_KEY[base], "variants": []}
+        )
+        group["variants"].append(action)
+    for group in groups.values():
+        group["variants"].sort(key=lambda a: a.rank)
     return {
         "type": "activities",
         "child": child,
@@ -119,6 +134,11 @@ def card_quick_actions(context, child):
             for action in arranged["actions"]
         ],
         "hidden_actions": arranged["hidden_actions"],
+        "available": [groups[a.key] for a in layout.ACTIONS if a.key in groups],
+        "children": children,
+        # The folded list stays open after arranging an action (the edit
+        # view redirects with "more").
+        "more": bool(context["request"].GET.get("more")),
         "empty": not arranged["actions"] and not edit,
         "hide_empty": True,
     }

@@ -188,7 +188,59 @@ class DashboardLayoutViewTestCase(TestCase):
         page = self.c.get(self.url)
         self.assertContains(page, 'id="dashboard-quick_actions"')
         self.assertNotContains(page, 'class="dash-controls"')
-        self.assertContains(page, "?child=" + self.child.slug)
+        # A quick action opens the activity's list for the child; entries
+        # are added from there or by a timer.
+        self.assertContains(page, 'href="/sleep/?child={}"'.format(self.child.pk))
+        self.assertNotContains(page, 'href="/sleep/add/?child=')
+        for action in layout.ACTIONS:
+            if action.url:
+                self.assertTrue(action.url.endswith("-list"), action.url)
+                self.assertTrue(layout.action("add:" + action.key).add)
+        self.assertIsNone(layout.action("add:nope"))
+        # The add form, shown, is the activity's icon with a plus.
+        self.c.post(self.edit_url, {"kind": "action", "key": "add:sleep", "op": "show"})
+        page = self.c.get(self.url)
+        self.assertContains(page, 'href="/sleep/add/?child={}"'.format(self.child.slug))
+        self.assertContains(page, 'class="icon-add quick-action-badge"')
+        page = self.c.get(self.url + "?edit=1")
+        self.assertContains(page, "Sleep · Add")
+        # The rest wait folded away, grouped by activity: sleep still offers
+        # its timer, medication its list and add form, the children theirs.
+        self.assertContains(page, "<summary>More actions</summary>")
+        groups = {g["action"].key: g for g in page.context["available"]}
+        self.assertEqual([a.key for a in groups["sleep"]["variants"]], ["timer:sleep"])
+        # Always timer, add form, list.
+        self.assertEqual(
+            [a.key for a in groups["medication"]["variants"]],
+            ["add:medication", "medication"],
+        )
+        self.c.post(self.edit_url, {"kind": "action", "key": "sleep", "op": "hide"})
+        self.c.post(self.edit_url, {"kind": "action", "key": "timer", "op": "hide"})
+        page = self.c.get(self.url + "?edit=1")
+        groups = {g["action"].key: g for g in page.context["available"]}
+        self.assertEqual(
+            [a.key for a in groups["sleep"]["variants"]], ["timer:sleep", "sleep"]
+        )
+        # The timer activity: start one, the add form and the timer list.
+        self.assertEqual(
+            [a.key for a in groups["timer"]["variants"]],
+            ["timer", "add:timer", "list:timer"],
+        )
+        self.assertTrue(groups["timer"]["variants"][0].starts_timer)
+        self.assertEqual(layout.action("add:timer").url, "core:timer-add")
+        self.assertEqual(layout.action("list:timer").url, "core:timer-list")
+        self.assertIsNone(layout.action("list:sleep"))
+        # Arranging a quick action leaves the folded list open.
+        response = self.c.post(
+            self.edit_url, {"kind": "action", "key": "sleep", "op": "show"}
+        )
+        self.assertEqual(response.url, self.url + "?edit=1&more=1#dashboard-sleep")
+        self.assertContains(
+            self.c.get(self.url + "?edit=1&more=1"),
+            '<details class="quick-actions-more" open>',
+        )
+        self.assertNotContains(self.c.get(self.url + "?edit=1"), 'more" open>')
+        self.assertContains(page, 'value="add:medication"')
 
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, 'class="dash-controls"')
@@ -288,7 +340,15 @@ class DashboardLayoutViewTestCase(TestCase):
         dash = page.context["dash"]
         # Writing sleep, a timed kind, brings the timers along (babubi/roles.py).
         self.assertEqual([a.key for a in dash["actions"]], ["sleep", "timer"])
-        self.assertEqual([a.key for a in dash["hidden_actions"]], ["timer:sleep"])
+        self.assertEqual(
+            [a.key for a in dash["hidden_actions"]],
+            ["timer:sleep", "add:sleep", "add:timer", "list:timer"],
+        )
+        # Reading alone opens the lists, not the add forms nor a timer.
+        user.user_permissions.remove(Permission.objects.get(codename="add_sleep"))
+        dash = c.get(self.url + "?edit=1").context["dash"]
+        self.assertEqual([a.key for a in dash["actions"]], ["sleep"])
+        self.assertEqual([a.key for a in dash["hidden_actions"]], ["list:timer"])
 
     def test_editing_needs_the_permission_to_view_children(self):
         get_user_model().objects.create_user(username="nobody", password="secret")

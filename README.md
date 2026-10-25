@@ -20,7 +20,7 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 
 ## How Babubi differs from Baby Buddy
 
-- **A dashboard per child, arranged by each caregiver**: three columns of cards to drag around, hide and bring back, with an order of their own on a phone, a card of quick actions drawn like a phone's home screen, graph cards with any report, and a percentiles card with the exact WHO percentiles of the latest weight, height and head circumference.
+- **A dashboard per child, arranged by each caregiver**: three columns of cards to drag around, hide and bring back, with an order of their own on a phone, a card of quick actions drawn like a phone's home screen that open each activity's list for the child, its add form (marked with a plus) or start a timer, graph cards with any report, and a percentiles card with the exact WHO percentiles of the latest weight, height and head circumference.
 - **Child-first menu.** The menu starts with the child whose dashboard was opened last and leads back to it; the other children are one tap away.
 - **Timers that know what they time.** A timer is started as a feeding, pumping, sleep or tummy time timer, from the quick actions, the phone's stopwatch button or the Timers menu, and one button finishes it and opens that activity's form filled in.
 - **Lists grouped by day**, with a summary row per day, the time since the previous entry, and sleep drawn as bars with its nap or night badge.

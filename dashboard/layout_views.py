@@ -69,8 +69,11 @@ class DashboardLayoutEdit(PermissionRequiredMixin, View):
             return JsonResponse({"ok": True})
         url = reverse("core:child", args=[child.slug])
         anchor = request.POST.get("key", "")
+        # After arranging a quick action, the folded list of the others
+        # stays open (cards/quick_actions.html).
+        more = "&more=1" if request.POST.get("kind") == "action" else ""
         return HttpResponseRedirect(
-            "{}?edit=1{}".format(url, "#dashboard-" + anchor if anchor else "")
+            "{}?edit=1{}{}".format(url, more, "#dashboard-" + anchor if anchor else "")
         )
 
 

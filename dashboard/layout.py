@@ -66,21 +66,35 @@ class Report:
 class Action:
     key: str
     label: str
-    # The core model it adds, which also names its colour and icon.
+    # The core model it is about, which also names its colour and icon.
     model: str
-    # The add view; None for the quick timer, which is a POST.
+    # The model's list view, opened for the dashboard's child; None for the
+    # quick timer, which is a POST. Every fixed action has an "add:" twin
+    # that opens the add form, and the quick timer a "list:" one (action()).
     url: str = None
     default: bool = False
     # For a child's shortcut, the child whose dashboard it opens.
     child: object = None
     # For a timer of a kind, the activity it times (core.timer_kinds).
     timer_kind: str = None
+    # Whether it adds an entry (the add form) rather than opening the list.
+    add: bool = False
 
     @property
     def activity(self):
         if self.timer_kind:
             return self.timer_kind
         return {"headcircumference": "head-circumference"}.get(self.model, self.model)
+
+    @property
+    def starts_timer(self):
+        """Whether it starts a timer (the quick timer, of a kind or not)."""
+        return self.url is None and self.child is None
+
+    @property
+    def rank(self):
+        """The order of an activity's variants: timer, add form, list."""
+        return 0 if self.starts_timer else 1 if self.add else 2
 
 
 def _card(key, label, model):
@@ -204,39 +218,54 @@ ACTIONS = [
         "diaperchange",
         _("Diaper Change"),
         "diaperchange",
-        "core:diaperchange-add",
+        "core:diaperchange-list",
         True,
     ),
-    Action("feeding", _("Feeding"), "feeding", "core:feeding-add", True),
-    Action("sleep", _("Sleep"), "sleep", "core:sleep-add", True),
+    Action("feeding", _("Feeding"), "feeding", "core:feeding-list", True),
+    Action("sleep", _("Sleep"), "sleep", "core:sleep-list", True),
     Action("timer", _("Timer"), "timer", default=True),
-    Action("tummytime", _("Tummy Time"), "tummytime", "core:tummytime-add"),
-    Action("pumping", _("Pumping"), "pumping", "core:pumping-add"),
-    Action("medication", _("Medication"), "medication", "core:medication-add"),
-    Action("temperature", _("Temperature"), "temperature", "core:temperature-add"),
-    Action("note", _("Note"), "note", "core:note-add"),
-    Action("weight", _("Weight"), "weight", "core:weight-add"),
-    Action("height", _("Height"), "height", "core:height-add"),
+    Action("tummytime", _("Tummy Time"), "tummytime", "core:tummytime-list"),
+    Action("pumping", _("Pumping"), "pumping", "core:pumping-list"),
+    Action("medication", _("Medication"), "medication", "core:medication-list"),
+    Action("temperature", _("Temperature"), "temperature", "core:temperature-list"),
+    Action("note", _("Note"), "note", "core:note-list"),
+    Action("weight", _("Weight"), "weight", "core:weight-list"),
+    Action("height", _("Height"), "height", "core:height-list"),
     Action(
         "headcircumference",
         _("Head Circumference"),
         "headcircumference",
-        "core:head-circumference-add",
+        "core:head-circumference-list",
     ),
-    Action("bmi", _("BMI"), "bmi", "core:bmi-add"),
+    Action("bmi", _("BMI"), "bmi", "core:bmi-list"),
 ]
 ACTIONS_BY_KEY = {action.key: action for action in ACTIONS}
 CHILD_PREFIX = "child:"
 TIMER_PREFIX = "timer:"
+ADD_PREFIX = "add:"
+LIST_PREFIX = "list:"
 
 
 def action(key):
     """
-    The quick action a key names: a fixed one, or a shortcut to a child's
-    dashboard ("child:<slug>"); None if there is no such action or child.
+    The quick action a key names: a fixed one (its list, or the quick timer),
+    the add form of one ("add:<key>"), the timer list ("list:timer"), a timer
+    of a kind ("timer:<kind>") or a shortcut to a child's dashboard
+    ("child:<slug>"); None if there is no such action.
     """
     if key in ACTIONS_BY_KEY:
         return ACTIONS_BY_KEY[key]
+    # The add and list views are named after the activity (core/urls.py).
+    if key.startswith(ADD_PREFIX):
+        fixed = ACTIONS_BY_KEY.get(key[len(ADD_PREFIX) :])
+        if fixed:
+            url = "core:{}-add".format(fixed.activity)
+            return Action(key, fixed.label, fixed.model, url, add=True)
+    if key.startswith(LIST_PREFIX):
+        fixed = ACTIONS_BY_KEY.get(key[len(LIST_PREFIX) :])
+        if fixed and not fixed.url:
+            url = "core:{}-list".format(fixed.activity)
+            return Action(key, _("Timers"), fixed.model, url)
     if key.startswith(TIMER_PREFIX):
         from core.timer_kinds import KINDS
 
@@ -289,13 +318,19 @@ def action_allowed(user, action):
     # A timer of a kind also needs the activity it times.
     if action.timer_kind and not user.has_perm("core.add_" + action.timer_kind):
         return False
+    if action.url and not action.add:
+        return user.has_perm("core.view_" + action.model)
     return user.has_perm("core.add_" + action.model)
 
 
 def action_url(action, child):
     if action.child:
         return reverse("core:child", args=[action.child.slug])
-    return "{}?child={}".format(reverse(action.url), child.slug)
+    if action.add:
+        # The add form, for the child (it takes the slug).
+        return "{}?child={}".format(reverse(action.url), child.slug)
+    # The list, filtered to the child (its filter form takes the pk).
+    return "{}?child={}".format(reverse(action.url), child.pk)
 
 
 def arrangement(layout):
@@ -335,14 +370,20 @@ def arrangement(layout):
     for fixed in ACTIONS:
         if fixed.key not in seen:
             (actions if fixed.default else hidden_actions).append(fixed.key)
-    # A timer of each kind, and every child as a shortcut: one the layout has
-    # not placed yet waits among the hidden actions.
+    # A timer of each kind, the add form of each list and every child as a
+    # shortcut: one the layout has not placed yet waits among the hidden
+    # actions.
     from core.models import Child
     from core.timer_kinds import KINDS
 
     for kind in KINDS:
         if TIMER_PREFIX + kind not in seen:
             hidden_actions.append(TIMER_PREFIX + kind)
+    for fixed in ACTIONS:
+        if ADD_PREFIX + fixed.key not in seen:
+            hidden_actions.append(ADD_PREFIX + fixed.key)
+        if not fixed.url and LIST_PREFIX + fixed.key not in seen:
+            hidden_actions.append(LIST_PREFIX + fixed.key)
 
     for slug in Child.objects.order_by("last_name", "first_name").values_list(
         "slug", flat=True
