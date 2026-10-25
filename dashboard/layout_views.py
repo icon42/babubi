@@ -45,9 +45,7 @@ class DashboardLayoutEdit(PermissionRequiredMixin, View):
         child = get_object_or_404(Child, slug=slug)
         instance = DashboardLayout.of(request.user, child)
         op = request.POST.get("op", "")
-        if op == "reset":
-            layout.reset(instance)
-        elif op == "configure":
+        if op == "configure":
             key = request.POST.get("key", "")
             if not layout.configure(instance, key, request.POST):
                 return HttpResponseBadRequest()

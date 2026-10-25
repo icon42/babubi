@@ -271,11 +271,6 @@ class DashboardLayoutViewTestCase(TestCase):
         page = self.c.get(self.url)
         self.assertNotContains(page, 'id="dashboard-statistics"')
 
-        response = self.c.post(self.edit_url, {"op": "reset"})
-        self.assertEqual(response.status_code, 302)
-        saved.refresh_from_db()
-        self.assertEqual(saved.hidden, layout.default_hidden())
-
         response = self.c.post(self.edit_url, {"kind": "card", "key": "x", "op": "up"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.c.get(self.edit_url).status_code, 405)
@@ -354,7 +349,9 @@ class DashboardLayoutViewTestCase(TestCase):
         get_user_model().objects.create_user(username="nobody", password="secret")
         c = HttpClient()
         c.login(username="nobody", password="secret")
-        response = c.post(self.edit_url, {"op": "reset"})
+        response = c.post(
+            self.edit_url, {"kind": "card", "key": "statistics", "op": "hide"}
+        )
         self.assertEqual(response.status_code, 403)
         self.assertFalse(DashboardLayout.objects.filter(child=self.child).exists())
 

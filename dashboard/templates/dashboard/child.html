@@ -19,11 +19,6 @@
     {% with edit=request.GET.edit %}
         <div class="dash-toolbar">
             {% if edit %}
-                <form method="post"
-                      action="{% url 'dashboard:dashboard-layout' object.slug %}">
-                    {% csrf_token %}
-                    <button class="btn btn-sm dash-btn" name="op" value="reset">{% trans "Reset" %}</button>
-                </form>
                 <a class="btn btn-sm btn-primary"
                    href="{% url 'core:child' object.slug %}">{% trans "Done" %}</a>
             {% else %}
