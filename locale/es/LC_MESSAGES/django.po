@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Babubi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 23:57+0000\n"
+"POT-Creation-Date: 2026-10-26 10:32+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -429,13 +429,13 @@ msgid "Some fields have errors. See below for details."
 msgstr "Algunos campos contienen errores. Mira más abajo para más detalles."
 
 #: babubi/templates/babubi/nav-dropdown.html:46 core/models.py:296
-#: core/models.py:300 dashboard/layout.py:219
+#: core/models.py:300 dashboard/layout.py:221
 msgid "Diaper Change"
 msgstr "Cambio de Pañal"
 
 #: babubi/templates/babubi/nav-dropdown.html:52
 #: babubi/templates/babubi/nav-dropdown.html:172 core/forms.py:687
-#: core/models.py:369 core/models.py:373 dashboard/layout.py:224
+#: core/models.py:369 core/models.py:373 dashboard/layout.py:226
 #: dashboard/models.py:83
 msgid "Feeding"
 msgstr "Toma"
@@ -452,7 +452,7 @@ msgstr "Biberón"
 #: core/templates/core/medication_form.html:12
 #: core/templates/core/medication_list.html:4
 #: core/templates/core/medication_list.html:7
-#: core/templates/core/medication_list.html:10 dashboard/layout.py:229
+#: core/templates/core/medication_list.html:10 dashboard/layout.py:231
 msgid "Medication"
 msgstr "Medicación"
 
@@ -463,7 +463,7 @@ msgstr "Medicación"
 #: core/templates/core/pumping_form.html:12
 #: core/templates/core/pumping_list.html:4
 #: core/templates/core/pumping_list.html:7
-#: core/templates/core/pumping_list.html:10 dashboard/layout.py:228
+#: core/templates/core/pumping_list.html:10 dashboard/layout.py:230
 #: dashboard/models.py:84 reports/templates/reports/pumping_amounts.html:4
 #: reports/templates/reports/pumping_amounts.html:9
 msgid "Pumping"
@@ -472,7 +472,7 @@ msgstr "Extracciones"
 #: babubi/templates/babubi/nav-dropdown.html:74
 #: babubi/templates/babubi/nav-dropdown.html:253 core/models.py:478
 #: core/models.py:492 core/models.py:496 core/templates/core/note_list.html:14
-#: dashboard/layout.py:231
+#: dashboard/layout.py:233
 msgid "Note"
 msgstr "Nota"
 
@@ -483,7 +483,7 @@ msgstr "Nota"
 #: core/templates/core/sleep_confirm_delete.html:8
 #: core/templates/core/sleep_form.html:12 core/templates/core/sleep_list.html:4
 #: core/templates/core/sleep_list.html:7 core/templates/core/sleep_list.html:10
-#: dashboard/layout.py:225 dashboard/models.py:85
+#: dashboard/layout.py:227 dashboard/models.py:85
 msgid "Sleep"
 msgstr "Sueño"
 
@@ -495,7 +495,7 @@ msgstr "Sueño"
 #: core/templates/core/tummytime_form.html:12
 #: core/templates/core/tummytime_list.html:4
 #: core/templates/core/tummytime_list.html:7
-#: core/templates/core/tummytime_list.html:10 dashboard/layout.py:227
+#: core/templates/core/tummytime_list.html:10 dashboard/layout.py:229
 #: dashboard/models.py:86
 msgid "Tummy Time"
 msgstr "Tiempo boca abajo"
@@ -563,7 +563,7 @@ msgstr "Mediciones"
 #: core/templates/core/bmi_confirm_delete.html:8
 #: core/templates/core/bmi_form.html:12 core/templates/core/bmi_list.html:4
 #: core/templates/core/bmi_list.html:7 core/templates/core/bmi_list.html:10
-#: core/templates/core/bmi_list.html:16 dashboard/layout.py:240
+#: core/templates/core/bmi_list.html:16 dashboard/layout.py:242
 #: reports/graphs/bmi_change.py:19 reports/graphs/bmi_change.py:27
 #: reports/graphs/bmi_change.py:30 reports/templates/reports/bmi_change.html:4
 #: reports/templates/reports/bmi_change.html:9
@@ -581,8 +581,8 @@ msgstr "Entrada de IMC"
 #: core/templates/core/head_circumference_list.html:4
 #: core/templates/core/head_circumference_list.html:7
 #: core/templates/core/head_circumference_list.html:10
-#: core/templates/core/head_circumference_list.html:16 dashboard/layout.py:158
-#: dashboard/layout.py:236 reports/graphs/head_circumference_change.py:24
+#: core/templates/core/head_circumference_list.html:16 dashboard/layout.py:160
+#: dashboard/layout.py:238 reports/graphs/head_circumference_change.py:24
 #: reports/graphs/head_circumference_change.py:33
 #: reports/graphs/head_circumference_change.py:36
 #: reports/templates/reports/head_circumference_change.html:4
@@ -602,8 +602,8 @@ msgstr "Entrada de perímetro craneal"
 #: core/templates/core/height_list.html:4
 #: core/templates/core/height_list.html:7
 #: core/templates/core/height_list.html:10
-#: core/templates/core/height_list.html:16 dashboard/layout.py:161
-#: dashboard/layout.py:233 reports/graphs/height_change.py:30
+#: core/templates/core/height_list.html:16 dashboard/layout.py:163
+#: dashboard/layout.py:235 reports/graphs/height_change.py:30
 #: reports/graphs/height_change.py:88 reports/graphs/height_change.py:91
 #: reports/templates/reports/height_change.html:4
 #: reports/templates/reports/height_change.html:9
@@ -623,7 +623,7 @@ msgstr "Entrada de altura"
 #: core/templates/core/temperature_list.html:7
 #: core/templates/core/temperature_list.html:10
 #: core/templates/core/temperature_list.html:13 core/timeline.py:328
-#: dashboard/layout.py:169 dashboard/layout.py:230
+#: dashboard/layout.py:171 dashboard/layout.py:232
 #: reports/graphs/temperature_change.py:19
 #: reports/graphs/temperature_change.py:26
 #: reports/graphs/temperature_change.py:32
@@ -644,8 +644,8 @@ msgstr "Lectura de temperatura"
 #: core/templates/core/weight_list.html:4
 #: core/templates/core/weight_list.html:7
 #: core/templates/core/weight_list.html:10
-#: core/templates/core/weight_list.html:16 dashboard/layout.py:171
-#: dashboard/layout.py:232 reports/graphs/weight_change.py:28
+#: core/templates/core/weight_list.html:16 dashboard/layout.py:173
+#: dashboard/layout.py:234 reports/graphs/weight_change.py:28
 #: reports/graphs/weight_change.py:86 reports/graphs/weight_change.py:89
 #: reports/templates/reports/report_list.html:89
 #: reports/templates/reports/weight_change.html:4
@@ -995,7 +995,7 @@ msgstr ""
 #: core/templates/core/diaperchange_list.html:4
 #: core/templates/core/diaperchange_list.html:7
 #: core/templates/core/diaperchange_list.html:10
-#: core/templates/core/tag_detail.html:80 dashboard/layout.py:128
+#: core/templates/core/tag_detail.html:80 dashboard/layout.py:131
 #: dashboard/templates/cards/diaperchange_types.html:4
 msgid "Diaper Changes"
 msgstr "Cambios de Pañal"
@@ -1332,7 +1332,7 @@ msgid "Tag"
 msgstr "Etiqueta"
 
 #: core/forms.py:141 core/models.py:663 core/models.py:677
-#: core/templates/core/timer_form.html:4 dashboard/layout.py:226
+#: core/templates/core/timer_form.html:4 dashboard/layout.py:228
 #: dashboard/templates/cards/quick_actions.html:20
 #: dashboard/templates/cards/quick_actions.html:68
 msgid "Timer"
@@ -1640,7 +1640,7 @@ msgstr "Nombre"
 #: core/templates/core/timer_form.html:8 core/templates/core/timer_list.html:4
 #: core/templates/core/timer_list.html:7 core/templates/core/timer_list.html:11
 #: core/templates/core/timer_nav.html:9 core/templates/core/timer_nav.html:29
-#: dashboard/layout.py:114 dashboard/layout.py:268
+#: dashboard/layout.py:117 dashboard/layout.py:270
 #: dashboard/templates/cards/timer_list.html:4
 msgid "Timers"
 msgstr "Temporizadores"
@@ -2379,177 +2379,177 @@ msgstr "%(model)s lectura añadida!"
 msgid "%(model)s reading for %(child)s updated."
 msgstr "%(model)s lectura para %(child)s actualizada."
 
-#: dashboard/layout.py:109 dashboard/templates/cards/quick_actions.html:4
+#: dashboard/layout.py:112 dashboard/templates/cards/quick_actions.html:4
 msgid "Quick Actions"
 msgstr "Acciones rápidas"
 
-#: dashboard/layout.py:115 dashboard/templates/cards/feeding_last.html:4
+#: dashboard/layout.py:118 dashboard/templates/cards/feeding_last.html:4
 msgid "Last Feeding"
 msgstr "Última Toma"
 
-#: dashboard/layout.py:116 dashboard/templates/cards/notes_recent.html:4
+#: dashboard/layout.py:119 dashboard/templates/cards/notes_recent.html:4
 msgid "Recent Notes"
 msgstr "Notas recientes"
 
-#: dashboard/layout.py:117 dashboard/templates/cards/diaperchange_last.html:4
+#: dashboard/layout.py:120 dashboard/templates/cards/diaperchange_last.html:4
 msgid "Last Diaper Change"
 msgstr "Último Cambio Pañal"
 
-#: dashboard/layout.py:118 dashboard/templates/cards/pumping_last.html:4
+#: dashboard/layout.py:121 dashboard/templates/cards/pumping_last.html:4
 msgid "Last Pumping"
 msgstr "Últimas extracciones"
 
-#: dashboard/layout.py:119 dashboard/templates/cards/pumping_recent.html:4
+#: dashboard/layout.py:122 dashboard/templates/cards/pumping_recent.html:4
 msgid "Recent Pumpings"
 msgstr "Extracciones recientes"
 
-#: dashboard/layout.py:120 dashboard/templates/cards/sleep_last.html:4
+#: dashboard/layout.py:123 dashboard/templates/cards/sleep_last.html:4
 msgid "Last Sleep"
 msgstr "Último sueño"
 
-#: dashboard/layout.py:121 dashboard/templates/cards/medication_last.html:4
+#: dashboard/layout.py:124 dashboard/templates/cards/medication_last.html:4
 msgid "Last Medication"
 msgstr "Última medicación"
 
-#: dashboard/layout.py:122 dashboard/templates/cards/feeding_last_method.html:4
+#: dashboard/layout.py:125 dashboard/templates/cards/feeding_last_method.html:4
 msgid "Last Feeding Method"
 msgstr "Último Método de Toma"
 
-#: dashboard/layout.py:123 dashboard/templates/cards/feeding_recent.html:4
+#: dashboard/layout.py:126 dashboard/templates/cards/feeding_recent.html:4
 msgid "Recent Feedings"
 msgstr "Tomas recientes"
 
-#: dashboard/layout.py:124 dashboard/templates/cards/statistics.html:6
+#: dashboard/layout.py:127 dashboard/templates/cards/statistics.html:6
 msgid "Statistics"
 msgstr "Estadísticas"
 
-#: dashboard/layout.py:125 dashboard/templates/cards/sleep_recent.html:4
+#: dashboard/layout.py:128 dashboard/templates/cards/sleep_recent.html:4
 msgid "Recent Sleep"
 msgstr "Sueño reciente"
 
-#: dashboard/layout.py:126 dashboard/templates/cards/sleep_naps_day.html:4
+#: dashboard/layout.py:129 dashboard/templates/cards/sleep_naps_day.html:4
 msgid "Today's Naps"
 msgstr "Siestas de Hoy"
 
-#: dashboard/layout.py:127 dashboard/templates/cards/tummytime_day.html:4
+#: dashboard/layout.py:130 dashboard/templates/cards/tummytime_day.html:4
 msgid "Today's Tummy Time"
 msgstr "Tiempo Boca Abajo Hoy"
 
-#: dashboard/layout.py:129 dashboard/templates/cards/breastfeeding.html:4
+#: dashboard/layout.py:132 dashboard/templates/cards/breastfeeding.html:4
 msgid "Breastfeeding"
 msgstr "Lactancia"
 
-#: dashboard/layout.py:133 dashboard/templates/cards/percentiles.html:4
+#: dashboard/layout.py:136 dashboard/templates/cards/percentiles.html:4
 msgid "Percentiles"
 msgstr "Percentiles"
 
-#: dashboard/layout.py:147 reports/templates/reports/report_list.html:17
+#: dashboard/layout.py:149 reports/templates/reports/report_list.html:17
 msgid "Body Mass Index (BMI)"
 msgstr "Índice de Masa Corporal (IMC)"
 
-#: dashboard/layout.py:148 reports/graphs/diaperchange_amounts.py:36
+#: dashboard/layout.py:150 reports/graphs/diaperchange_amounts.py:36
 #: reports/templates/reports/report_list.html:21
 msgid "Diaper Change Amounts"
 msgstr "Cantidades de Cambio de Pañal"
 
-#: dashboard/layout.py:149 reports/graphs/diaperchange_types.py:48
+#: dashboard/layout.py:151 reports/graphs/diaperchange_types.py:48
 #: reports/templates/reports/diaperchange_types.html:4
 #: reports/templates/reports/diaperchange_types.html:9
 #: reports/templates/reports/report_list.html:23
 msgid "Diaper Change Types"
 msgstr "Tipos de Cambio de Pañal"
 
-#: dashboard/layout.py:150 reports/templates/reports/report_list.html:25
+#: dashboard/layout.py:152 reports/templates/reports/report_list.html:25
 msgid "Diaper Intervals"
 msgstr "Intervalos entre cambios de pañal"
 
-#: dashboard/layout.py:151 reports/graphs/diaperchange_lifetimes.py:35
+#: dashboard/layout.py:153 reports/graphs/diaperchange_lifetimes.py:35
 #: reports/templates/reports/diaperchange_lifetimes.html:4
 #: reports/templates/reports/diaperchange_lifetimes.html:9
 #: reports/templates/reports/report_list.html:27
 msgid "Diaper Lifetimes"
 msgstr "Duración Pañal"
 
-#: dashboard/layout.py:152 reports/templates/reports/feeding_amounts.html:4
+#: dashboard/layout.py:154 reports/templates/reports/feeding_amounts.html:4
 #: reports/templates/reports/feeding_amounts.html:9
 #: reports/templates/reports/report_list.html:31
 msgid "Feeding Amounts"
 msgstr "Cantidad de Tomas"
 
-#: dashboard/layout.py:153 reports/templates/reports/report_list.html:33
+#: dashboard/layout.py:155 reports/templates/reports/report_list.html:33
 msgid "Feeding Durations (Average)"
 msgstr "Duración de Tomas (Media)"
 
-#: dashboard/layout.py:154 reports/templates/reports/feeding_intervals.html:4
+#: dashboard/layout.py:156 reports/templates/reports/feeding_intervals.html:4
 #: reports/templates/reports/feeding_intervals.html:9
 #: reports/templates/reports/report_list.html:35
 msgid "Feeding Intervals"
 msgstr "Intervalos entre tomas"
 
-#: dashboard/layout.py:155 reports/graphs/feeding_pattern.py:178
+#: dashboard/layout.py:157 reports/graphs/feeding_pattern.py:178
 #: reports/templates/reports/feeding_pattern.html:4
 #: reports/templates/reports/feeding_pattern.html:9
 #: reports/templates/reports/report_list.html:37
 msgid "Feeding Pattern"
 msgstr "Patrón de tomas"
 
-#: dashboard/layout.py:162
+#: dashboard/layout.py:164
 #: reports/templates/reports/medication_frequency.html:4
 #: reports/templates/reports/medication_frequency.html:9
 #: reports/templates/reports/report_list.html:65
 msgid "Medication Frequency"
 msgstr "Frecuencia de medicación"
 
-#: dashboard/layout.py:163
+#: dashboard/layout.py:165
 #: reports/templates/reports/medication_intervals.html:4
 #: reports/templates/reports/medication_intervals.html:9
 #: reports/templates/reports/report_list.html:67
 msgid "Medication Intervals"
 msgstr "Intervalos de medicación"
 
-#: dashboard/layout.py:164 reports/templates/reports/report_list.html:71
+#: dashboard/layout.py:166 reports/templates/reports/report_list.html:71
 msgid "Pumping Amounts"
 msgstr "Cantidad de extracciones"
 
-#: dashboard/layout.py:167 reports/graphs/sleep_pattern.py:165
+#: dashboard/layout.py:169 reports/graphs/sleep_pattern.py:165
 #: reports/templates/reports/report_list.html:75
 #: reports/templates/reports/sleep_pattern.html:4
 #: reports/templates/reports/sleep_pattern.html:9
 msgid "Sleep Pattern"
 msgstr "Patrón de Sueño"
 
-#: dashboard/layout.py:168 reports/graphs/sleep_totals.py:58
+#: dashboard/layout.py:170 reports/graphs/sleep_totals.py:58
 #: reports/templates/reports/report_list.html:77
 #: reports/templates/reports/sleep_totals.html:4
 #: reports/templates/reports/sleep_totals.html:9
 msgid "Sleep Totals"
 msgstr "Totales de Sueño"
 
-#: dashboard/layout.py:170 reports/templates/reports/report_list.html:85
+#: dashboard/layout.py:172 reports/templates/reports/report_list.html:85
 msgid "Tummy Time Durations (Sum)"
 msgstr "Tiempo Boca Abajo (Suma)"
 
-#: dashboard/layout.py:186 reports/templates/reports/report_list.html:44
+#: dashboard/layout.py:188 reports/templates/reports/report_list.html:44
 msgid "WHO Head Circumference Percentiles for Boys in cm"
 msgstr "Percentiles de perímetro craneal de la OMS para niños, en cm"
 
-#: dashboard/layout.py:191 reports/templates/reports/report_list.html:48
+#: dashboard/layout.py:193 reports/templates/reports/report_list.html:48
 msgid "WHO Head Circumference Percentiles for Girls in cm"
 msgstr "Percentiles de perímetro craneal de la OMS para niñas, en cm"
 
-#: dashboard/layout.py:193 reports/templates/reports/report_list.html:56
+#: dashboard/layout.py:195 reports/templates/reports/report_list.html:56
 msgid "WHO Height Percentiles for Boys in cm"
 msgstr "Percentiles de altura de la OMS para niños, en cm"
 
-#: dashboard/layout.py:194 reports/templates/reports/report_list.html:60
+#: dashboard/layout.py:196 reports/templates/reports/report_list.html:60
 msgid "WHO Height Percentiles for Girls in cm"
 msgstr "Percentiles de altura de la OMS para niñas, en cm"
 
-#: dashboard/layout.py:195 reports/templates/reports/report_list.html:92
+#: dashboard/layout.py:197 reports/templates/reports/report_list.html:92
 msgid "WHO Weight Percentiles for Boys in kg"
 msgstr "Percentiles de peso de la OMS para niños, en kg"
 
-#: dashboard/layout.py:196 reports/templates/reports/report_list.html:96
+#: dashboard/layout.py:198 reports/templates/reports/report_list.html:96
 msgid "WHO Weight Percentiles for Girls in kg"
 msgstr "Percentiles de peso de la OMS para niñas, en kg"
 
