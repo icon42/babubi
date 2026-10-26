@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Babubi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 10:32+0000\n"
+"POT-Creation-Date: 2026-10-26 10:39+0000\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -441,7 +441,7 @@ msgid "Diaper Change"
 msgstr "Changement de couche"
 
 #: babubi/templates/babubi/nav-dropdown.html:52
-#: babubi/templates/babubi/nav-dropdown.html:172 core/forms.py:687
+#: babubi/templates/babubi/nav-dropdown.html:172 core/forms.py:699
 #: core/models.py:369 core/models.py:373 dashboard/layout.py:226
 #: dashboard/models.py:83
 msgid "Feeding"
@@ -464,7 +464,7 @@ msgid "Medication"
 msgstr "Médicament"
 
 #: babubi/templates/babubi/nav-dropdown.html:68
-#: babubi/templates/babubi/nav-dropdown.html:197 core/forms.py:688
+#: babubi/templates/babubi/nav-dropdown.html:197 core/forms.py:700
 #: core/models.py:533 core/models.py:534 core/models.py:537
 #: core/templates/core/pumping_confirm_delete.html:8
 #: core/templates/core/pumping_form.html:12
@@ -485,7 +485,7 @@ msgstr "Note"
 
 #: babubi/templates/babubi/nav-dropdown.html:80
 #: babubi/templates/babubi/nav-dropdown.html:209
-#: babubi/templates/babubi/welcome.html:47 core/forms.py:689 core/models.py:578
+#: babubi/templates/babubi/welcome.html:47 core/forms.py:701 core/models.py:578
 #: core/models.py:579 core/models.py:582
 #: core/templates/core/sleep_confirm_delete.html:8
 #: core/templates/core/sleep_form.html:12 core/templates/core/sleep_list.html:4
@@ -496,7 +496,7 @@ msgstr "Sommeil"
 
 #: babubi/templates/babubi/nav-dropdown.html:86
 #: babubi/templates/babubi/nav-dropdown.html:221
-#: babubi/templates/babubi/welcome.html:57 core/forms.py:690 core/models.py:755
+#: babubi/templates/babubi/welcome.html:57 core/forms.py:702 core/models.py:755
 #: core/models.py:756 core/models.py:759
 #: core/templates/core/tummytime_confirm_delete.html:8
 #: core/templates/core/tummytime_form.html:12
@@ -728,7 +728,7 @@ msgstr "Site"
 msgid "API Browser"
 msgstr "Navigateur d'API"
 
-#: babubi/templates/babubi/nav-dropdown.html:377 core/forms.py:248
+#: babubi/templates/babubi/nav-dropdown.html:377 core/forms.py:260
 #: core/models.py:123 core/templates/core/day_list.html:51
 #: core/templates/core/tag_confirm_delete.html:8
 #: core/templates/core/tag_detail.html:12 core/templates/core/tag_form.html:12
@@ -1372,28 +1372,28 @@ msgstr ""
 msgid "Tag"
 msgstr "Étiquette"
 
-#: core/forms.py:141 core/models.py:663 core/models.py:677
+#: core/forms.py:153 core/models.py:663 core/models.py:677
 #: core/templates/core/timer_form.html:4 dashboard/layout.py:228
 #: dashboard/templates/cards/quick_actions.html:20
 #: dashboard/templates/cards/quick_actions.html:68
 msgid "Timer"
 msgstr "Chronomètre"
 
-#: core/forms.py:184
+#: core/forms.py:196
 #, fuzzy
 #| msgid "The path %(path)s does not exist."
 msgid "This timer does not exist."
 msgstr "Le chemin %(path)s n'existe pas."
 
-#: core/forms.py:187 core/forms.py:208
+#: core/forms.py:199 core/forms.py:220
 msgid "You do not have permission to consume timers."
 msgstr ""
 
-#: core/forms.py:204
+#: core/forms.py:216
 msgid "This timer no longer exists."
 msgstr ""
 
-#: core/forms.py:253
+#: core/forms.py:265
 msgid ""
 "Click on the tags to add (+) or remove (-) tags or use the text editor to "
 "create new tags."
@@ -1401,50 +1401,50 @@ msgstr ""
 "Cliquez sur une étiquette pour l'ajouter (+) ou l'enlever (-) ou utilisez "
 "l'éditeur de texte pour en créer de nouvelles"
 
-#: core/forms.py:340 core/forms.py:686 core/templates/core/timer_detail.html:45
+#: core/forms.py:352 core/forms.py:698 core/templates/core/timer_detail.html:45
 #: core/templates/core/timer_quick_kinds.html:22
 msgid "Not specified"
 msgstr ""
 
-#: core/forms.py:341 core/models.py:461 core/models.py:906
+#: core/forms.py:353 core/models.py:461 core/models.py:906
 #: dashboard/models.py:60
 msgid "Boy"
 msgstr "Garçon"
 
-#: core/forms.py:342 core/models.py:460 core/models.py:905
+#: core/forms.py:354 core/models.py:460 core/models.py:905
 #: dashboard/models.py:60
 msgid "Girl"
 msgstr "Fille"
 
-#: core/forms.py:344 dashboard/models.py:66
+#: core/forms.py:356 dashboard/models.py:66
 msgid "Sex"
 msgstr ""
 
-#: core/forms.py:345
+#: core/forms.py:357
 msgid "Picks the WHO growth standards; none when not specified."
 msgstr ""
 
-#: core/forms.py:385
+#: core/forms.py:397
 msgid "Name does not match child name."
 msgstr "Le nom ne correspond pas au nom de l'enfant."
 
-#: core/forms.py:513
+#: core/forms.py:525
 msgid "Time Until Next Dosage"
 msgstr "Durée avant la prochaine dose"
 
-#: core/forms.py:517
+#: core/forms.py:529
 msgid "Optional: Hours until next dose can be given"
 msgstr ""
 "Optionnel : nombre d'heures avant qu'une nouvelle dose puisse être donnée"
 
-#: core/forms.py:572
+#: core/forms.py:584
 #, fuzzy, python-format
 #| msgid "%(hours)s hour"
 #| msgid_plural "%(hours)s hours"
 msgid "every %(hours)s h"
 msgstr "%(hours)s heure"
 
-#: core/forms.py:692 core/models.py:344
+#: core/forms.py:704 core/models.py:344
 #: core/templates/core/feeding_list.html:21
 #: core/templates/core/sleep_list.html:17
 #: core/templates/core/timer_detail.html:33 dashboard/models.py:93
