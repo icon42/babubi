@@ -1048,6 +1048,61 @@ class ValidationsTestCase(FormsTestCaseBase):
         )
 
 
+class DecimalInputTestCase(FormsTestCaseBase):
+    """
+    A number with decimals is typed as text, with a comma or a point, and
+    shown with the language's separator (babubi/widgets.py, DecimalInput).
+    """
+
+    def test_a_comma_or_a_point_is_the_decimal_separator(self):
+        from core.forms import MedicationForm, WeightForm
+
+        for typed in ("8,25", "8.25"):
+            form = WeightForm(
+                {"child": self.child.id, "weight": typed, "date": "2026-10-01"}
+            )
+            self.assertTrue(form.is_valid(), form.errors)
+            self.assertEqual(form.cleaned_data["weight"], 8.25)
+        form = MedicationForm(
+            {
+                "child": self.child.id,
+                "name": "Dalsy",
+                "dosage": "2,5",
+                "dosage_unit": "ml",
+                "time": "2026-10-01T10:00",
+                "next_dose_interval": "1,5",
+            }
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data["dosage"], 2.5)
+        self.assertEqual(
+            form.cleaned_data["next_dose_interval"], datetime.timedelta(hours=1.5)
+        )
+        params = {"child": self.child.id, "weight": "3,5", "date": "2026-10-02"}
+        self.c.post("/weight/add/", params, follow=True)
+        self.assertEqual(models.Weight.objects.get(date="2026-10-02").weight, 3.5)
+
+    def test_the_input_shows_the_separator_of_the_language(self):
+        from django.utils import translation
+
+        from core.forms import WeightForm
+
+        weight = models.Weight.objects.create(
+            child=self.child, weight=8.25, date="2026-10-03"
+        )
+        with translation.override("ca"):
+            field = str(WeightForm(instance=weight)["weight"])
+        self.assertIn('type="text"', field)
+        self.assertIn('inputmode="decimal"', field)
+        self.assertIn('value="8,25"', field)
+        with translation.override("en"):
+            self.assertIn('value="8.25"', str(WeightForm(instance=weight)["weight"]))
+        # A whole value has no decimals to show, in any language.
+        weight.weight = 8
+        with translation.override("ca"):
+            self.assertIn('value="8"', str(WeightForm(instance=weight)["weight"]))
+
+
 class WeightFormsTestCase(FormsTestCaseBase):
     @classmethod
     def setUpClass(cls):

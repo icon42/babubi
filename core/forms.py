@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from taggit.forms import TagField, TagWidgetMixin
 
-from babubi.widgets import DateInput, DateTimeInput, TimeInput
+from babubi.widgets import DateInput, DateTimeInput, DecimalInput, TimeInput
 from core import models
 from core.models import Timer
 from core.presets import PresetsMixin
@@ -102,8 +102,20 @@ class CoreModelForm(forms.ModelForm):
         self.timer_id = kwargs.get("timer", None)
         kwargs = set_initial_values(kwargs, type(self))
         super(CoreModelForm, self).__init__(*args, **kwargs)
+        self.use_decimal_inputs()
         self.add_timer_field()
         self.hide_single_child()
+
+    def use_decimal_inputs(self):
+        """
+        Every number with decimals is typed as text, a comma or a point as
+        the separator, and shown with the language's one (DecimalInput).
+        """
+        for field in self.fields.values():
+            if isinstance(field, (forms.FloatField, forms.DecimalField)):
+                field.localize = True
+                field.widget = DecimalInput()
+                field.widget.is_localized = True
 
     def hide_single_child(self):
         """

@@ -82,8 +82,8 @@ class PresetsTestCase(TestCase):
             self.values(MedicationForm)["Dalsy · 5 ml · every 8 h"],
             {
                 "name": "Dalsy",
-                "next_dose_interval": 8,
-                "dosage": 5,
+                "next_dose_interval": "8",
+                "dosage": "5",
                 "dosage_unit": "ml",
                 "notes": "",
                 "tags": [],

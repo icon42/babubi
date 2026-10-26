@@ -12,6 +12,7 @@ offers that child's entries; otherwise everyone's.
 import json
 from collections import Counter
 
+from django import forms
 from django.db.models import Count, Max
 
 from core.suggestions import plain
@@ -127,6 +128,12 @@ class PresetsMixin:
             for name, value in row.items():
                 if value is not None:
                     value = plain(to_form.get(name, lambda v: v)(value))
+                    # A number with decimals as the field shows it, with the
+                    # language's separator (core/forms.py, DecimalInput).
+                    if isinstance(
+                        self.fields[name], (forms.FloatField, forms.DecimalField)
+                    ):
+                        value = self.fields[name].widget.format_value(value)
                 values[self[name].html_name] = "" if value is None else value
             for name, value in found.items():
                 if name in self.fields:

@@ -27,3 +27,23 @@ class DateInput(DateTimeBaseInput):
 
 class TimeInput(DateTimeBaseInput):
     input_type = "time"
+
+
+class DecimalInput(widgets.TextInput):
+    """
+    A number with decimals, typed as text: a number input only takes a point,
+    and the phone keyboard of many languages offers a comma instead. Either
+    one is the decimal separator (a comma only when there is no point), and
+    the field is localized, so a value shows with the language's separator.
+    """
+
+    def __init__(self, attrs=None):
+        super().__init__(
+            {"inputmode": "decimal", "autocomplete": "off", **(attrs or {})}
+        )
+
+    def value_from_datadict(self, data, files, name):
+        value = super().value_from_datadict(data, files, name)
+        if isinstance(value, str) and "," in value and "." not in value:
+            value = value.replace(",", ".")
+        return value
