@@ -26,11 +26,14 @@ class Card:
     model: str = None
     # For a report card, the report it shows.
     report: "Report" = None
-    # Whether a layout that has not placed it yet keeps it among the hidden.
-    default_hidden: bool = False
     # Whether the card has settings of its own in edit mode (a form in its
     # body), which a collapsed card on a narrow screen must unfold to reach.
     editable: bool = False
+
+    @property
+    def removable(self):
+        """A report card the user added can go altogether; the rest only hide."""
+        return self.report is not None and self.key not in DEFAULT_COLUMN
 
 
 @dataclass(frozen=True)
@@ -127,13 +130,12 @@ CARDS = [
     _card("tummytime_day", _("Today's Tummy Time"), "tummytime"),
     _card("diaperchange_types", _("Diaper Changes"), "diaperchange"),
     _card("breastfeeding", _("Breastfeeding"), "feeding"),
-    # Needs the child's sex, which only its settings give: hidden until then.
+    # Without the child's sex it asks for it.
     Card(
         "percentiles",
         _("Percentiles"),
         "card_percentiles",
         "cards/percentiles.html",
-        default_hidden=True,
         editable=True,
     ),
 ]
@@ -282,28 +284,76 @@ def action(key):
     return None
 
 
-def _default_column(index):
-    """Deals the default order out to the columns, left to right."""
-    return index % COLUMNS
-
-
-DEFAULT_COLUMN = {card.key: _default_column(i) for i, card in enumerate(CARDS)}
+# The default dashboard, arranged by hand: the three columns of a wide
+# screen, the order of a narrow one (by activity) and the quick actions.
+# The WHO weight cards of both sexes are placed, side by side, since a
+# dashboard shows only the one of the child's sex (dashboard_layout.py).
+DEFAULT_COLUMNS = [
+    [
+        "quick_actions",
+        "timer_list",
+        "feeding_last",
+        "feeding_recent",
+        "feeding_last_method",
+        "breastfeeding",
+        "report:feeding-intervals",
+    ],
+    [
+        "sleep_last",
+        "sleep_naps_day",
+        "sleep_recent",
+        "report:sleep-pattern",
+        "tummytime_day",
+        "pumping_last",
+        "pumping_recent",
+    ],
+    [
+        "percentiles",
+        "diaperchange_last",
+        "diaperchange_types",
+        "medication_last",
+        "notes_recent",
+        "statistics",
+        "report:weight-change-boy",
+        "report:weight-change-girl",
+    ],
+]
+DEFAULT_ORDER = [
+    "quick_actions",
+    "timer_list",
+    "notes_recent",
+    "diaperchange_last",
+    "diaperchange_types",
+    "sleep_last",
+    "sleep_naps_day",
+    "sleep_recent",
+    "report:sleep-pattern",
+    "feeding_last",
+    "feeding_last_method",
+    "feeding_recent",
+    "report:feeding-intervals",
+    "breastfeeding",
+    "medication_last",
+    "tummytime_day",
+    "pumping_recent",
+    "pumping_last",
+    "percentiles",
+    "report:weight-change-boy",
+    "report:weight-change-girl",
+    "statistics",
+]
+DEFAULT_ACTIONS = ["timer:sleep", "timer:feeding", "add:diaperchange", "add:medication"]
+# A card's default column, where a layout that has not placed it yet (a new
+# layout, or a card added since it was saved) shows it.
+DEFAULT_COLUMN = {key: c for c, column in enumerate(DEFAULT_COLUMNS) for key in column}
 
 
 def default_columns():
-    columns = [[] for _ in range(COLUMNS)]
-    for fixed in CARDS:
-        if not fixed.default_hidden:
-            columns[DEFAULT_COLUMN[fixed.key]].append(fixed.key)
-    return columns
-
-
-def default_hidden():
-    return [fixed.key for fixed in CARDS if fixed.default_hidden]
+    return [list(column) for column in DEFAULT_COLUMNS]
 
 
 def default_actions():
-    return [action.key for action in ACTIONS if action.default]
+    return list(DEFAULT_ACTIONS)
 
 
 def card_allowed(user, card):
@@ -341,7 +391,7 @@ def arrangement(layout):
     :param layout: a DashboardLayout, saved or not.
     :returns: (columns, hidden, actions, hidden_actions, order), lists of
         keys; `order` is the cards' order on narrow screens, every shown card
-        once, interleaved from the columns where the layout has not set it.
+        once, the default order where the layout has not set it.
     """
     seen = set()
 
@@ -356,26 +406,27 @@ def arrangement(layout):
     columns = [known(column, card) for column in layout.columns[:COLUMNS]]
     columns += [[] for _ in range(COLUMNS - len(columns))]
     hidden = known(layout.hidden, card)
-    for fixed in CARDS:
-        if fixed.key not in seen:
-            if fixed.default_hidden:
-                hidden.append(fixed.key)
-            else:
-                columns[DEFAULT_COLUMN[fixed.key]].append(fixed.key)
-    order = narrow_order(layout.order, columns)
+    for key in DEFAULT_COLUMN:
+        if key not in seen:
+            columns[DEFAULT_COLUMN[key]].append(key)
+    order = narrow_order(layout.order or DEFAULT_ORDER, columns)
 
     seen.clear()
     actions = known(layout.actions, action)
     hidden_actions = known(layout.hidden_actions, action)
-    for fixed in ACTIONS:
-        if fixed.key not in seen:
-            (actions if fixed.default else hidden_actions).append(fixed.key)
-    # A timer of each kind, the add form of each list and every child as a
-    # shortcut: one the layout has not placed yet waits among the hidden
-    # actions.
+    for key in DEFAULT_ACTIONS:
+        if key not in seen:
+            seen.add(key)
+            actions.append(key)
+    # Every other action, the add form of each list, a timer of each kind
+    # and every child as a shortcut: one the layout has not placed yet waits
+    # among the hidden actions.
     from core.models import Child
     from core.timer_kinds import KINDS
 
+    for fixed in ACTIONS:
+        if fixed.key not in seen:
+            hidden_actions.append(fixed.key)
     for kind in KINDS:
         if TIMER_PREFIX + kind not in seen:
             hidden_actions.append(TIMER_PREFIX + kind)
@@ -519,7 +570,7 @@ def apply(layout, kind, key, op, keys=None):
                 hidden.remove(key)
             columns[0].append(key)
             order.append(key)
-        elif op == "remove" and is_report and key in hidden:
+        elif op == "remove" and card(key).removable and key in hidden:
             hidden.remove(key)
         elif op in ("up", "down") and where is not None:
             _move_within(where, key, -1 if op == "up" else 1)
@@ -561,7 +612,7 @@ def apply(layout, kind, key, op, keys=None):
 
 def reset(layout):
     layout.columns = default_columns()
-    layout.hidden = default_hidden()
+    layout.hidden = []
     layout.order = []
     layout.actions = default_actions()
-    layout.hidden_actions = [a.key for a in ACTIONS if not a.default]
+    layout.hidden_actions = []

@@ -16,11 +16,27 @@ class ArrangementTestCase(TestCase):
             DashboardLayout()
         )
         self.assertEqual(columns, layout.default_columns())
-        interleaved = layout.interleaved(columns)
-        self.assertEqual(order, sorted(interleaved, key=interleaved.get))
+        self.assertEqual(order, layout.DEFAULT_ORDER)
         self.assertEqual(columns[0][0], "quick_actions")
-        self.assertEqual(hidden, layout.default_hidden())
-        self.assertIn("percentiles", hidden)
+        self.assertEqual(hidden, [])
+        # Every fixed card and the default report cards, each once, the two
+        # WHO weight ones (one shows, by the child's sex) side by side.
+        flat = [key for column in columns for key in column]
+        self.assertEqual(len(flat), len(set(flat)))
+        self.assertEqual(sorted(flat), sorted(layout.DEFAULT_ORDER))
+        for fixed in layout.CARDS:
+            self.assertIn(fixed.key, flat)
+        for key in ["report:sleep-pattern", "report:feeding-intervals"]:
+            self.assertIn(key, flat)
+        boy = flat.index("report:weight-change-boy")
+        self.assertEqual(flat[boy + 1], "report:weight-change-girl")
+        self.assertEqual(
+            layout.DEFAULT_ORDER.index("report:weight-change-girl"),
+            layout.DEFAULT_ORDER.index("report:weight-change-boy") + 1,
+        )
+        self.assertTrue(layout.card("report:bmi-change").removable)
+        self.assertFalse(layout.card("report:sleep-pattern").removable)
+        self.assertFalse(layout.card("percentiles").removable)
         self.assertEqual(actions, layout.default_actions())
         fixed = [key for key in actions + hidden_actions if ":" not in key]
         self.assertEqual(sorted(fixed), sorted(layout.ACTIONS_BY_KEY))
@@ -36,9 +52,9 @@ class ArrangementTestCase(TestCase):
         self.assertEqual(len(columns), layout.COLUMNS)
         self.assertEqual(columns[0][0], "sleep_last")
         self.assertEqual(columns[1][0], "statistics")
-        self.assertEqual(hidden, ["notes_recent", "percentiles"])
+        self.assertEqual(hidden, ["notes_recent"])
         keys = [key for column in columns for key in column] + hidden
-        self.assertEqual(sorted(keys), sorted(layout.CARDS_BY_KEY))
+        self.assertEqual(sorted(keys), sorted(layout.DEFAULT_COLUMN))
         self.assertEqual(actions[0], "note")
         self.assertEqual(actions.count("note"), 1)
         self.assertNotIn("gone", actions)
@@ -188,10 +204,18 @@ class DashboardLayoutViewTestCase(TestCase):
         page = self.c.get(self.url)
         self.assertContains(page, 'id="dashboard-quick_actions"')
         self.assertNotContains(page, 'class="dash-controls"')
-        # A quick action opens the activity's list for the child; entries
-        # are added from there or by a timer.
-        self.assertContains(page, 'href="/sleep/?child={}"'.format(self.child.pk))
+        # By default the sleep and feeding timers and the diaper change and
+        # medication add forms, marked with a plus; a list action opens the
+        # activity's list for the child.
+        self.assertContains(page, 'name="kind" value="sleep"')
+        self.assertContains(
+            page, 'href="/changes/add/?child={}"'.format(self.child.slug)
+        )
+        self.assertContains(page, 'class="icon-add quick-action-badge"', count=2)
         self.assertNotContains(page, 'href="/sleep/add/?child=')
+        self.c.post(self.edit_url, {"kind": "action", "key": "sleep", "op": "show"})
+        page = self.c.get(self.url)
+        self.assertContains(page, 'href="/sleep/?child={}"'.format(self.child.pk))
         for action in layout.ACTIONS:
             if action.url:
                 self.assertTrue(action.url.endswith("-list"), action.url)
@@ -201,21 +225,22 @@ class DashboardLayoutViewTestCase(TestCase):
         self.c.post(self.edit_url, {"kind": "action", "key": "add:sleep", "op": "show"})
         page = self.c.get(self.url)
         self.assertContains(page, 'href="/sleep/add/?child={}"'.format(self.child.slug))
-        self.assertContains(page, 'class="icon-add quick-action-badge"')
+        self.assertContains(page, 'class="icon-add quick-action-badge"', count=3)
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, "Sleep · Add")
-        # The rest wait folded away, grouped by activity: sleep still offers
-        # its timer, medication its list and add form, the children theirs.
+        # The rest wait folded away, grouped by activity: sleep, with all
+        # three on the card, has no row; feeding still offers its add form
+        # and list, always in that order after the timer.
         self.assertContains(page, "<summary>More actions</summary>")
         groups = {g["action"].key: g for g in page.context["available"]}
-        self.assertEqual([a.key for a in groups["sleep"]["variants"]], ["timer:sleep"])
-        # Always timer, add form, list.
+        self.assertNotIn("sleep", groups)
         self.assertEqual(
-            [a.key for a in groups["medication"]["variants"]],
-            ["add:medication", "medication"],
+            [a.key for a in groups["feeding"]["variants"]], ["add:feeding", "feeding"]
         )
         self.c.post(self.edit_url, {"kind": "action", "key": "sleep", "op": "hide"})
-        self.c.post(self.edit_url, {"kind": "action", "key": "timer", "op": "hide"})
+        self.c.post(
+            self.edit_url, {"kind": "action", "key": "timer:sleep", "op": "hide"}
+        )
         page = self.c.get(self.url + "?edit=1")
         groups = {g["action"].key: g for g in page.context["available"]}
         self.assertEqual(
@@ -241,7 +266,7 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertContains(
             page, 'class="quick-actions-edit quick-actions-edit_sortable'
         )
-        self.assertContains(page, '<li data-key="diaperchange">')
+        self.assertContains(page, '<li data-key="add:diaperchange">')
 
         page = self.c.get(self.url + "?edit=1")
         self.assertContains(page, 'class="dash-controls"')
@@ -251,9 +276,9 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertContains(page, 'data-move="up"')
         self.assertNotContains(page, 'value="left"')
         # The toggle unfolds the cards with settings: quick actions and
-        # percentiles (hidden by default, so only the former here).
+        # percentiles.
         self.assertEqual(
-            page.content.decode().count('class="btn btn-sm dash-btn dash-toggle'), 1
+            page.content.decode().count('class="btn btn-sm dash-btn dash-toggle'), 2
         )
         self.assertContains(page, 'id="dashboard-quick_actions"')
         quick = page.content.decode().split('id="dashboard-quick_actions"')[1]
@@ -290,12 +315,12 @@ class DashboardLayoutViewTestCase(TestCase):
         )
         saved = DashboardLayout.objects.get(user=self.user, child=self.child)
         self.assertEqual(saved.order, list(reversed(shown)))
-        # The page positions the cards by it, the last of the default
-        # interleaving first.
+        # The page positions the cards by it: of the reversed default, the
+        # first card this child shows (the WHO cards need a sex) is first.
         page = self.c.get(self.url)
         self.assertRegex(
             page.content.decode(),
-            r'id="dashboard-{}"\s+style="--dash-order: 0"'.format(shown[-1]),
+            r'id="dashboard-statistics"\s+style="--dash-order: 0"',
         )
         self.assertNotContains(page, "data-column=")
 
@@ -336,17 +361,20 @@ class DashboardLayoutViewTestCase(TestCase):
         self.assertContains(page, 'id="dashboard-sleep_last"')
         self.assertNotContains(page, 'id="dashboard-feeding_last"')
         dash = page.context["dash"]
-        # Writing sleep, a timed kind, brings the timers along (babubi/roles.py).
-        self.assertEqual([a.key for a in dash["actions"]], ["sleep", "timer"])
+        # Writing sleep, a timed kind, brings the timers along (babubi/roles.py):
+        # of the default actions, the sleep timer.
+        self.assertEqual([a.key for a in dash["actions"]], ["timer:sleep"])
         self.assertEqual(
             [a.key for a in dash["hidden_actions"]],
-            ["timer:sleep", "add:sleep", "add:timer", "list:timer"],
+            ["sleep", "timer", "add:sleep", "add:timer", "list:timer"],
         )
         # Reading alone opens the lists, not the add forms nor a timer.
         user.user_permissions.remove(Permission.objects.get(codename="add_sleep"))
         dash = c.get(self.url + "?edit=1").context["dash"]
-        self.assertEqual([a.key for a in dash["actions"]], ["sleep"])
-        self.assertEqual([a.key for a in dash["hidden_actions"]], ["list:timer"])
+        self.assertEqual([a.key for a in dash["actions"]], [])
+        self.assertEqual(
+            [a.key for a in dash["hidden_actions"]], ["sleep", "list:timer"]
+        )
 
     def test_editing_needs_the_permission_to_view_children(self):
         get_user_model().objects.create_user(username="nobody", password="secret")
@@ -430,8 +458,6 @@ class PercentilesTestCase(TestCase):
         c = HttpClient()
         c.login(username="tester", password="secret")
         url = "/children/{}/".format(child.slug)
-        self.assertNotContains(c.get(url), 'id="dashboard-percentiles"')
-        c.post(url + "layout/", {"kind": "card", "key": "percentiles", "op": "show"})
         page = c.get(url)
         self.assertContains(page, 'id="dashboard-percentiles"')
         self.assertContains(page, "percentiles-settings", count=0)
@@ -534,8 +560,14 @@ class ChildSexTestCase(TestCase):
             "reports"
         ]
         keys = [report.key for report in reports]
-        self.assertIn("weight-change-girl", keys)
-        self.assertNotIn("weight-change-boy", keys)
+        # The girl's WHO weight card is on the page by default, the others
+        # of her sex wait in the picker; no boy's one anywhere.
+        self.assertIn("height-change-girl", keys)
+        self.assertNotIn("weight-change-girl", keys)
+        self.assertNotIn("height-change-boy", keys)
+        page = c.get("/children/{}/".format(child.slug))
+        self.assertContains(page, 'id="dashboard-report:weight-change-girl"')
+        self.assertNotContains(page, 'id="dashboard-report:weight-change-boy"')
 
 
 class TimerKindTestCase(TestCase):
@@ -652,13 +684,13 @@ class TimerKindTestCase(TestCase):
         self.assertFalse(layout.action_allowed(carer, layout.action("timer:feeding")))
 
     def test_timer_kind_quick_actions(self):
-        key = layout.TIMER_PREFIX + "sleep"
+        key = layout.TIMER_PREFIX + "pumping"
         url = "/children/{}/".format(self.child.slug)
         dash = self.c.get(url + "?edit=1").context["dash"]
         self.assertIn(key, [a.key for a in dash["hidden_actions"]])
         self.c.post(url + "layout/", {"kind": "action", "key": key, "op": "show"})
         page = self.c.get(url)
-        self.assertContains(page, 'name="kind" value="sleep"')
+        self.assertContains(page, 'name="kind" value="pumping"')
         self.assertIsNone(layout.action(layout.TIMER_PREFIX + "nope"))
 
 
