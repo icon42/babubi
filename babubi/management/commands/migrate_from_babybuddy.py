@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
+from django.db.migrations.loader import MigrationLoader
 
 OLD_LABEL = "babybuddy"
 NEW_LABEL = "babubi"
@@ -30,6 +31,19 @@ class Command(BaseCommand):
             self.stdout.write("Nothing left from Baby Buddy, nothing to move.")
             return
 
+        # A newer Baby Buddy than the one Babubi builds on has migrations
+        # Babubi lacks: its schema has columns the models do not know, so the
+        # database is left as it is until Babubi catches up.
+        unknown = self.unknown_migrations()
+        if unknown:
+            raise CommandError(
+                "This database comes from a newer Baby Buddy than the one Babubi "
+                "builds on: it has migrations Babubi does not know ({}). Update "
+                "Babubi before moving it; nothing was changed.".format(
+                    ", ".join(unknown)
+                )
+            )
+
         # Both labels at once means migrate already ran with the new label
         # and created fresh tables; merging them is a manual job.
         new_tables = [t for t in tables if t.startswith(NEW_LABEL + "_")]
@@ -57,4 +71,16 @@ class Command(BaseCommand):
             "Moved from Baby Buddy: {} table(s), {} migration record(s).".format(
                 len(old_tables), old_migrations
             )
+        )
+
+    def unknown_migrations(self):
+        """The applied migrations, as Baby Buddy recorded them, with no file here."""
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT app, name FROM django_migrations")
+            applied = cursor.fetchall()
+        known = MigrationLoader(None, ignore_no_migrations=True).disk_migrations
+        return sorted(
+            "{}.{}".format(app, name)
+            for app, name in applied
+            if (NEW_LABEL if app == OLD_LABEL else app, name) not in known
         )

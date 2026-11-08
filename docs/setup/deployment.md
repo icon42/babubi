@@ -64,6 +64,13 @@ moves the tables, content types and migration records from the `babybuddy`
 app label to `babubi`; later starts find nothing to move. Some Babubi
 migrations cannot be undone, so the backup is the only way back.
 
+Babubi takes over databases from the Baby Buddy release it builds on or an
+older one: the `+bb.` part of its release tag, or the `babubi.upstream` image
+label, names that release. A database from a newer Baby Buddy has migrations
+Babubi does not know yet, so `migrate_from_babybuddy` stops with an error that
+lists them and leaves the database untouched; wait for a Babubi release built
+on that Baby Buddy version.
+
 ### Running commands
 
 Run administrative commands with `manage.py` inside the container; the

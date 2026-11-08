@@ -4,6 +4,7 @@ from io import StringIO
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import CommandError, call_command
 from django.db import connection
+from django.db.migrations.recorder import MigrationRecorder
 from django.test import TransactionTestCase
 
 
@@ -74,4 +75,19 @@ class MigrateFromBabyBuddyTestCase(TransactionTestCase):
             run()
         with connection.schema_editor(atomic=True) as editor:
             editor.execute("DROP TABLE babubi_settings")
+        run()  # Leave the schema as the other tests expect it.
+
+    def test_refuses_newer_baby_buddy(self):
+        make_baby_buddy_database()
+        recorder = MigrationRecorder(connection)
+        recorder.record_applied("core", "0999_from_a_newer_baby_buddy")
+        recorder.record_applied("webhooks", "0001_initial")
+        with self.assertRaisesMessage(
+            CommandError, "core.0999_from_a_newer_baby_buddy, webhooks.0001_initial"
+        ):
+            run()
+        # Nothing was moved.
+        self.assertIn("babybuddy_settings", connection.introspection.table_names())
+        recorder.record_unapplied("core", "0999_from_a_newer_baby_buddy")
+        recorder.record_unapplied("webhooks", "0001_initial")
         run()  # Leave the schema as the other tests expect it.
