@@ -12530,38 +12530,6 @@ textarea.form-control-lg {
   vertical-align: 0.2rem;
 }
 
-.day-dot_black {
-  --day-dot: #2b2b2b;
-}
-
-.day-dot_brown {
-  --day-dot: #8b5a2b;
-}
-
-.day-dot_gray {
-  --day-dot: #9aa0a6;
-}
-
-.day-dot_green {
-  --day-dot: #5a8f3c;
-}
-
-.day-dot_orange {
-  --day-dot: #e8892f;
-}
-
-.day-dot_red {
-  --day-dot: #d64545;
-}
-
-.day-dot_white {
-  --day-dot: #ffffff;
-}
-
-.day-dot_yellow {
-  --day-dot: #e9c53a;
-}
-
 .day-cell_text {
   white-space: normal !important;
   width: 100%;
