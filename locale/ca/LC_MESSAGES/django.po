@@ -1467,7 +1467,7 @@ msgstr "Groc"
 
 #: core/models.py:126
 msgid "Enter colors from the list, separated by commas."
-msgstr ""
+msgstr "Introduïu colors de la llista, separats per comes."
 
 #: core/models.py:140
 msgid "Date/time can not be in the future."

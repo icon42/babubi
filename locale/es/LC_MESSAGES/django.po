@@ -1466,7 +1466,7 @@ msgstr "Amarillo"
 
 #: core/models.py:126
 msgid "Enter colors from the list, separated by commas."
-msgstr ""
+msgstr "Introduce colores de la lista, separados por comas."
 
 #: core/models.py:140
 msgid "Date/time can not be in the future."
