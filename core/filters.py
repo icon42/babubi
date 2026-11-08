@@ -22,6 +22,12 @@ class BMIFilter(TagFilter):
 
 
 class DiaperChangeFilter(TagFilter):
+    color = django_filters.ChoiceFilter(
+        label=_("Color"),
+        choices=models.DIAPER_COLOR_CHOICES,
+        method=models.filter_diaper_color,
+    )
+
     class Meta:
         model = models.DiaperChange
         fields = ["child", "wet", "solid", "color"]

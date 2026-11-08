@@ -2,6 +2,7 @@
 import datetime
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import formats, timezone
@@ -111,9 +112,7 @@ class DiaperChangeTestCase(TestCase):
         self.assertListEqual(self.change.attributes(), ["Wet", "Solid", "Black"])
 
     def test_diaperchange_color_choices(self):
-        colors = [
-            choice[0] for choice in models.DiaperChange._meta.get_field("color").choices
-        ]
+        colors = [key for key, label in models.DIAPER_COLOR_CHOICES]
         # Create a fresh child so the setUp fixture's DiaperChange doesn't
         # interfere with the count.
         child = models.Child.objects.create(
@@ -130,6 +129,30 @@ class DiaperChangeTestCase(TestCase):
         self.assertEqual(
             models.DiaperChange.objects.filter(child=child).count(), len(colors)
         )
+
+    def test_diaperchange_multiple_colors(self):
+        self.change.color = "green,yellow"
+        self.change.full_clean()
+        self.assertEqual(self.change.color_list(), ["green", "yellow"])
+        self.assertEqual(self.change.get_color_display(), "Green, Yellow")
+        self.assertListEqual(
+            self.change.attributes(), ["Wet", "Solid", "Green, Yellow"]
+        )
+
+    def test_diaperchange_invalid_colors(self):
+        for value in ["purple", "green,green", "green, yellow", "green,"]:
+            self.change.color = value
+            with self.assertRaises(ValidationError, msg=value):
+                self.change.full_clean()
+
+    def test_diaperchange_color_swatch(self):
+        self.assertEqual(self.change.color_swatch(), "#2b2b2b")
+        self.change.color = "white,black"
+        mixed = self.change.color_swatch()
+        self.assertRegex(mixed, r"^#[0-9a-f]{6}$")
+        self.assertNotIn(mixed, ["#2b2b2b", "#ffffff"])
+        self.change.color = ""
+        self.assertEqual(self.change.color_swatch(), "")
 
 
 class FeedingTestCase(TestCase):

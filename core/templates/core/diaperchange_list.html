@@ -33,7 +33,8 @@
                title="{% trans "Solid" %}"></i>
         {% endif %}
         {% if item.color %}
-            <span class="day-dot day-dot_{{ item.color }} day-dot_compact"
+            <span class="day-dot day-dot_compact"
+                  style="--day-dot: {{ item.color_swatch }}"
                   role="img"
                   aria-label="{{ item.get_color_display }}"
                   title="{{ item.get_color_display }}"></span>
@@ -41,7 +42,9 @@
     </td>
     <td class="day-cell_secondary">
         {% if item.color %}
-            <span class="day-dot day-dot_{{ item.color }}" aria-hidden="true"></span>{{ item.get_color_display }}
+            <span class="day-dot"
+                  style="--day-dot: {{ item.color_swatch }}"
+                  aria-hidden="true"></span>{{ item.get_color_display }}
         {% endif %}
     </td>
     <td class="day-cell_secondary">{{ item.amount|default_if_none:"" }}</td>

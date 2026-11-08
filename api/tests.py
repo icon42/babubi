@@ -324,6 +324,21 @@ class DiaperChangeAPITestCase(TestBase.BabubiAPITestCaseBase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, entry)
 
+    def test_multiple_colors(self):
+        data = {"child": 1, "wet": False, "solid": True, "color": "green,yellow"}
+        response = self.client.post(self.endpoint, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created = response.data["id"]
+        response = self.client.get(self.endpoint, {"color": "yellow"})
+        self.assertIn(created, [r["id"] for r in response.data["results"]])
+        response = self.client.get(self.endpoint, {"color": "brown"})
+        self.assertNotIn(created, [r["id"] for r in response.data["results"]])
+
+    def test_invalid_colors(self):
+        data = {"child": 1, "wet": False, "solid": True, "color": "green,purple"}
+        response = self.client.post(self.endpoint, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class FeedingAPITestCase(TestBase.BabubiAPITestCaseBase):
     endpoint = reverse("api:feeding-list")

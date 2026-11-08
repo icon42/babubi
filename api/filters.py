@@ -63,6 +63,10 @@ class StartEndFieldFilter(ChildFieldFilter):
 
 
 class DiaperChangeFilter(TimeFieldFilter, TagsFieldFilter):
+    color = filters.ChoiceFilter(
+        choices=models.DIAPER_COLOR_CHOICES, method=models.filter_diaper_color
+    )
+
     class Meta(TimeFieldFilter.Meta):
         model = models.DiaperChange
         fields = sorted(

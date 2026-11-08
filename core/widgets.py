@@ -1,7 +1,7 @@
 import datetime
 from typing import Any, Dict, Optional
 
-from django.forms import RadioSelect, widgets
+from django.forms import CheckboxSelectMultiple, RadioSelect, widgets
 
 from . import models
 
@@ -104,6 +104,17 @@ class ChildRadioSelect(RadioSelect):
         if value != "":
             option["picture"] = value.instance.picture
         return option
+
+
+class PillCheckboxSelect(CheckboxSelectMultiple):
+    # The pills of PillRadioSelect, for picking several options.
+    template_name = "core/pill_radio.html"
+    option_template_name = "core/pill_radio_option.html"
+
+    def build_attrs(self, base_attrs, extra_attrs=None):
+        attrs = super().build_attrs(base_attrs, extra_attrs)
+        attrs["class"] = (attrs.get("class", "") + " btn-check d-none").strip()
+        return attrs
 
 
 class PillRadioSelect(RadioSelect):

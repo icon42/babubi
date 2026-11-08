@@ -16,7 +16,7 @@ from taggit.managers import TaggableManager as TaggitTaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 
 from babubi.site_settings import NapSettings, FeedingSettings, SleepSettings
-from core.utils import random_color, timezone_aware_duration
+from core.utils import mix_colors, random_color, timezone_aware_duration
 
 
 def validate_date(date, field_name):
@@ -84,6 +84,48 @@ def validate_unique_period(queryset, model):
                 ),
                 code="period_intersection",
             )
+
+
+# Diaper colors: key, label and the swatch shown in the lists. A diaper
+# change stores several keys comma-separated in its single color field.
+DIAPER_COLORS = [
+    ("black", _("Black"), "#2b2b2b"),
+    ("brown", _("Brown"), "#8b5a2b"),
+    ("gray", _("Gray"), "#9aa0a6"),
+    ("green", _("Green"), "#5a8f3c"),
+    ("orange", _("Orange"), "#e8892f"),
+    ("red", _("Red"), "#d64545"),
+    ("white", _("White"), "#ffffff"),
+    ("yellow", _("Yellow"), "#e9c53a"),
+]
+DIAPER_COLOR_CHOICES = [(key, label) for key, label, swatch in DIAPER_COLORS]
+
+
+def filter_diaper_color(queryset, name, value):
+    """
+    django-filter method: the diaper changes whose colors include one key.
+    """
+    if not value:
+        return queryset
+    return queryset.filter(**{name + "__regex": r"(^|,)%s(,|$)" % re.escape(value)})
+
+
+def validate_diaper_colors(value):
+    """
+    Confirm that a comma-separated list of diaper colors holds known keys,
+    each one once.
+    :param value: the stored string, e.g. "green,yellow".
+    :return:
+    """
+    if not value:
+        return
+    keys = value.split(",")
+    known = {key for key, label, swatch in DIAPER_COLORS}
+    if len(set(keys)) != len(keys) or not set(keys) <= known:
+        raise ValidationError(
+            _("Enter colors from the list, separated by commas."),
+            code="invalid_colors",
+        )
 
 
 def validate_time(time, field_name):
@@ -269,19 +311,11 @@ class DiaperChange(models.Model):
     )
     wet = models.BooleanField(verbose_name=_("Wet"))
     solid = models.BooleanField(verbose_name=_("Solid"))
+    # Several colors, comma-separated (see DIAPER_COLORS).
     color = models.CharField(
         blank=True,
-        choices=[
-            ("black", _("Black")),
-            ("brown", _("Brown")),
-            ("gray", _("Gray")),
-            ("green", _("Green")),
-            ("orange", _("Orange")),
-            ("red", _("Red")),
-            ("white", _("White")),
-            ("yellow", _("Yellow")),
-        ],
         max_length=255,
+        validators=[validate_diaper_colors],
         verbose_name=_("Color"),
     )
     amount = models.FloatField(blank=True, null=True, verbose_name=_("Amount"))
@@ -308,6 +342,20 @@ class DiaperChange(models.Model):
         if self.color:
             attributes.append(self.get_color_display())
         return attributes
+
+    def color_list(self):
+        return self.color.split(",") if self.color else []
+
+    def get_color_display(self):
+        # The field has no choices (it holds several keys), so Django does not
+        # generate this; it keeps the name the templates and attributes() use.
+        labels = {key: label for key, label, swatch in DIAPER_COLORS}
+        return ", ".join(str(labels.get(key, key)) for key in self.color_list())
+
+    def color_swatch(self):
+        swatches = {key: swatch for key, label, swatch in DIAPER_COLORS}
+        known = [swatches[key] for key in self.color_list() if key in swatches]
+        return mix_colors(known) if known else ""
 
     def clean(self):
         validate_time(self.time, "time")

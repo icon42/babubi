@@ -14,7 +14,13 @@ from core import models
 from core.models import Timer
 from core.presets import PresetsMixin
 from core.suggestions import SHORT, SuggestionsMixin, plain
-from core.widgets import TagsEditor, ChildRadioSelect, PillRadioSelect
+from core.fields import CommaSeparatedChoiceField
+from core.widgets import (
+    TagsEditor,
+    ChildRadioSelect,
+    PillCheckboxSelect,
+    PillRadioSelect,
+)
 
 
 def set_initial_values(kwargs, form_type):
@@ -418,12 +424,18 @@ class DiaperChangeForm(SuggestionsMixin, CoreModelForm, TaggableModelForm):
         {"layout": "advanced", "fields": ["notes", "tags"]},
     ]
 
+    color = CommaSeparatedChoiceField(
+        choices=models.DIAPER_COLOR_CHOICES,
+        label=_("Color"),
+        required=False,
+        widget=PillCheckboxSelect(),
+    )
+
     class Meta:
         model = models.DiaperChange
         fields = ["child", "time", "wet", "solid", "color", "amount", "notes", "tags"]
         widgets = {
             "child": ChildRadioSelect(),
-            "color": PillRadioSelect(),
             "time": DateTimeInput(),
             "notes": forms.Textarea(attrs={"rows": 5}),
         }

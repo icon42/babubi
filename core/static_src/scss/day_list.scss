@@ -154,22 +154,8 @@
     vertical-align: .2rem;
 }
 
-$day-dots: (
-    "black": #2b2b2b,
-    "brown": #8b5a2b,
-    "gray": #9aa0a6,
-    "green": #5a8f3c,
-    "orange": #e8892f,
-    "red": #d64545,
-    "white": #ffffff,
-    "yellow": #e9c53a,
-);
-
-@each $name, $color in $day-dots {
-    .day-dot_#{$name} {
-        --day-dot: #{$color};
-    }
-}
+// The swatch itself (--day-dot) comes from the template: the colors live in
+// core.models.DIAPER_COLORS, mixed when a change has several.
 
 .day-cell_text {
     white-space: normal !important;

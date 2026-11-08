@@ -3,6 +3,25 @@ from django import forms
 from django.utils.translation import gettext as _
 
 
+class CommaSeparatedChoiceField(forms.MultipleChoiceField):
+    """
+    Several choices edited as a list and stored as one comma-separated string,
+    in the order of the choices.
+    """
+
+    def prepare_value(self, value):
+        if isinstance(value, str):
+            return value.split(",") if value else []
+        return value
+
+    def clean(self, value):
+        selected = set(super().clean(value))
+        return ",".join(key for key, label in self.choices if key in selected)
+
+    def has_changed(self, initial, data):
+        return super().has_changed(self.prepare_value(initial), data)
+
+
 class NapStartMaxTimeField(forms.TimeField):
     def validate(self, value):
         from core.models import Sleep

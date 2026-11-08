@@ -370,6 +370,19 @@ class DiaperChangeFormsTestCase(FormsTestCaseBase):
             page, "Diaper Change entry for {} updated".format(str(self.change.child))
         )
 
+    def test_multiple_colors(self):
+        params = {
+            "child": self.change.child.id,
+            "time": self.localtime_string(),
+            "solid": True,
+            "color": ["yellow", "green"],
+        }
+        page = self.c.post("/changes/{}/".format(self.change.id), params, follow=True)
+        self.assertEqual(page.status_code, 200)
+        self.change.refresh_from_db()
+        # Stored in the order of the choices, whatever order was posted.
+        self.assertEqual(self.change.color, "green,yellow")
+
     def test_delete(self):
         page = self.c.post("/changes/{}/delete/".format(self.change.id), follow=True)
         self.assertEqual(page.status_code, 200)
