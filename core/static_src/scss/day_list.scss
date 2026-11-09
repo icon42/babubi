@@ -358,10 +358,17 @@
         }
     }
 
+    // The day takes its own line and the counts go below it, so a long day
+    // ("Yesterday · Sun Nov 8") never leaves a lone count on a second line.
     .day-row-name {
+        display: block;
         text-transform: uppercase;
         letter-spacing: .05em;
         font-size: .8125rem;
+    }
+
+    .day-row-part {
+        white-space: nowrap;
     }
 
     .day-item {
