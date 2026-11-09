@@ -24,6 +24,8 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 - **Child-first menu.** The menu starts with the child whose dashboard was opened last and leads back to it; the other children are one tap away.
 - **Timers that know what they time.** A timer is started as a feeding, pumping, sleep or tummy time timer, from the quick actions, the phone's stopwatch button or the Timers menu, and one button finishes it and opens that activity's form filled in.
 - **Lists grouped by day**, with a summary row per day, the time since the previous entry, and sleep drawn as bars with its nap or night badge.
+- **Several stool colours per diaper change**, picked together in the form and drawn in the lists as one dot of their mixed colour.
+- **Numbers in each user's format**: weights, doses, amounts and hours accept a decimal comma where the language uses one, and show it back the same way.
 - **Frequent values under form fields**: the medication names, doses and intervals, the amounts and the short notes used before, filled in with a click. Above the medication and feeding forms, **"Same as before"** repeats a recent treatment or feeding, every field at once.
 - **Permissions per user**, in the user form: a matrix of what each user may read and write, per activity and measurement, with an "All" per column that also covers kinds added later. It sets Django's model permissions, so the web interface, the API and the MCP server all honour it.
 - **WHO head circumference charts** for boys and girls, next to the weight and height ones; a child's sex picks the right charts.
@@ -34,7 +36,7 @@ Babubi is a fork of [Baby Buddy](https://github.com/babybuddy/babybuddy). It sta
 - **Your own logo and styles** without rebuilding the image: drop `logo.svg`, `icon.svg` or `custom.css` into `/config/branding/` (see [`BRANDING_DIR`](docs/configuration/application.md#branding_dir)).
 - **OpenID Connect login** with any provider, alongside passwords or instead of them, including back-channel logout; accounts link by verified email or from the user's settings (see [`LOGIN_METHODS`](docs/configuration/security.md#login_methods)).
 - **A REST API that knows the additions** (a child's sex, a timer's kind) and a [Model Context Protocol server](https://github.com/icon42/babubi-mcp) to log and query from AI assistants.
-- **Drop-in migration from Baby Buddy.** Its `/config` volume matches the linuxserver Baby Buddy image, and the first start moves the database over to Babubi on its own.
+- **Drop-in migration from Baby Buddy.** Its `/config` volume matches the linuxserver Baby Buddy image, and the first start moves the database over to Babubi on its own. It takes databases from the Baby Buddy release it builds on or an older one, and refuses a newer one without touching it.
 
 ## Getting started
 
