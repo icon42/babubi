@@ -12508,6 +12508,16 @@ textarea.form-control-lg {
   font-size: 1.4rem;
 }
 
+.icon-solid_colored {
+  --icon-edge: oklch(from var(--icon-solid-color) calc(l - .4) c h / calc((l - .8) * 6));
+  filter: drop-shadow(0 0 var(--icon-edge-width, 0.5px) var(--icon-edge));
+}
+
+[data-bs-theme=dark] .icon-solid_colored {
+  --icon-edge: oklch(from var(--icon-solid-color) calc(l + .5) c h / calc((.45 - l) * 6));
+  --icon-edge-width: 1.5px;
+}
+
 .day-table td.day-cell_previous {
   color: var(--day-muted);
   font-variant-numeric: tabular-nums;
@@ -12522,12 +12532,6 @@ textarea.form-control-lg {
   vertical-align: -0.05rem;
   background: var(--day-dot);
   box-shadow: inset 0 0 0 1px rgba(var(--bs-emphasis-color-rgb), 0.25);
-}
-
-.day-dot_compact {
-  display: none;
-  margin: 0 0 0 0.2rem;
-  vertical-align: 0.2rem;
 }
 
 .day-cell_text {
@@ -12681,9 +12685,6 @@ textarea.form-control-lg {
   .day-table tbody tr.day-item_alt {
     background: var(--day-stripe);
   }
-  .day-dot_compact {
-    display: inline-block;
-  }
   .day-table tbody tr.day-row {
     background: var(--day-tint);
     border-top: 1px solid var(--day-edge);
@@ -12699,9 +12700,13 @@ textarea.form-control-lg {
     white-space: normal;
   }
   .day-row-name {
+    display: block;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-size: 0.8125rem;
+  }
+  .day-row-part {
+    white-space: nowrap;
   }
   .day-item {
     position: relative;
@@ -12710,6 +12715,7 @@ textarea.form-control-lg {
     white-space: normal;
   }
   .day-table > tbody > .day-item > .day-cell_time,
+  .day-table > tbody > .day-item > .day-cell_icons,
   .day-table > tbody > .day-item > .day-cell_previous {
     white-space: nowrap;
   }
