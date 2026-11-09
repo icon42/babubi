@@ -26,18 +26,17 @@
                aria-label="{% trans "Wet" %}"
                title="{% trans "Wet" %}"></i>
         {% endif %}
-        {% if item.solid %}
+        {% if item.solid and item.color %}
+            <i class="icon-solid icon-solid_colored"
+               style="--icon-solid-color: {{ item.color_swatch }}"
+               role="img"
+               aria-label="{% trans "Solid" %} ({{ item.get_color_display }})"
+               title="{% trans "Solid" %} ({{ item.get_color_display }})"></i>
+        {% elif item.solid %}
             <i class="icon-solid"
                role="img"
                aria-label="{% trans "Solid" %}"
                title="{% trans "Solid" %}"></i>
-        {% endif %}
-        {% if item.color %}
-            <span class="day-dot day-dot_compact"
-                  style="--day-dot: {{ item.color_swatch }}"
-                  role="img"
-                  aria-label="{{ item.get_color_display }}"
-                  title="{{ item.get_color_display }}"></span>
         {% endif %}
     </td>
     <td class="day-cell_secondary">

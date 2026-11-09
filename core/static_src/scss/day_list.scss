@@ -132,6 +132,24 @@
     font-size: 1.4rem;
 }
 
+// A stool icon drawn in the change's colours (mixed when several). Only a
+// colour too close to the background gets an edge, in a darker shade of
+// itself on the light theme (white, pale yellow) and a lighter one on the
+// dark theme (black); its opacity grows with the lightness past the
+// threshold and is clamped to 0 below it, so other colours stay clean.
+.icon-solid_colored {
+    --icon-edge: oklch(from var(--icon-solid-color) calc(l - .4) c h / calc((l - .8) * 6));
+    filter: drop-shadow(0 0 var(--icon-edge-width, .5px) var(--icon-edge));
+}
+
+// Black on a dark background needs a wider edge than white on a light one.
+@include color-mode("dark") {
+    .icon-solid_colored {
+        --icon-edge: oklch(from var(--icon-solid-color) calc(l + .5) c h / calc((.45 - l) * 6));
+        --icon-edge-width: 1.5px;
+    }
+}
+
 .day-table td.day-cell_previous {
     color: var(--day-muted);
     font-variant-numeric: tabular-nums;
@@ -146,12 +164,6 @@
     vertical-align: -.05rem;
     background: var(--day-dot);
     box-shadow: inset 0 0 0 1px rgba(var(--bs-emphasis-color-rgb), .25);
-}
-
-.day-dot_compact {
-    display: none;
-    margin: 0 0 0 .2rem;
-    vertical-align: .2rem;
 }
 
 // The swatch itself (--day-dot) comes from the template: the colors live in
@@ -328,11 +340,6 @@
         }
     }
 
-    // The colour column is hidden; its dot joins the icons.
-    .day-dot_compact {
-        display: inline-block;
-    }
-
     .day-table tbody tr.day-row {
         background: var(--day-tint);
         border-top: 1px solid var(--day-edge);
@@ -362,12 +369,14 @@
     }
 
     // Cells wrap their words rather than push the line past the screen; a
-    // time never breaks, and a span breaks only between its start and end.
+    // time and the icons never break, and a span breaks only between its
+    // start and end.
     .day-table > tbody > .day-item > * {
         white-space: normal;
     }
 
     .day-table > tbody > .day-item > .day-cell_time,
+    .day-table > tbody > .day-item > .day-cell_icons,
     .day-table > tbody > .day-item > .day-cell_previous {
         white-space: nowrap;
     }
