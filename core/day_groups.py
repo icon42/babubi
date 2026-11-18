@@ -97,7 +97,9 @@ def _tummytime_summary(items):
 
 
 def _medication_summary(items):
-    names = Counter(item.name for item in items)
+    # The first word names a medication well enough in a line that must stay
+    # short ("Dalsy 200 mg/5 ml" and "Dalsy" are both "Dalsy").
+    names = Counter((item.name.split() or [""])[0] for item in items)
     return [
         _part(
             _count(

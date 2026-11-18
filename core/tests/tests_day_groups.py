@@ -5,7 +5,7 @@ from django.test import Client as HttpClient
 from django.test import TestCase
 from django.utils import timezone
 
-from core import models
+from core import day_groups, models
 from core.templatetags import days
 
 
@@ -42,6 +42,18 @@ class DayFiltersTestCase(TestCase):
         self.assertTrue(days.ends_next_day(sleep))
         sleep.end = start + datetime.timedelta(hours=1)
         self.assertFalse(days.ends_next_day(sleep))
+
+
+class MedicationSummaryTestCase(TestCase):
+    def test_names_by_their_first_word(self):
+        items = [
+            models.Medication(name=name)
+            for name in ("Dalsy 200 mg/5 ml", "Dalsy", "Vitamin D3 drops")
+        ]
+        self.assertEqual(
+            [part["text"] for part in day_groups._medication_summary(items)],
+            ["3 doses", "Dalsy ×2", "Vitamin ×1"],
+        )
 
 
 class DayGroupedListTestCase(TestCase):
