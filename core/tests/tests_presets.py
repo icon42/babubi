@@ -67,16 +67,21 @@ class PresetsTestCase(TestCase):
         self.give("Dalsy", dosage=5, dosage_unit="ml")
         # The same name with another interval is another treatment.
         self.give("Dalsy", hours=6, dosage=5, dosage_unit="ml")
-        # Once is enough; without an interval it is no treatment.
+        # Once is enough, with an interval or without one.
         self.give("Vitamin D", hours=24, dosage=1, dosage_unit="drops")
         self.give("Apiretal", hours=None, dosage=2.5, dosage_unit="ml")
         self.assertEqual(
             self.labels(MedicationForm),
             [
                 "Dalsy · 5 ml · every 8 h",
+                "Apiretal · 2.5 ml",
                 "Vitamin D · 1 drops · every 24 h",
                 "Dalsy · 5 ml · every 6 h",
             ],
+        )
+        self.assertEqual(
+            self.values(MedicationForm)["Apiretal · 2.5 ml"]["next_dose_interval"],
+            "",
         )
         self.assertEqual(
             self.values(MedicationForm)["Dalsy · 5 ml · every 8 h"],

@@ -523,13 +523,12 @@ class MedicationForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableMode
         "dosage": "dosage",
         "next_dose_interval": ("next_dose_interval", {"to_form": interval_hours}),
     }
-    # A treatment: a medication given with an interval to the next dose (a
-    # different interval is another treatment), with its usual dose.
+    # A treatment: a medication with its interval to the next dose, or none
+    # (a different interval is another treatment), and its usual dose.
     presets = {
         "key": ["name", "next_dose_interval"],
         "usual": ["dosage", "dosage_unit"],
         "dated_by": "time",
-        "filter": {"next_dose_interval__isnull": False},
         "to_form": {"next_dose_interval": interval_hours},
     }
 
@@ -587,15 +586,17 @@ class MedicationForm(PresetsMixin, SuggestionsMixin, CoreModelForm, TaggableMode
             self.initial["dosage"] = plain(self.instance.dosage)
 
     def preset_label(self, row):
-        """E.g. "Dalsy · 5 ml · every 8 h"."""
+        """E.g. "Dalsy · 5 ml · every 8 h", or "Apiretal · 2.5 ml" with no interval."""
         dose = " ".join(
             str(part)
             for part in (plain(row["dosage"]), row["dosage_unit"])
             if part not in (None, "")
         )
-        every = _("every %(hours)s h") % {
-            "hours": plain(interval_hours(row["next_dose_interval"]))
-        }
+        every = ""
+        if row["next_dose_interval"]:
+            every = _("every %(hours)s h") % {
+                "hours": plain(interval_hours(row["next_dose_interval"]))
+            }
         return " · ".join(part for part in (row["name"], dose, every) if part)
 
     def clean_next_dose_interval(self):
